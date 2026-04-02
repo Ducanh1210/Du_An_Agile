@@ -1,0 +1,167 @@
+
+<div id="erd"></div>
+<style>
+#erd svg { width: 100%; }
+</style>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+  },
+});
+const { svg } = await mermaid.render('erd-svg', `erDiagram
+  users ||--o{ trainers : "là trainer"
+  users ||--o{ subscriptions : "đăng ký"
+  users ||--o{ bookings : "đặt lịch"
+  users ||--o{ checkins : "check-in"
+  users ||--o{ reviews : "viết review"
+  users ||--o{ notifications : "nhận thông báo"
+  users ||--o{ news : "đăng bài"
+  users ||--o{ support_tickets : "gửi ticket"
+  users ||--o{ payments : "xác nhận (staff)"
+
+  memberships ||--o{ subscriptions : "áp dụng cho"
+
+  trainers ||--o{ subscriptions : "phân công"
+  trainers ||--o{ schedules : "phụ trách"
+  trainers ||--o{ bookings : "PT 1-1"
+  trainers ||--o{ reviews : "được đánh giá"
+
+  subscriptions ||--o{ payments : "thanh toán"
+  subscriptions ||--o{ bookings : "dùng gói"
+  subscriptions ||--o{ checkins : "xác minh gói"
+
+  schedules ||--o{ bookings : "đặt vào lớp"
+
+  bookings ||--o| reviews : "sau buổi tập"
+
+  users {
+    int id PK
+    string full_name
+    string email
+    enum role
+    tinyint is_active
+  }
+  trainers {
+    int id PK
+    int user_id FK
+    enum specialization
+    tinyint is_available
+  }
+  memberships {
+    int id PK
+    string name
+    enum category
+    int duration_days
+    decimal price
+    tinyint allow_pt
+  }
+  subscriptions {
+    int id PK
+    int user_id FK
+    int membership_id FK
+    int trainer_id FK
+    date start_date
+    date end_date
+    enum status
+  }
+  payments {
+    int id PK
+    int subscription_id FK
+    decimal amount
+    enum method
+    enum status
+    int confirmed_by FK
+  }
+  schedules {
+    int id PK
+    int trainer_id FK
+    enum category
+    datetime start_time
+    int capacity
+    enum status
+  }
+  bookings {
+    int id PK
+    int user_id FK
+    int subscription_id FK
+    int schedule_id FK
+    int trainer_id FK
+    enum booking_type
+    enum status
+  }
+  checkins {
+    int id PK
+    int user_id FK
+    int subscription_id FK
+    string qr_token
+    datetime expires_at
+    enum status
+  }
+  reviews {
+    int id PK
+    int user_id FK
+    int trainer_id FK
+    int booking_id FK
+    int rating
+  }
+  notifications {
+    int id PK
+    int user_id FK
+    string title
+    enum type
+    tinyint is_read
+  }
+  equipments {
+    int id PK
+    string name
+    enum status
+  }
+  news {
+    int id PK
+    int author_id FK
+    string title
+    enum category
+    enum status
+  }
+  support_tickets {
+    int id PK
+    int user_id FK
+    int assigned_to FK
+    enum status
+  }
+`);
+document.getElementById('erd').innerHTML = svg;
+document.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {
+  const firstPath = node.querySelector('path[d]');
+  if (!firstPath) return;
+  const d = firstPath.getAttribute('d');
+  const nums = d.match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs = [nums[0], nums[2], nums[4], nums[6]];
+  const ys = [nums[1], nums[3], nums[5], nums[7]];
+  const x = Math.min(...xs), y = Math.min(...ys);
+  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', x); rect.setAttribute('y', y);
+  rect.setAttribute('width', w); rect.setAttribute('height', h);
+  rect.setAttribute('rx', '8');
+  for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+    if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+  }
+  firstPath.replaceWith(rect);
+});
+document.querySelectorAll('#erd svg.erDiagram .row-rect-odd path, #erd svg.erDiagram .row-rect-even path').forEach(p => {
+  p.setAttribute('stroke', 'none');
+});
+</script>

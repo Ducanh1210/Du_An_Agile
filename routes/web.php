@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController; 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,9 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::controller(ProductController::class)
-        ->name('products.')
-        ->prefix('products/')
+    Route::controller(\App\Http\Controllers\MembershipController::class)
+        ->name('memberships.')
+        ->prefix('memberships/')
         ->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
