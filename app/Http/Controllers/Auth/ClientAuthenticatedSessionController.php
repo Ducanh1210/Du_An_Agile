@@ -31,6 +31,10 @@ class ClientAuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
+        if (!$user->hasVerifiedEmail()) {
+            return redirect()->route('client.verification.notice');
+        }
+
         if ($user->role == 'admin') {
             return redirect('/admin');
         }

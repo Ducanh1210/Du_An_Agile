@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\ClientAuthenticatedSessionController;
 use App\Http\Controllers\Auth\ClientRegisteredUserController;
+use App\Http\Controllers\Auth\ClientEmailVerificationPromptController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +27,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -56,6 +57,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('client/verify-email', ClientEmailVerificationPromptController::class)
+                ->name('client.verification.notice');
+
     Route::post('client/logout', [ClientAuthenticatedSessionController::class, 'destroy'])
                 ->name('client.logout');
 });

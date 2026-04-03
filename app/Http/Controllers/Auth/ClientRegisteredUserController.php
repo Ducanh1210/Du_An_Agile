@@ -44,8 +44,8 @@ class ClientRegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user); // Remove auto-login
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('client.login')->with('status', 'Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản trước khi đăng nhập.');
     }
 }

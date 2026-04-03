@@ -91,7 +91,7 @@
         <!-- Name -->
         <div class="form-group">
             <label for="name">Họ tên</label>
-            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+            <input id="name" type="text" name="name" required autofocus>
             @error('name')
                 <div class="error-message">{{ $message }}</div>
             @enderror
@@ -100,7 +100,7 @@
         <!-- Email -->
         <div class="form-group">
             <label for="email">Email</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+            <input id="email" type="email" name="email" required>
             @error('email')
                 <div class="error-message">{{ $message }}</div>
             @enderror
