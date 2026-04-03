@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\ClientAuthenticatedSessionController;
+use App\Http\Controllers\Auth\ClientRegisteredUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,6 +41,23 @@ Route::middleware('auth')->group(function () {
             Route::put('/update/{id}', 'update')->name('update');
             Route::delete('/delete/{id}', 'delete')->name('delete');
         });
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('client/login', [ClientAuthenticatedSessionController::class, 'create'])
+                ->name('client.login');
+
+    Route::post('client/login', [ClientAuthenticatedSessionController::class, 'store']);
+
+    Route::get('client/register', [ClientRegisteredUserController::class, 'create'])
+                ->name('client.register');
+
+    Route::post('client/register', [ClientRegisteredUserController::class, 'store']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('client/logout', [ClientAuthenticatedSessionController::class, 'destroy'])
+                ->name('client.logout');
 });
 
 require __DIR__.'/auth.php';

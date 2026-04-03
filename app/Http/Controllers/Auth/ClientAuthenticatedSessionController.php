@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class AuthenticatedSessionController extends Controller
+class ClientAuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('client.auth.login');
     }
 
     /**
@@ -29,13 +29,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-       $user = auth()->user();
+        $user = auth()->user();
 
-if ($user->role == 'admin') {
-    return redirect('/admin');
-}
+        if ($user->role == 'admin') {
+            return redirect('/admin');
+        }
 
-return redirect('/');
+        return redirect('/');
     }
 
     /**

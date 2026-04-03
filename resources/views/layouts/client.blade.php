@@ -54,11 +54,20 @@
                 <i class="fas fa-moon" id="darkIcon"></i>
             </button>
 
-            {{-- User Dropdown --}}
+            {{-- Login/Register (hiện khi chưa đăng nhập) --}}
+            @guest
+            <div class="auth-buttons">
+                <a href="{{ route('client.login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                <a href="{{ route('client.register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
+            </div>
+            @endguest
+
+            {{-- User Dropdown (hiện khi đã đăng nhập) --}}
+            @auth
             <div class="user-dropdown" id="userDropdown">
                 <button class="user-trigger" id="userTrigger">
-                    <img src="https://ui-avatars.com/api/?name=Nguyen+Van+A&background=FF6B35&color=fff&size=36" alt="Avatar" class="user-avatar">
-                    <span class="user-name">Nguyễn Văn A</span>
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=FF6B35&color=fff&size=36" alt="Avatar" class="user-avatar">
+                    <span class="user-name">{{ auth()->user()->name }}</span>
                     <i class="fas fa-chevron-down user-chevron"></i>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
@@ -68,17 +77,13 @@
                     <a href="{{ url('/lich-su-thanh-toan') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
                     <a href="{{ url('/check-in') }}" class="dropdown-item"><i class="fas fa-qrcode"></i> Check-in QR</a>
                     <div class="dropdown-divider"></div>
-                    <a href="{{ url('/dang-xuat') }}" class="dropdown-item dropdown-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                    <form method="POST" action="{{ route('client.logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="dropdown-item dropdown-logout" style="border: none; background: none; width: 100%; text-align: left;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+                    </form>
                 </div>
             </div>
-
-            {{-- Login/Register (hiện khi chưa đăng nhập) --}}
-            {{-- 
-            <div class="auth-buttons">
-                <a href="{{ url('/dang-nhap') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-                <a href="{{ url('/dang-ky') }}" class="btn btn-primary btn-sm">Đăng ký</a>
-            </div>
-            --}}
+            @endauth
 
             {{-- Mobile Hamburger --}}
             <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
@@ -144,7 +149,10 @@
 
             {{-- Col 1: Brand --}}
             <div class="footer-col">
-                <img src="{{ asset('images/logo-white.png') }}" alt="EXTRA FIT+" class="footer-logo" onerror="this.onerror=null;this.src='{{ asset('images/logo.png') }}';this.style.filter='brightness(0) invert(1)'">
+                @php
+                    $fallbackLogo = asset('images/logo.png');
+                @endphp
+                <img src="{{ asset('images/logo-white.png') }}" alt="EXTRA FIT+" class="footer-logo" onerror="this.onerror=null; this.src='{{ $fallbackLogo }}'; this.style.filter='brightness(0) invert(1)';">
                 <p class="footer-desc">Nơi bạn bắt đầu hành trình thay đổi bản thân. Huấn luyện chuyên nghiệp, cơ sở hiện đại, cộng đồng năng động.</p>
                 <div class="social-links">
                     <a href="#" class="social-link" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
