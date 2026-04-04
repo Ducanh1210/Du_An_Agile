@@ -80,6 +80,11 @@
                     <span class="font-medium text-[15px]">Quản lý Gói tập</span>
                 </a>
 
+                <a href="{{ route('users.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span class="font-medium text-[15px]">Quản lý Người dùng</span>
+                </a>    
+
                 <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Nhân sự & Hội viên</div>
 
                 <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 uppercase tracking-widest leading-normal tracking-tighter ">

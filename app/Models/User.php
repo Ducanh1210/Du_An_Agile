@@ -22,6 +22,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'phone',
+        'avatar_url',
+        'is_active',
     ];
 
     /**
@@ -39,7 +42,53 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    /**
+     * Lấy danh sách người dùng có phân trang
+     */
+    public function loadAllDataUserWithPage()
+    {
+        $query = User::query()
+            ->latest('id')
+            ->paginate(10);
+        return $query;
+    }
+
+    /**
+     * Thêm mới người dùng
+     */
+    public function insertDataUser($params)
+    {
+        $params['email_verified_at'] = now();
+        $res = User::query()->create($params);
+        return $res;
+    }
+
+    /**
+     * Lấy thông tin chi tiết người dùng theo ID
+     */
+    public function loadDataUserById($id)
+    {
+        $query = User::query()
+            ->where('id', $id)
+            ->first();
+        return $query;
+    }
+
+    /**
+     * Cập nhật thông tin người dùng
+     */
+    public function updateDataUser($id, $params)
+    {
+        $res = User::query()->where('id', $id)->update($params);
+        return $res;
+    }
+
+    /**
+     * Xóa người dùng
+     */
+    public function deleteDataUser($id)
+    {
+        $res = User::query()->where('id', $id)->delete();
+        return $res;
+    }
 }

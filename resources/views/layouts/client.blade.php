@@ -57,8 +57,8 @@
             {{-- Login/Register (hiện khi chưa đăng nhập) --}}
             @guest
             <div class="auth-buttons">
-                <a href="{{ route('client.login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
-                <a href="{{ route('client.register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
+                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
             </div>
             @endguest
 
@@ -77,7 +77,7 @@
                     <a href="{{ url('/lich-su-thanh-toan') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
                     <a href="{{ url('/check-in') }}" class="dropdown-item"><i class="fas fa-qrcode"></i> Check-in QR</a>
                     <div class="dropdown-divider"></div>
-                    <form method="POST" action="{{ route('client.logout') }}" style="display: inline;">
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                         @csrf
                         <button type="submit" class="dropdown-item dropdown-logout" style="border: none; background: none; width: 100%; text-align: left;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
                     </form>

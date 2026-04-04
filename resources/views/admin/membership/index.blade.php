@@ -56,7 +56,6 @@
     <div class="px-8 py-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h2 class="text-xl font-bold text-slate-900 tracking-tight leading-normal">Kho dữ liệu các Gói Fitness</h2>
-            <p class="text-sm text-slate-400 font-medium tracking-tighter uppercase whitespace-nowrap">Hiện có {{ $listMem->total() }} gói tập đang được quản lý trên hệ thống.</p>
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('memberships.create') }}" class="px-6 py-2.5 bg-orange-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-orange-600/20 hover:bg-orange-700 hover:scale-105 active:scale-95 transition-all">
