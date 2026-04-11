@@ -17,6 +17,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
 Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.detail');
+Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
+Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
 
 // Dashboard & Admin Management
 Route::middleware(['auth', 'admin'])->group(function () {
