@@ -15,6 +15,12 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('memberships.index')" :active="request()->routeIs('memberships.*')">
+                        Quản lý gói tập
+                    </x-nav-link>
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                        Quản lý người dùng
+                    </x-nav-link>
                 </div>
             </div>
 
