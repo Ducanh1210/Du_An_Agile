@@ -17,7 +17,8 @@ class StoreUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'role' => 'required|in:user,staff,admin,trainer',
+            'role' => 'required|in:user,staff,trainer',
+            'avatar_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
@@ -32,6 +33,9 @@ class StoreUserRequest extends FormRequest
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'role.required' => 'Vui lòng chọn vai trò.',
             'role.in' => 'Vai trò không hợp lệ.',
+            'avatar_url.image' => 'Tệp tải lên phải là hình ảnh.',
+            'avatar_url.mimes' => 'Ảnh đại diện phải thuộc định dạng: jpeg, png, jpg, gif.',
+            'avatar_url.max' => 'Dung lượng ảnh không được vượt quá 2MB.',
         ];
     }
 }

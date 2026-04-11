@@ -6,14 +6,14 @@
 <div class="max-w-4xl mx-auto leading-relaxed  uppercase tracking-widest leading-normal tracking-tighter">
     <!-- Breadcrumb Link Back -->
     <div class="mb-6 flex items-center justify-between">
-        <a href="{{ route('memberships.index') }}" class="text-sm font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-2">
+        <a href="{{ route('admin.memberships.index') }}" class="text-sm font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-2">
             <i class="fa-solid fa-arrow-left-long"></i> Quay lại Danh sách
         </a>
         <div class="text-[10px] font-bold text-slate-300 uppercase tracking-widest leading-loose italic">Mã Gói: #{{ $memDetail->id }}</div>
     </div>
 
     <!-- Main Edit Form Card -->
-    <form action="{{ route('memberships.update', $memDetail->id) }}" method="POST" class="space-y-8 animate-fade-in-up">
+    <form action="{{ route('admin.memberships.update', $memDetail->id) }}" method="POST" class="space-y-8 animate-fade-in-up">
         @csrf
         @method('PUT')
         

@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'phone',
+        'height',
         'avatar_url',
         'is_active',
     ];
@@ -45,12 +46,19 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Lấy danh sách người dùng có phân trang
      */
-    public function loadAllDataUserWithPage()
+    public function loadAllDataUserWithPage($role = null)
     {
-        $query = User::query()
-            ->latest('id')
-            ->paginate(10);
-        return $query;
+        $query = User::query()->latest('id');
+
+        if ($role) {
+            if ($role === 'staff_admin') {
+                $query->whereIn('role', ['admin', 'staff']);
+            } else {
+                $query->where('role', $role);
+            }
+        }
+
+        return $query->paginate(10);
     }
 
     /**
@@ -90,5 +98,43 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $res = User::query()->where('id', $id)->delete();
         return $res;
+    }
+
+    /* Relationships */
+
+    public function healthMetrics()
+    {
+        return $this->hasMany(HealthMetric::class);
+    }
+
+    public function rescheduleRequests()
+    {
+        return $this->hasMany(RescheduleRequest::class, 'requested_by');
+    }
+
+    public function sessionReports()
+    {
+        return $this->hasMany(SessionReport::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Lấy gói tập đang hoạt động
+     */
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where('end_date', '>=', now()->toDateString())
+            ->first();
     }
 }

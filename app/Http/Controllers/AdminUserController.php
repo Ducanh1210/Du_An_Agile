@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminUserController extends Controller
 {
@@ -20,10 +21,23 @@ class AdminUserController extends Controller
     /**
      * Danh sách người dùng
      */
-    public function index()
+    public function index(Request $request)
     {
+        $role = $request->query('role');
         $objUser = new User();
-        $this->view['listUser'] = $objUser->loadAllDataUserWithPage();
+        
+        // Lấy danh sách người dùng đã lọc và phân trang
+        $this->view['listUser'] = $objUser->loadAllDataUserWithPage($role);
+        
+        // Thống kê số lượng (Luôn lấy tổng số trong DB, không phụ thuộc trang hiện tại)
+        $this->view['countAll'] = User::count();
+        $this->view['countStaffAdmin'] = User::whereIn('role', ['admin', 'staff'])->count();
+        $this->view['countTrainer'] = User::where('role', 'trainer')->count();
+        $this->view['countCustomer'] = User::where('role', 'user')->count();
+        
+        // Truyền role hiện tại để hiển thị active trên giao diện
+        $this->view['currentRole'] = $role;
+
         return view('admin.user.index', $this->view);
     }
 
@@ -43,6 +57,12 @@ class AdminUserController extends Controller
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
         
+        // Xử lý upload ảnh đại diện
+        if ($request->hasFile('avatar_url')) {
+            $path = $request->file('avatar_url')->store('avatars', 'public');
+            $data['avatar_url'] = '/storage/' . $path;
+        }
+
         $objUser = new User();
         $res = $objUser->insertDataUser($data);
         
@@ -79,6 +99,20 @@ class AdminUserController extends Controller
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
+        }
+
+        // Xử lý upload ảnh đại diện mới
+        if ($request->hasFile('avatar_url')) {
+            $user = User::findOrFail($id);
+            
+            // Xóa ảnh cũ nếu tồn tại
+            if ($user->avatar_url && str_contains($user->avatar_url, '/storage/avatars/')) {
+                $oldPath = str_replace('/storage/', '', $user->avatar_url);
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            $path = $request->file('avatar_url')->store('avatars', 'public');
+            $data['avatar_url'] = '/storage/' . $path;
         }
         
         $objUser = new User();

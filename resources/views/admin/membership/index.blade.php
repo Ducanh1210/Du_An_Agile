@@ -58,7 +58,7 @@
             <h2 class="text-xl font-bold text-slate-900 tracking-tight leading-normal">Kho dữ liệu các Gói Fitness</h2>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{{ route('memberships.create') }}" class="px-6 py-2.5 bg-orange-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-orange-600/20 hover:bg-orange-700 hover:scale-105 active:scale-95 transition-all">
+            <a href="{{ route('admin.memberships.create') }}" class="px-6 py-2.5 bg-orange-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-orange-600/20 hover:bg-orange-700 hover:scale-105 active:scale-95 transition-all">
                 <i class="fa-solid fa-plus mr-2"></i> Thêm gói tập ngay
             </a>
         </div>
@@ -128,10 +128,10 @@
                     </td>
                     <td class="px-8 py-5 tracking-widest uppercase tracking-tighter ">
                         <div class="flex items-center justify-center gap-2">
-                             <a href="{{ route('memberships.edit', $mem->id) }}" class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm shadow-blue-600/10">
+                             <a href="{{ route('admin.memberships.edit', $mem->id) }}" class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm shadow-blue-600/10">
                                  <i class="fa-solid fa-pen-nib text-sm"></i>
                              </a>
-                             <form action="{{ route('memberships.delete', $mem->id) }}" method="POST" onsubmit="return confirm('Xác nhận xóa gói tập này?')" class="inline">
+                             <form action="{{ route('admin.memberships.delete', $mem->id) }}" method="POST" onsubmit="return confirm('Xác nhận xóa gói tập này?')" class="inline">
                                  @csrf @method('DELETE')
                                  <button type="submit" class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm shadow-red-600/10  uppercase tracking-tighter">
                                      <i class="fa-solid fa-trash-can text-sm"></i>

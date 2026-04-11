@@ -6,14 +6,14 @@
 <div class="max-w-4xl mx-auto">
     <!-- Breadcrumb Link Back -->
     <div class="mb-6 flex items-center justify-between">
-        <a href="{{ route('memberships.index') }}" class="text-sm font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-2">
+        <a href="{{ route('admin.memberships.index') }}" class="text-sm font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-2">
             <i class="fa-solid fa-arrow-left-long"></i> Quay lại Danh sách
         </a>
         <div class="text-[10px] font-bold text-slate-300 uppercase tracking-widest leading-loose italic">Bước 1: Thiết lập cơ bản</div>
     </div>
 
     <!-- Main Creation Form Card -->
-    <form action="{{ route('memberships.store') }}" method="POST" class="space-y-8 animate-fade-in-up">
+    <form action="{{ route('admin.memberships.store') }}" method="POST" class="space-y-8 animate-fade-in-up">
         @csrf
         
         <div class="bg-white rounded-[32px] shadow-sm border border-gray-100 p-10 leading-relaxed group hover:shadow-xl transition-all duration-500">

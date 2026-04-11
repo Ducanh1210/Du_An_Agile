@@ -66,7 +66,7 @@
             @auth
             <div class="user-dropdown" id="userDropdown">
                 <button class="user-trigger" id="userTrigger">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=FF6B35&color=fff&size=36" alt="Avatar" class="user-avatar">
+                    <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff&size=36' }}" alt="Avatar" class="user-avatar">
                     <span class="user-name">{{ auth()->user()->name }}</span>
                     <i class="fas fa-chevron-down user-chevron"></i>
                 </button>
@@ -112,13 +112,15 @@
         <a href="{{ url('/lien-he') }}" class="drawer-link"><i class="fas fa-envelope"></i> Liên hệ</a>
     </nav>
     <div class="drawer-footer">
+        @auth
         <div class="drawer-user">
-            <img src="https://ui-avatars.com/api/?name=Nguyen+Van+A&background=FF6B35&color=fff&size=40" alt="Avatar" class="drawer-avatar">
-            <div>
-                <div class="drawer-user-name">Nguyễn Văn A</div>
-                <div class="drawer-user-email">nguyenvana@email.com</div>
+            <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff&size=40' }}" alt="Avatar" class="drawer-avatar">
+            <div class="min-w-0">
+                <div class="drawer-user-name truncate">{{ auth()->user()->name }}</div>
+                <div class="drawer-user-email truncate">{{ auth()->user()->email }}</div>
             </div>
         </div>
+        @endauth
         <button class="btn btn-outline-primary w-full" id="drawerDarkToggle">
             <i class="fas fa-moon" id="drawerDarkIcon"></i> Chế độ tối
         </button>

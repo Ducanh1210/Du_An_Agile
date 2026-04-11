@@ -30,4 +30,19 @@ class Trainer extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function healthMetrics()
+    {
+        return $this->hasMany(HealthMetric::class);
+    }
+
+    public function sessionReports()
+    {
+        return $this->hasMany(SessionReport::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

@@ -20,41 +20,76 @@ Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.d
 Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
 
+// Dashboard Redirect Logic
+Route::get('/dashboard', function () {
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif (auth()->user()->role === 'trainer') {
+        return redirect()->route('trainer.dashboard');
+    }
+    return redirect()->route('home');
+})->middleware(['auth'])->name('dashboard');
+
 // Dashboard & Admin Management
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
 
-    Route::controller(MembershipController::class)
-        ->name('memberships.')
-        ->prefix('memberships/')
-        ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::post('/store', 'store')->name('store');
-            Route::get('/edit/{id}', 'edit')->name('edit');
-            Route::put('/update/{id}', 'update')->name('update');
-            Route::delete('/delete/{id}', 'delete')->name('delete');
-        });
+    // Quản lý Gói tập
+    Route::prefix('memberships')->name('memberships.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\MembershipController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\MembershipController::class, 'create'])->name('create');
+        Route::post('/store', [\App\Http\Controllers\MembershipController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [\App\Http\Controllers\MembershipController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [\App\Http\Controllers\MembershipController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [\App\Http\Controllers\MembershipController::class, 'delete'])->name('delete');
+    });
 
-    Route::controller(\App\Http\Controllers\AdminUserController::class)
-        ->name('users.')
-        ->prefix('users/')
-        ->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::post('/store', 'store')->name('store');
-            Route::get('/edit/{id}', 'edit')->name('edit');
-            Route::put('/update/{id}', 'update')->name('update');
-            Route::delete('/delete/{id}', 'delete')->name('delete');
-        });
+    // Quản lý Người dùng
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\AdminUserController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\AdminUserController::class, 'create'])->name('create');
+        Route::post('/store', [\App\Http\Controllers\AdminUserController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [\App\Http\Controllers\AdminUserController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [\App\Http\Controllers\AdminUserController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [\App\Http\Controllers\AdminUserController::class, 'delete'])->name('delete');
+    });
+
+    // Quản lý Lịch lớp (Tách file riêng)
+    Route::prefix('schedules')->name('schedules.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\AdminController::class, 'schedules'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\AdminController::class, 'createSchedule'])->name('create');
+        Route::post('/store', [\App\Http\Controllers\AdminController::class, 'storeSchedule'])->name('store');
+        Route::get('/edit/{id}', [\App\Http\Controllers\AdminController::class, 'editSchedule'])->name('edit');
+        Route::put('/update/{id}', [\App\Http\Controllers\AdminController::class, 'updateSchedule'])->name('update');
+        Route::delete('/delete/{id}', [\App\Http\Controllers\AdminController::class, 'deleteSchedule'])->name('delete');
+    });
 });
 
-// User Profile Routes
+// Trainer Portal Routes
+Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\TrainerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/students', [\App\Http\Controllers\TrainerController::class, 'students'])->name('students');
+    Route::get('/students/{id}', [\App\Http\Controllers\TrainerController::class, 'studentDetail'])->name('student.detail');
+    
+    // Actions
+    Route::post('/bookings/{id}/check-in', [\App\Http\Controllers\TrainerController::class, 'checkIn'])->name('booking.checkin');
+    Route::post('/students/{id}/metrics', [\App\Http\Controllers\TrainerController::class, 'updateMetrics'])->name('student.metrics');
+    Route::post('/bookings/{id}/report', [\App\Http\Controllers\TrainerController::class, 'submitReport'])->name('booking.report');
+    Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'requestReschedule'])->name('booking.reschedule');
+});
+
+// User Profile & Personal Logic
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Personal Schedule & Booking Logic
+    Route::get('/lich-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
+    Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
+    Route::post('/reschedule/{id}/respond', [\App\Http\Controllers\HomeController::class, 'respondToReschedule'])->name('reschedule.respond');
 });
 
 // Password Reset OTP Routes

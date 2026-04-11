@@ -68,34 +68,29 @@
 
             <!-- Menu -->
             <nav class="mt-6 px-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-160px)]">
-                <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-line w-5"></i>
                     <span class="font-medium text-[15px]">Dashboard</span>
                 </a>
 
                 <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Hệ thống Dịch vụ</div>
                 
-                <a href="{{ route('memberships.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('memberships.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.memberships.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.memberships.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-id-card w-5"></i>
                     <span class="font-medium text-[15px]">Quản lý Gói tập</span>
                 </a>
 
-                <a href="{{ route('users.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-users w-5"></i>
                     <span class="font-medium text-[15px]">Quản lý Người dùng</span>
-                </a>    
-
-                <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Nhân sự & Hội viên</div>
-
-                <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 uppercase tracking-widest leading-normal tracking-tighter ">
-                    <i class="fa-solid fa-user-ninja w-5"></i>
-                    <span class="font-medium text-[15px]">Đội ngũ PT Gym</span>
                 </a>
 
-                <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 uppercase tracking-widest leading-normal tracking-tighter ">
-                    <i class="fa-solid fa-users-gear w-5"></i>
-                    <span class="font-medium text-[15px]">Hội viên Gym Fit</span>
+                <a href="{{ route('admin.schedules.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-calendar-day w-5"></i>
+                    <span class="font-medium text-[15px]">Quản lý Lịch lớp</span>
                 </a>
+
+                
             </nav>
 
             <!-- Bottom Profile -->
