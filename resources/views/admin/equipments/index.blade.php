@@ -8,7 +8,7 @@
         <h2 class="text-2xl font-bold text-slate-900 tracking-tight uppercase">Danh sách Dụng cụ</h2>
         <p class="text-sm text-slate-500 mt-1 uppercase tracking-widest">Kiểm soát trạng thái và bảo trì thiết bị</p>
     </div>
-    <a href="{{ route('equipments.create') }}" class="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-orange-600/30 flex items-center gap-2 uppercase tracking-widest text-sm hover:-translate-y-0.5">
+    <a href="{{ route('admin.equipments.create') }}" class="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-orange-600/30 flex items-center gap-2 uppercase tracking-widest text-sm hover:-translate-y-0.5">
         <i class="fa-solid fa-plus"></i>
         <span>Thêm Dụng Cụ</span>
     </a>
@@ -51,10 +51,10 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex justify-end gap-2 opacity-100 transition-opacity">
-                            <a href="{{ route('equipments.edit', $equipment->id) }}" class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors">
+                            <a href="{{ route('admin.equipments.edit', $equipment->id) }}" class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors">
                                 <i class="fa-regular fa-pen-to-square text-xs"></i>
                             </a>
-                            <form action="{{ route('equipments.delete', $equipment->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa dụng cụ này?');" class="inline-block">
+                            <form action="{{ route('admin.equipments.delete', $equipment->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa dụng cụ này?');" class="inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors">
@@ -71,7 +71,7 @@
                             <i class="fa-solid fa-dumbbell"></i>
                         </div>
                         <p class="text-slate-500 font-medium">Chưa có dụng cụ nào được thêm.</p>
-                        <a href="{{ route('equipments.create') }}" class="text-orange-600 hover:text-orange-700 font-medium mt-2 inline-block">Thêm ngay &rarr;</a>
+                        <a href="{{ route('admin.equipments.create') }}" class="text-orange-600 hover:text-orange-700 font-medium mt-2 inline-block">Thêm ngay &rarr;</a>
                     </td>
                 </tr>
                 @endforelse

@@ -31,4 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'vnpay' => [
+        'tmn_code' => env('VNP_TMN_CODE'),
+        'hash_secret' => env('VNP_HASH_SECRET'),
+        'url' => env('VNP_URL'),
+        'return_url' => env('VNP_RETURN_URL'),
+        'api_url' => env('VNP_API_URL'),
+    ],
+
 ];

@@ -78,9 +78,15 @@
                     @endif
                 </ul>
                 <div class="pricing-action">
-                    <a href="{{ url('/dang-ky?package=' . $membership->id) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
-                        Đăng ký ngay
-                    </a>
+                    @auth
+                        <a href="{{ route('payment.checkout', ['package' => $membership->id]) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                            Đăng ký ngay
+                        </a>
+                    @else
+                        <a href="{{ route('register', ['package' => $membership->id]) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                            Đăng ký ngay
+                        </a>
+                    @endauth
                 </div>
             </div>
             @empty

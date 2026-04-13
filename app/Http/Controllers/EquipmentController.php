@@ -30,7 +30,7 @@ class EquipmentController extends Controller
 
         \App\Models\Equipment::create($request->all());
 
-        return redirect()->route('equipments.index')->with('success', 'Thêm dụng cụ thành công!');
+        return redirect()->route('admin.equipments.index')->with('success', 'Thêm dụng cụ thành công!');
     }
 
     public function edit($id)
@@ -53,7 +53,7 @@ class EquipmentController extends Controller
         $equipment = \App\Models\Equipment::findOrFail($id);
         $equipment->update($request->all());
 
-        return redirect()->route('equipments.index')->with('success', 'Cập nhật dụng cụ thành công!');
+        return redirect()->route('admin.equipments.index')->with('success', 'Cập nhật dụng cụ thành công!');
     }
 
     public function delete($id)
@@ -61,6 +61,6 @@ class EquipmentController extends Controller
         $equipment = \App\Models\Equipment::findOrFail($id);
         $equipment->delete();
 
-        return redirect()->route('equipments.index')->with('success', 'Xóa dụng cụ thành công!');
+        return redirect()->route('admin.equipments.index')->with('success', 'Xóa dụng cụ thành công!');
     }
 }

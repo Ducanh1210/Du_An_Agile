@@ -118,6 +118,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/goi-dang-ky/{id}/dong-bang', [ClientProfileController::class, 'freezeSubscription'])->name('client.subscription.freeze');
     Route::post('/goi-dang-ky/{id}/huy', [ClientProfileController::class, 'cancelSubscription'])->name('client.subscription.cancel');
     Route::get('/lich-ca-nhan', [ClientProfileController::class, 'calendar'])->name('client.calendar');
+
+    // VNPay Payment Routes
+    Route::get('/thanh-toan', [\App\Http\Controllers\PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::post('/thanh-toan/vnpay', [\App\Http\Controllers\PaymentController::class, 'createPayment'])->name('payment.vnpay');
+    Route::get('/thanh-toan/callback', [\App\Http\Controllers\PaymentController::class, 'vnpayReturn'])->name('payment.callback');
 });
 
 // Password Reset OTP Routes
