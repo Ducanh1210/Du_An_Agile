@@ -433,6 +433,63 @@
 
 
 {{-- ============================================================
+     PRICING / MEMBERSHIP PACKAGES SECTION
+     ============================================================ --}}
+<section class="section pricing-section" id="pricingSection" aria-labelledby="pricingTitle">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag animate-on-scroll">Bảng giá</span>
+            <h2 class="section-title animate-on-scroll delay-1" id="pricingTitle">
+                Chọn <span>Gói Tập</span> Phù Hợp
+            </h2>
+            <p class="section-desc animate-on-scroll delay-2">
+                Chúng tôi cung cấp nhiều lựa chọn linh hoạt để bạn bắt đầu hành trình thay đổi bản thân một cách dễ dàng nhất.
+            </p>
+        </div>
+
+        <div class="pricing-grid">
+            @foreach($memberships as $membership)
+            <div class="pricing-card animate-on-scroll {{ $membership->category == 'VIP' ? 'popular' : '' }}">
+                @if($membership->category == 'VIP')
+                    <div class="pricing-badge">Phổ biến nhất</div>
+                @endif
+                <h3 class="pricing-name">{{ $membership->name }}</h3>
+                <div class="pricing-price">
+                    <span class="amount">{{ number_format($membership->price, 0, ',', '.') }}</span>
+                    <span class="unit">đ / {{ $membership->duration_days }} ngày</span>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check-circle"></i> Tập luyện không giới hạn</li>
+                    <li><i class="fas fa-check-circle"></i> Đầy đủ trang thiết bị</li>
+                    <li>
+                        <i class="fas {{ $membership->allow_pt ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                        {{ $membership->pt_sessions }} buổi PT hướng dẫn
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> Tủ đồ & Phòng tắm nóng lạnh</li>
+                    @if($membership->category == 'VIP')
+                        <li><i class="fas fa-check-circle"></i> Ưu tiên đặt lịch PT</li>
+                        <li><i class="fas fa-check-circle"></i> Nước uống miễn phí</li>
+                    @endif
+                </ul>
+                <div class="pricing-action">
+                    <a href="{{ url('/dang-ky?package=' . $membership->id) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                        Đăng ký gói này
+                    </a>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="text-center" style="margin-top:var(--space-4)">
+            <a href="{{ route('client.memberships') }}" class="btn btn-link animate-on-scroll">
+                Xem tất cả các loại gói tập <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+{{-- ============================================================
      OUR TRAINER SECTION
      ============================================================ --}}
 <section class="section trainers-section" id="trainerSection" aria-labelledby="trainerTitle">

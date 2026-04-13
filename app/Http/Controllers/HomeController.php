@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Trainer;
 use App\Models\Schedule;
+use App\Models\Membership;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -11,7 +12,14 @@ class HomeController extends Controller
 {
     //
     public function index(){
-        return view("client.trangChu");    
+        $memberships = Membership::where('is_active', 1)->take(4)->get();
+        return view("client.trangChu", compact('memberships'));    
+    }
+
+    public function memberships()
+    {
+        $memberships = Membership::where('is_active', 1)->get();
+        return view("client.goiTap", compact('memberships'));
     }
 
     public function trainers()

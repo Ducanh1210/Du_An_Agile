@@ -881,6 +881,101 @@
 .scroll-top-btn:hover { background: var(--color-primary-dark); transform: translateY(-3px); }
 
 /* ============================================================
+   PRICING SECTION (Bảng giá)
+   ============================================================ */
+.pricing-section {
+    background: var(--color-bg);
+}
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+}
+.pricing-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    text-align: center;
+    position: relative;
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+.pricing-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-card-hover);
+}
+.pricing-card.popular {
+    transform: scale(1.05);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-card);
+    z-index: 1;
+}
+.pricing-card.popular:hover {
+    transform: scale(1.05) translateY(-8px);
+}
+.pricing-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: var(--radius-badge);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.pricing-name {
+    font-size: var(--font-size-lg);
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+}
+.pricing-price {
+    margin-bottom: var(--space-3);
+}
+.pricing-price .amount {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--color-primary);
+}
+.pricing-price .unit {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-4);
+    text-align: left;
+    flex: 1;
+}
+.pricing-features li {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pricing-features li:last-child { border-bottom: none; }
+.pricing-features li i {
+    color: var(--color-success);
+    font-size: 14px;
+}
+.pricing-features li i.fa-times {
+    color: var(--color-danger);
+    opacity: 0.5;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {

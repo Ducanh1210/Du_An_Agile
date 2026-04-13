@@ -20,6 +20,7 @@ Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');
 Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.detail');
 Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
+Route::get('/goi-tap', [HomeController::class, 'memberships'])->name('client.memberships');
 
 // Dashboard & Admin Management
 Route::middleware(['auth', 'admin'])->group(function () {
