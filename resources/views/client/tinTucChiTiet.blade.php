@@ -1,4 +1,4 @@
-@extends('client.layouts.app')
+@extends('layouts.client')
 
 @section('title', 'Indoor Cycling — Những điều cần biết trước buổi tập đầu tiên | EXTRA FIT+')
 

@@ -1,4 +1,4 @@
-@extends('client.layouts.app')
+@extends('layouts.client')
 
 @section('title', 'EXTRA FIT+ GYM & FITNESS — Liên Hệ')
 
