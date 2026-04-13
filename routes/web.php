@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,11 +63,23 @@ Route::middleware(['auth', 'admin'])->group(function () {
         });
 });
 
-// User Profile Routes
+// User Profile Routes (Breeze default)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Client Profile, Subscription & Calendar Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ho-so', [ClientProfileController::class, 'profile'])->name('client.profile');
+    Route::put('/ho-so', [ClientProfileController::class, 'updateProfile'])->name('client.profile.update');
+    Route::put('/ho-so/doi-mat-khau', [ClientProfileController::class, 'updatePassword'])->name('client.profile.password');
+    Route::get('/goi-dang-ky', [ClientProfileController::class, 'subscriptions'])->name('client.subscriptions');
+    Route::post('/goi-dang-ky/{id}/gia-han', [ClientProfileController::class, 'renewSubscription'])->name('client.subscription.renew');
+    Route::post('/goi-dang-ky/{id}/dong-bang', [ClientProfileController::class, 'freezeSubscription'])->name('client.subscription.freeze');
+    Route::post('/goi-dang-ky/{id}/huy', [ClientProfileController::class, 'cancelSubscription'])->name('client.subscription.cancel');
+    Route::get('/lich-ca-nhan', [ClientProfileController::class, 'calendar'])->name('client.calendar');
 });
 
 // Password Reset OTP Routes

@@ -91,4 +91,20 @@ class User extends Authenticatable implements MustVerifyEmail
         $res = User::query()->where('id', $id)->delete();
         return $res;
     }
+
+    /**
+     * Gói đăng ký của người dùng
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Lịch đặt chỗ của người dùng
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
