@@ -34,11 +34,11 @@ class Booking extends Model
     }
 
     /**
-     * Relationship with Trainer
+     * Relationship with Subscription
      */
-    public function trainer()
+    public function subscription()
     {
-        return $this->belongsTo(Trainer::class);
+        return $this->belongsTo(Subscription::class);
     }
 
     /**
@@ -47,6 +47,14 @@ class Booking extends Model
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);
+    }
+
+    /**
+     * Relationship with Trainer
+     */
+    public function trainer()
+    {
+        return $this->belongsTo(Trainer::class);
     }
 
     /**

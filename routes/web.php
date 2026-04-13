@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');
 Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.detail');
 Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
+Route::get('/goi-tap', [HomeController::class, 'memberships'])->name('client.memberships');
 
 // Dashboard Redirect Logic
 Route::get('/dashboard', function () {
@@ -45,15 +47,29 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('/delete/{id}', [\App\Http\Controllers\MembershipController::class, 'delete'])->name('delete');
     });
 
-    // Quản lý Người dùng
-    Route::prefix('users')->name('users.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\AdminUserController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\AdminUserController::class, 'create'])->name('create');
-        Route::post('/store', [\App\Http\Controllers\AdminUserController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [\App\Http\Controllers\AdminUserController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [\App\Http\Controllers\AdminUserController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [\App\Http\Controllers\AdminUserController::class, 'delete'])->name('delete');
-    });
+    Route::controller(\App\Http\Controllers\AdminUserController::class)
+        ->name('users.')
+        ->prefix('users')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'delete')->name('delete');
+        });
+
+    Route::controller(\App\Http\Controllers\EquipmentController::class)
+        ->name('equipments.')
+        ->prefix('equipments')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'delete')->name('delete');
+        });
 
     // Quản lý Lịch lớp (Tách file riêng)
     Route::prefix('schedules')->name('schedules.')->group(function () {
@@ -79,7 +95,7 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'requestReschedule'])->name('booking.reschedule');
 });
 
-// User Profile & Personal Logic
+// User Profile Routes (Breeze default)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -90,6 +106,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
     Route::post('/reschedule/{id}/respond', [\App\Http\Controllers\HomeController::class, 'respondToReschedule'])->name('reschedule.respond');
+});
+
+// Client Profile, Subscription & Calendar Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ho-so', [ClientProfileController::class, 'profile'])->name('client.profile');
+    Route::put('/ho-so', [ClientProfileController::class, 'updateProfile'])->name('client.profile.update');
+    Route::put('/ho-so/doi-mat-khau', [ClientProfileController::class, 'updatePassword'])->name('client.profile.password');
+    Route::get('/goi-dang-ky', [ClientProfileController::class, 'subscriptions'])->name('client.subscriptions');
+    Route::post('/goi-dang-ky/{id}/gia-han', [ClientProfileController::class, 'renewSubscription'])->name('client.subscription.renew');
+    Route::post('/goi-dang-ky/{id}/dong-bang', [ClientProfileController::class, 'freezeSubscription'])->name('client.subscription.freeze');
+    Route::post('/goi-dang-ky/{id}/huy', [ClientProfileController::class, 'cancelSubscription'])->name('client.subscription.cancel');
+    Route::get('/lich-ca-nhan', [ClientProfileController::class, 'calendar'])->name('client.calendar');
 });
 
 // Password Reset OTP Routes

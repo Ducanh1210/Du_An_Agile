@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Subscription extends Model
 {
@@ -20,12 +21,15 @@ class Subscription extends Model
         'status',
         'cancel_reason',
         'cancelled_at',
+        'frozen_until',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'cancelled_at' => 'datetime',
+        'frozen_until' => 'date',
+        'final_price' => 'decimal:2',
     ];
 
     /**
@@ -50,5 +54,35 @@ class Subscription extends Model
     public function trainer()
     {
         return $this->belongsTo(Trainer::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active' && $this->end_date->isFuture();
+    }
+
+    public function isFrozen(): bool
+    {
+        return $this->status === 'frozen' ||
+               ($this->frozen_until && Carbon::parse($this->frozen_until)->isFuture());
+    }
+
+    public function daysRemaining(): int
+    {
+        if ($this->end_date->isPast()) return 0;
+        return (int) now()->diffInDays($this->end_date, false);
+    }
+
+    public function progressPercent(): float
+    {
+        $total = $this->start_date->diffInDays($this->end_date);
+        if ($total <= 0) return 100;
+        $elapsed = $this->start_date->diffInDays(now());
+        return min(100, round(($elapsed / $total) * 100, 1));
     }
 }

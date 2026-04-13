@@ -80,6 +80,11 @@
                     <span class="font-medium text-[15px]">Quản lý Gói tập</span>
                 </a>
 
+                <a href="{{ route('admin.equipments.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.equipments.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-dumbbell w-5"></i>
+                    <span class="font-medium text-[15px]">Quản lý Dụng cụ</span>
+                </a>
+
                 <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-users w-5"></i>
                     <span class="font-medium text-[15px]">Quản lý Người dùng</span>
