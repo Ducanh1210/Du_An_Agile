@@ -130,6 +130,18 @@
                     </div>
                 </a>
 
+                <a href="{{ route('admin.news.create') }}" class="flex items-center justify-between p-4 bg-purple-50 border border-purple-100 rounded-2xl group hover:bg-purple-600 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white text-purple-600 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-newspaper"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900 group-hover:text-white">Thêm Tin tức</div>
+                            <div class="text-[10px] text-slate-400 group-hover:text-purple-100">Cập nhật tin tức mới nhất</div>
+                        </div>
+                    </div>
+                </a>
+
                 <a href="{{ route('profile.edit') }}" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl group hover:bg-slate-900 transition-all duration-300">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-white text-slate-600 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">

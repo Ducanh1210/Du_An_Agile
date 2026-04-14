@@ -95,6 +95,11 @@
                     <span class="font-medium text-[15px]">Quản lý Lịch lớp</span>
                 </a>
 
+                <a href="{{ route('admin.news.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-newspaper w-5"></i>
+                    <span class="font-medium text-[15px]">Quản lý Tin tức</span>
+                </a>
+
                 
             </nav>
 

@@ -26,6 +26,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'height',
         'avatar_url',
         'is_active',
+        'provider_name',
+        'provider_id',
     ];
 
     /**
@@ -48,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function loadAllDataUserWithPage($role = null)
     {
-        $query = User::query()->latest('id');
+        $query = User::query()->where('id', '!=', 1)->latest('id');
 
         if ($role) {
             if ($role === 'staff_admin') {

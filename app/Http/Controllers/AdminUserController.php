@@ -30,8 +30,8 @@ class AdminUserController extends Controller
         $this->view['listUser'] = $objUser->loadAllDataUserWithPage($role);
         
         // Thống kê số lượng (Luôn lấy tổng số trong DB, không phụ thuộc trang hiện tại)
-        $this->view['countAll'] = User::count();
-        $this->view['countStaffAdmin'] = User::whereIn('role', ['admin', 'staff'])->count();
+        $this->view['countAll'] = User::where('id', '!=', 1)->count();
+        $this->view['countStaffAdmin'] = User::whereIn('role', ['admin', 'staff'])->where('id', '!=', 1)->count();
         $this->view['countTrainer'] = User::where('role', 'trainer')->count();
         $this->view['countCustomer'] = User::where('role', 'user')->count();
         
