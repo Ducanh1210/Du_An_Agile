@@ -30,5 +30,13 @@ class UserSeeder extends Seeder
             'role'=> 'user',
             'email_verified_at' => now(),
         ]);
+
+        User::create([
+            'name'=> 'Hoàn Vũ Lê',
+            'email'=> 'hoanvule73@gmail.com',
+            'password'=> Hash::make('123456'), // Bạn có thể đổi sau
+            'role'=> 'admin',
+            'email_verified_at' => now(),
+        ]);
     }
 }

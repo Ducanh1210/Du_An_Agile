@@ -50,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function loadAllDataUserWithPage($role = null)
     {
-        $query = User::query()->where('id', '!=', 1)->latest('id');
+        $query = User::query()->latest('id');
 
         if ($role) {
             if ($role === 'staff_admin') {
