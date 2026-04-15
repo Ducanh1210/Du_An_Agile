@@ -26,6 +26,87 @@
         max-width: 600px;
         margin: 0 auto;
     }
+
+    /* Confirmation Modal */
+    .confirm-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .confirm-overlay.active { opacity: 1; visibility: visible; }
+    .confirm-overlay.active .confirm-box { transform: scale(1) translateY(0); }
+
+    .confirm-box {
+        background: #fff;
+        border-radius: 20px;
+        padding: 40px 36px 32px;
+        max-width: 440px; width: 92%;
+        text-align: center;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .confirm-icon {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 32px; color: #fff;
+    }
+    .confirm-title {
+        font-size: 22px; font-weight: 800;
+        color: #1A1A2E; margin-bottom: 8px;
+    }
+    .confirm-desc {
+        font-size: 15px; color: #666;
+        margin-bottom: 20px; line-height: 1.5;
+    }
+    .confirm-package-info {
+        background: #f8f8fa;
+        border-radius: 14px;
+        padding: 20px; margin-bottom: 24px;
+        border: 1px solid #eee;
+    }
+    .confirm-package-name {
+        font-size: 18px; font-weight: 700;
+        color: #1A1A2E; margin-bottom: 6px;
+    }
+    .confirm-package-price {
+        font-size: 26px; font-weight: 900;
+        color: #FF6B35;
+    }
+    .confirm-package-price small {
+        font-size: 14px; font-weight: 500;
+        color: #999;
+    }
+    .confirm-actions {
+        display: flex; gap: 12px;
+    }
+    .confirm-actions .btn {
+        flex: 1; padding: 14px 20px;
+        border-radius: 12px; font-weight: 700;
+        font-size: 15px; cursor: pointer;
+        transition: all 0.2s;
+    }
+    .confirm-btn-cancel {
+        background: #f0f0f0; color: #555;
+        border: none;
+    }
+    .confirm-btn-cancel:hover { background: #e4e4e4; }
+    .confirm-btn-ok {
+        background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+        color: #fff; border: none;
+        box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+    }
+    .confirm-btn-ok:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 24px rgba(255,107,53,0.45);
+    }
 </style>
 @endsection
 
@@ -79,11 +160,12 @@
                 </ul>
                 <div class="pricing-action">
                     @auth
-                        <a href="{{ route('payment.checkout', ['package' => $membership->id]) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                        <button onclick="confirmPackage('{{ $membership->name }}', '{{ number_format($membership->price, 0, ',', '.') }}đ / {{ $membership->duration_days }} ngày', '{{ route('payment.checkout', ['package' => $membership->id]) }}')"
+                                class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
                             Đăng ký ngay
-                        </a>
+                        </button>
                     @else
-                        <a href="{{ route('register', ['package' => $membership->id]) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                        <a href="{{ route('login', ['package' => $membership->id]) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
                             Đăng ký ngay
                         </a>
                     @endauth
@@ -107,8 +189,8 @@
         </div>
         <div style="max-width: 800px; margin: 0 auto; display: grid; gap: var(--space-3);">
             <div style="background: var(--color-bg); padding: var(--space-3); border-radius: var(--radius-card); border: 1px solid var(--color-border);">
-                <h4 style="margin-bottom: 10px; font-weight: 700;">Tôi có thể đóng băng gói tập không?</h4>
-                <p style="color: var(--color-text-muted); font-size: 14px;">Có, tất cả hội viên chính thức đều có thể yêu cầu đóng băng gói tập tối đa 7 ngày nếu có việc bận đột xuất hoặc lý do sức khỏe.</p>
+                <h4 style="margin-bottom: 10px; font-weight: 700;">Tôi có thể gia hạn gói tập không?</h4>
+                <p style="color: var(--color-text-muted); font-size: 14px;">Có, tất cả hội viên đều có thể gia hạn gói tập bất kỳ lúc nào. Thời hạn sẽ được cộng thêm vào ngày hết hạn hiện tại.</p>
             </div>
             <div style="background: var(--color-bg); padding: var(--space-3); border-radius: var(--radius-card); border: 1px solid var(--color-border);">
                 <h4 style="margin-bottom: 10px; font-weight: 700;">Tôi mới bắt đầu thì nên chọn gói nào?</h4>
@@ -117,11 +199,27 @@
         </div>
     </div>
 </section>
+{{-- Confirmation Modal --}}
+<div class="confirm-overlay" id="confirmModal">
+    <div class="confirm-box">
+        <div class="confirm-icon"><i class="fas fa-dumbbell"></i></div>
+        <h3 class="confirm-title">Xác nhận đăng ký</h3>
+        <p class="confirm-desc">Bạn có chắc chắn muốn đăng ký gói tập này không?</p>
+        <div class="confirm-package-info">
+            <div class="confirm-package-name" id="confirmPkgName"></div>
+            <div class="confirm-package-price" id="confirmPkgPrice"></div>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn confirm-btn-cancel" onclick="closeConfirm()"><i class="fas fa-times"></i> Hủy bỏ</button>
+            <a href="#" class="btn confirm-btn-ok" id="confirmPkgLink"><i class="fas fa-check"></i> Đồng ý</a>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-    // Reveal animation logic (already in main.js usually, but ensuring it runs for dynamic items)
+    // Reveal animation
     document.addEventListener('DOMContentLoaded', function() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -130,8 +228,26 @@
                 }
             });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    });
+
+    // Confirmation modal
+    function confirmPackage(name, price, url) {
+        document.getElementById('confirmPkgName').textContent = name;
+        document.getElementById('confirmPkgPrice').innerHTML = price;
+        document.getElementById('confirmPkgLink').href = url;
+        document.getElementById('confirmModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeConfirm() {
+        document.getElementById('confirmModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.getElementById('confirmModal').addEventListener('click', function(e) {
+        if (e.target === this) closeConfirm();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeConfirm();
     });
 </script>
 @endsection

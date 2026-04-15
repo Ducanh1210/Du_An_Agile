@@ -56,7 +56,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
             Route::post('/store', 'store')->name('store');
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::put('/update/{id}', 'update')->name('update');
-            Route::delete('/delete/{id}', 'delete')->name('delete');
+            Route::patch('/toggle-status/{id}', 'toggleStatus')->name('toggleStatus');
         });
 
     Route::controller(\App\Http\Controllers\EquipmentController::class)
@@ -115,15 +115,16 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/ho-so/doi-mat-khau', [ClientProfileController::class, 'updatePassword'])->name('client.profile.password');
     Route::get('/goi-dang-ky', [ClientProfileController::class, 'subscriptions'])->name('client.subscriptions');
     Route::post('/goi-dang-ky/{id}/gia-han', [ClientProfileController::class, 'renewSubscription'])->name('client.subscription.renew');
-    Route::post('/goi-dang-ky/{id}/dong-bang', [ClientProfileController::class, 'freezeSubscription'])->name('client.subscription.freeze');
     Route::post('/goi-dang-ky/{id}/huy', [ClientProfileController::class, 'cancelSubscription'])->name('client.subscription.cancel');
     Route::get('/lich-ca-nhan', [ClientProfileController::class, 'calendar'])->name('client.calendar');
 
-    // VNPay Payment Routes
+    // VNPay Payment Routes (Checkout & initiate payment require auth)
     Route::get('/thanh-toan', [\App\Http\Controllers\PaymentController::class, 'checkout'])->name('payment.checkout');
     Route::post('/thanh-toan/vnpay', [\App\Http\Controllers\PaymentController::class, 'createPayment'])->name('payment.vnpay');
-    Route::get('/thanh-toan/callback', [\App\Http\Controllers\PaymentController::class, 'vnpayReturn'])->name('payment.callback');
 });
+
+// VNPay Callback - MUST be public (cross-site redirect from VNPay can drop session cookies)
+Route::get('/thanh-toan/callback', [\App\Http\Controllers\PaymentController::class, 'vnpayReturn'])->name('payment.callback');
 
 // Password Reset OTP Routes
 Route::controller(PasswordResetController::class)->group(function () {

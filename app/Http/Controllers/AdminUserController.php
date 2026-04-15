@@ -126,22 +126,25 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Xóa người dùng
+     * Khóa/Mở khóa người dùng
      */
-    public function delete($id)
+    public function toggleStatus($id)
     {
-        // Không cho phép tự xóa bản thân hoặc xóa admin chính (ID = 1)
+        // Không cho phép tự khóa bản thân hoặc khóa admin chính (ID = 1)
         if ($id == auth()->id() || $id == 1) {
-            return redirect()->route('users.index')->with('error', 'Bạn không thể xóa tài khoản này!');
+            return redirect()->route('admin.users.index')->with('error', 'Bạn không thể khóa tài khoản này!');
         }
 
-        $objUser = new User();
-        $res = $objUser->deleteDataUser($id);
+        $user = User::findOrFail($id);
+        $newStatus = $user->is_active == 1 ? 0 : 1;
+        
+        $res = $user->update(['is_active' => $newStatus]);
         
         if ($res) {
-            return redirect()->route('users.index')->with('success', 'Xóa người dùng thành công!');
+            $msg = $newStatus == 0 ? 'Đã khóa tài khoản thành công!' : 'Đã mở khóa tài khoản thành công!';
+            return redirect()->route('admin.users.index')->with('success', $msg);
         } else {
-            return redirect()->route('users.index')->with('error', 'Xóa người dùng không thành công!');
+            return redirect()->route('admin.users.index')->with('error', 'Thao tác không thành công!');
         }
     }
 }

@@ -109,6 +109,14 @@
                     </td>
                     <td class="px-8 py-5">
                         @php
+                            $now = now();
+                            $status = $schedule->status;
+                            
+                            // Tự động chuyển sang "Đã kết thúc" nếu thời gian đã trôi qua
+                            if ($status === 'upcoming' && $schedule->start_time < $now) {
+                                $status = 'completed';
+                            }
+
                             $statusClasses = [
                                 'upcoming' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
                                 'completed' => 'bg-slate-50 text-slate-500 border-slate-100',
@@ -119,8 +127,8 @@
                                 'completed' => 'Đã kết thúc',
                                 'cancelled' => 'Đã hủy bỏ',
                             ];
-                            $class = $statusClasses[$schedule->status] ?? $statusClasses['upcoming'];
-                            $label = $statusLabels[$schedule->status] ?? $schedule->status;
+                            $class = $statusClasses[$status] ?? $statusClasses['upcoming'];
+                            $label = $statusLabels[$status] ?? $status;
                         @endphp
                         <span class="px-3 py-1 {{ $class }} rounded-lg text-[10px] font-bold uppercase tracking-widest border shadow-sm leading-normal inline-block">
                             {{ $label }}

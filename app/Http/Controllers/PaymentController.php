@@ -85,6 +85,7 @@ class PaymentController extends Controller
 
     /**
      * Xử lý kết quả trả về từ VNPay (Return URL)
+     * Route này KHÔNG yêu cầu auth vì VNPay cross-site redirect có thể mất session
      */
     public function vnpayReturn(Request $request)
     {
@@ -106,7 +107,14 @@ class PaymentController extends Controller
                     $payment->update(['status' => 'completed']);
                     $payment->subscription->update(['status' => 'active']);
                 }
-                return redirect()->route('client.subscriptions')->with('success', 'Thanh toán thành công! Gói tập của bạn đã được kích hoạt.');
+                
+                // Nếu user vẫn còn session → redirect thẳng tới trang gói đăng ký
+                if (Auth::check()) {
+                    return redirect()->route('client.subscriptions')->with('success', 'Thanh toán thành công! Gói tập của bạn đã được kích hoạt.');
+                }
+                
+                // Nếu mất session → redirect tới login với thông báo thành công
+                return redirect()->route('login')->with('success', 'Thanh toán thành công! Vui lòng đăng nhập để xem gói tập đã kích hoạt.');
             } else {
                 // Thanh toán thất bại hoặc hủy
                 return redirect()->route('client.memberships')->with('error', 'Thanh toán không thành công hoặc đã bị hủy.');

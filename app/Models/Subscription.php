@@ -61,6 +61,11 @@ class Subscription extends Model
         return $this->hasMany(Booking::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active' && $this->end_date->isFuture();

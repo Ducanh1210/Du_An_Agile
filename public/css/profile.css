@@ -272,6 +272,8 @@
     transition: transform var(--transition-base), box-shadow var(--transition-base);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 .sub-card:hover {
     transform: translateY(-4px);
@@ -404,7 +406,8 @@
 .sub-actions {
     display: flex;
     gap: 8px;
-    margin-top: var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-2);
     flex-wrap: wrap;
 }
 .sub-actions .btn {
@@ -413,15 +416,6 @@
     font-size: 13px;
     height: 38px;
     padding: 0 12px;
-}
-.btn-freeze {
-    background: rgba(59,130,246,0.1);
-    color: var(--color-info);
-    border: 1.5px solid var(--color-info);
-}
-.btn-freeze:hover {
-    background: var(--color-info);
-    color: #fff;
 }
 .btn-cancel-sub {
     background: rgba(239,68,68,0.08);
@@ -750,10 +744,7 @@
     background: rgba(34,197,94,0.12);
     color: var(--color-success);
 }
-.confirm-icon.icon-freeze {
-    background: rgba(59,130,246,0.12);
-    color: var(--color-info);
-}
+
 .confirm-icon.icon-cancel {
     background: rgba(239,68,68,0.12);
     color: var(--color-error);

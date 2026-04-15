@@ -22,7 +22,7 @@
                 <span style="color: var(--color-primary-light)">Gói đã đăng ký</span>
             </div>
             <h1 class="page-hero-title">Gói Đã <span>Đăng Ký</span></h1>
-            <p class="page-hero-desc">Quản lý các gói tập của bạn — gia hạn, đóng băng hoặc hủy gói dễ dàng.</p>
+            <p class="page-hero-desc">Quản lý các gói tập của bạn — gia hạn hoặc thanh toán dễ dàng.</p>
         </div>
     </div>
 </section>
@@ -147,31 +147,28 @@
                 @endif
 
                 {{-- Actions --}}
-                @if(in_array($sub->status, ['active', 'expired', 'frozen']))
+                @if($sub->status === 'pending_payment')
+                {{-- ===== PENDING PAYMENT: Thanh toán ngay + Hủy đăng ký ===== --}}
                 <div class="sub-actions">
-                    @if(in_array($sub->status, ['active', 'expired']))
+                    <a href="{{ route('payment.checkout', ['package' => $sub->membership_id]) }}" class="btn btn-primary" id="btnPay{{ $sub->id }}">
+                        <i class="fas fa-credit-card"></i> Thanh toán ngay
+                    </a>
+                    <button class="btn btn-cancel-sub" onclick="openModal('cancelModal{{ $sub->id }}')" id="btnCancel{{ $sub->id }}">
+                        <i class="fas fa-times"></i> Hủy đăng ký
+                    </button>
+                </div>
+                @elseif($sub->status === 'expired')
+                {{-- ===== EXPIRED: Cho phép gia hạn ===== --}}
+                <div class="sub-actions">
                     <button class="btn btn-primary" onclick="openModal('renewModal{{ $sub->id }}')" id="btnRenew{{ $sub->id }}">
                         <i class="fas fa-sync-alt"></i> Gia hạn
                     </button>
-                    @endif
-
-                    @if($sub->status === 'active')
-                    <button class="btn btn-freeze" onclick="openModal('freezeModal{{ $sub->id }}')" id="btnFreeze{{ $sub->id }}">
-                        <i class="fas fa-snowflake"></i> Đóng băng
-                    </button>
-                    @endif
-
-                    @if(in_array($sub->status, ['active', 'frozen']))
-                    <button class="btn btn-cancel-sub" onclick="openModal('cancelModal{{ $sub->id }}')" id="btnCancel{{ $sub->id }}">
-                        <i class="fas fa-times"></i> Hủy gói
-                    </button>
-                    @endif
                 </div>
                 @endif
             </div>
 
             {{-- ============ RENEW MODAL ============ --}}
-            @if(in_array($sub->status, ['active', 'expired']))
+            @if($sub->status === 'expired')
             <div class="modal-overlay" id="renewModal{{ $sub->id }}">
                 <div class="modal-card">
                     <div class="modal-header">
@@ -197,49 +194,20 @@
             </div>
             @endif
 
-            {{-- ============ FREEZE MODAL ============ --}}
-            @if($sub->status === 'active')
-            <div class="modal-overlay" id="freezeModal{{ $sub->id }}">
-                <div class="modal-card">
-                    <div class="modal-header">
-                        <span class="modal-title">Xác nhận đóng băng</span>
-                        <button class="modal-close" onclick="closeModal('freezeModal{{ $sub->id }}')"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="modal-body" style="text-align:center">
-                        <div class="confirm-icon icon-freeze"><i class="fas fa-snowflake"></i></div>
-                        <div class="confirm-title">Đóng băng gói?</div>
-                        <div class="confirm-desc">
-                            Gói <strong>{{ $sub->membership->name ?? '' }}</strong> sẽ được tạm dừng <strong>7 ngày</strong>.
-                            Thời hạn gói sẽ được cộng thêm tương ứng. Bạn không thể sử dụng gói trong thời gian đóng băng.
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-ghost" onclick="closeModal('freezeModal{{ $sub->id }}')">Hủy bỏ</button>
-                        <form action="{{ route('client.subscription.freeze', $sub->id) }}" method="POST" style="display:inline">
-                            @csrf
-                            <button type="submit" class="btn btn-freeze" style="background:var(--color-info);color:#fff;border-color:var(--color-info)">
-                                <i class="fas fa-snowflake"></i> Xác nhận đóng băng
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            {{-- ============ CANCEL MODAL ============ --}}
-            @if(in_array($sub->status, ['active', 'frozen']))
+            {{-- ============ CANCEL MODAL (chỉ cho pending_payment) ============ --}}
+            @if($sub->status === 'pending_payment')
             <div class="modal-overlay" id="cancelModal{{ $sub->id }}">
                 <div class="modal-card">
                     <div class="modal-header">
-                        <span class="modal-title">Xác nhận hủy gói</span>
+                        <span class="modal-title">Hủy đăng ký</span>
                         <button class="modal-close" onclick="closeModal('cancelModal{{ $sub->id }}')"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="modal-body" style="text-align:center">
                         <div class="confirm-icon icon-cancel"><i class="fas fa-exclamation-triangle"></i></div>
-                        <div class="confirm-title">Hủy gói này?</div>
+                        <div class="confirm-title">Hủy gói chờ thanh toán?</div>
                         <div class="confirm-desc">
                             Bạn chắc chắn muốn hủy gói <strong>{{ $sub->membership->name ?? '' }}</strong>?
-                            Hành động này <strong>không thể hoàn tác</strong>. Gói sẽ bị vô hiệu hóa ngay lập tức.
+                            Gói chưa được thanh toán sẽ bị xóa khỏi danh sách.
                         </div>
                         <form action="{{ route('client.subscription.cancel', $sub->id) }}" method="POST" id="cancelForm{{ $sub->id }}">
                             @csrf
@@ -251,9 +219,9 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-ghost" onclick="closeModal('cancelModal{{ $sub->id }}')">Không, giữ gói</button>
+                        <button class="btn btn-ghost" onclick="closeModal('cancelModal{{ $sub->id }}')">Không, giữ lại</button>
                         <button type="submit" form="cancelForm{{ $sub->id }}" class="btn btn-danger">
-                            <i class="fas fa-times"></i> Hủy gói
+                            <i class="fas fa-times"></i> Xác nhận hủy
                         </button>
                     </div>
                 </div>

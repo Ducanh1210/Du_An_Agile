@@ -86,9 +86,10 @@
                 <tr class="bg-slate-50/50">
                     <th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-[.2em]">Người dùng</th>
                     <th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-[.2em]">Email</th>
-                    <th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-[.2em]">Vai trò</th>
-                    <th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-[.2em]">Ngày tạo</th>
-                    <th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-[.2em] text-center">Tương tác</th>
+                    <th class="px-8 py-5 text-[11px] font-bold text_slate-400 uppercase tracking-[.2em]">Vai trò</th>
+                    <th class="px-8 py-5 text-[11px] font-bold text_slate-400 uppercase tracking-[.2em]">Trạng thái</th>
+                    <th class="px-8 py-5 text-[11px] font-bold text_slate-400 uppercase tracking-[.2em]">Ngày tạo</th>
+                    <th class="px-8 py-5 text-[11px] font-bold text_slate-400 uppercase tracking-[.2em] text-center">Tương tác</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -126,20 +127,37 @@
                             {{ strtoupper($user->role) }}
                         </span>
                     </td>
+                    <td class="px-8 py-5">
+                        @if($user->is_active == 1)
+                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm leading-normal inline-block">
+                                <i class="fa-solid fa-circle-check mr-1"></i> Hoạt động
+                            </span>
+                        @else
+                            <span class="px-3 py-1 bg-red-50 text-red-600 border border-red-100 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm leading-normal inline-block">
+                                <i class="fa-solid fa-circle-xmark mr-1"></i> Bị khóa
+                            </span>
+                        @endif
+                    </td>
                     <td class="px-8 py-5 text-sm font-bold text-slate-500">
                         {{ $user->created_at ? $user->created_at->format('d/m/Y') : '---' }}
                     </td>
                     <td class="px-8 py-5">
                         <div class="flex items-center justify-center gap-2">
-                             <a href="{{ route('admin.users.edit', $user->id) }}" class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm shadow-blue-600/10">
+                             <a href="{{ route('admin.users.edit', $user->id) }}" class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm shadow-blue-600/10" title="Chỉnh sửa">
                                  <i class="fa-solid fa-user-pen text-sm"></i>
                              </a>
                              @if($user->id != 1 && $user->id != auth()->id())
-                             <form action="{{ route('admin.users.delete', $user->id) }}" method="POST" onsubmit="return confirm('Xác nhận xóa người dùng này?')" class="inline">
-                                 @csrf @method('DELETE')
-                                 <button type="submit" class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm shadow-red-600/10">
-                                     <i class="fa-solid fa-user-minus text-sm"></i>
-                                 </button>
+                             <form action="{{ route('admin.users.toggleStatus', $user->id) }}" method="POST" onsubmit="return confirm('{{ $user->is_active == 1 ? 'Xác nhận KHÓA tài khoản này?' : 'Xác nhận MỞ KHÓA tài khoản này?' }}')" class="inline">
+                                 @csrf @method('PATCH')
+                                 @if($user->is_active == 1)
+                                     <button type="submit" class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm shadow-red-600/10" title="Khóa tài khoản">
+                                         <i class="fa-solid fa-lock text-sm"></i>
+                                     </button>
+                                 @else
+                                     <button type="submit" class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-sm shadow-emerald-600/10" title="Mở khóa tài khoản">
+                                         <i class="fa-solid fa-lock-open text-sm"></i>
+                                     </button>
+                                 @endif
                              </form>
                              @endif
                         </div>

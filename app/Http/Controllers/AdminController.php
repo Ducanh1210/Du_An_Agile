@@ -30,12 +30,23 @@ class AdminController extends Controller
 
     public function schedules()
     {
-        $schedules = Schedule::with('trainer.user')->latest()->paginate(10);
+        $now = now();
+        $oneMonthLater = now()->addDays(30);
+
+        // Chỉ lấy lịch từ hiện tại đến 30 ngày tới, sắp xếp theo thời gian bắt đầu gần nhất
+        $schedules = Schedule::with('trainer.user')
+            ->where('start_time', '>=', $now)
+            ->where('start_time', '<=', $oneMonthLater)
+            ->orderBy('start_time', 'asc')
+            ->paginate(15);
         
         $stats = [
             'countAll' => Schedule::count(),
             'countToday' => Schedule::whereDate('start_time', now()->toDateString())->count(),
-            'countUpcoming' => Schedule::where('status', 'upcoming')->count(),
+            // Cập nhật: Chỉ đếm là "Sắp diễn ra" nếu trạng thái là upcoming và chưa tới giờ bắt đầu
+            'countUpcoming' => Schedule::where('status', 'upcoming')
+                ->where('start_time', '>', $now)
+                ->count(),
             'countCancelled' => Schedule::where('status', 'cancelled')->count(),
         ];
 

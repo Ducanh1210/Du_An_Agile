@@ -46,15 +46,15 @@ class HomeController extends Controller
             ];
         }
 
-        // 2. Lấy toàn bộ lịch trong vòng 30 ngày tới
+        // 2. Lấy toàn bộ lịch trong vòng 30 ngày tới (Tính từ thời điểm hiện tại trở đi)
         $schedules = Schedule::with('trainer.user')
             ->where('status', 'upcoming')
-            ->whereDate('start_time', '>=', $startDate->toDateString())
-            ->whereDate('start_time', '<=', $startDate->copy()->addDays(30)->toDateString())
+            ->where('start_time', '>=', now())
+            ->where('start_time', '<=', now()->addDays(30))
             ->orderBy('start_time')
             ->get()
             ->groupBy(function($schedule) {
-                return Carbon::parse($schedule->start_time)->toDateString();
+                return $schedule->start_time->toDateString();
             });
 
         return view("client.lichLop", compact('schedules', 'dates'));

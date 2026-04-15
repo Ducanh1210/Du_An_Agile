@@ -97,8 +97,8 @@ class ClientProfileController extends Controller
     {
         $subscription = Subscription::where('user_id', Auth::id())->findOrFail($id);
 
-        if (!in_array($subscription->status, ['active', 'expired'])) {
-            return back()->with('error', 'Không thể gia hạn gói ở trạng thái này.');
+        if ($subscription->status !== 'expired') {
+            return back()->with('error', 'Chỉ có thể gia hạn gói đã hết hạn.');
         }
 
         $daysToAdd = $subscription->membership->duration_days ?? 30;
@@ -117,34 +117,14 @@ class ClientProfileController extends Controller
     }
 
     /**
-     * Đóng băng gói
-     */
-    public function freezeSubscription(Request $request, $id)
-    {
-        $subscription = Subscription::where('user_id', Auth::id())->findOrFail($id);
-
-        if ($subscription->status !== 'active') {
-            return back()->with('error', 'Chỉ có thể đóng băng gói đang hoạt động.');
-        }
-
-        $freezeDays = 7;
-        $subscription->status = 'frozen';
-        $subscription->frozen_until = now()->addDays($freezeDays);
-        $subscription->end_date = $subscription->end_date->addDays($freezeDays);
-        $subscription->save();
-
-        return back()->with('success', 'Đã đóng băng gói ' . $freezeDays . ' ngày. Gói sẽ tự động kích hoạt lại sau.');
-    }
-
-    /**
-     * Hủy gói
+     * Hủy gói (chỉ cho phép gói chờ thanh toán)
      */
     public function cancelSubscription(Request $request, $id)
     {
         $subscription = Subscription::where('user_id', Auth::id())->findOrFail($id);
 
-        if (in_array($subscription->status, ['cancelled', 'expired'])) {
-            return back()->with('error', 'Gói này đã bị hủy hoặc hết hạn.');
+        if ($subscription->status !== 'pending_payment') {
+            return back()->with('error', 'Chỉ có thể hủy gói đang chờ thanh toán.');
         }
 
         $subscription->status = 'cancelled';
@@ -152,7 +132,12 @@ class ClientProfileController extends Controller
         $subscription->cancelled_at = now();
         $subscription->save();
 
-        return back()->with('success', 'Đã hủy gói thành công.');
+        // Hủy các payment pending liên quan
+        $subscription->payments()->where('status', 'pending')->update([
+            'status' => 'cancelled',
+        ]);
+
+        return back()->with('success', 'Đã hủy đăng ký thành công.');
     }
 
     /**
