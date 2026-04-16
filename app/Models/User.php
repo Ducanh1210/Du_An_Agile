@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'phone',
+        'height',
         'avatar_url',
         'is_active',
     ];
@@ -45,12 +46,34 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Lấy danh sách người dùng có phân trang
      */
-    public function loadAllDataUserWithPage()
+    public function loadAllDataUserWithPage($role = null, $search = null)
     {
-        $query = User::query()
-            ->latest('id')
-            ->paginate(10);
-        return $query;
+        $query = User::query();
+
+        // Ẩn tài khoản admin chính (ID 1) khỏi danh sách
+        $query->where('id', '!=', 1);
+
+        // Tìm kiếm theo tên hoặc email
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Sắp xếp theo ưu tiên: staff -> trainer -> user (admin đã bị ẩn)
+        $query->orderByRaw("FIELD(role, 'staff', 'trainer', 'user') ASC")
+            ->orderBy('id', 'asc');
+
+        if ($role) {
+            if ($role === 'staff_admin') {
+                $query->whereIn('role', ['admin', 'staff']);
+            } else {
+                $query->where('role', $role);
+            }
+        }
+
+        return $query->paginate(10);
     }
 
     /**
@@ -90,5 +113,55 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $res = User::query()->where('id', $id)->delete();
         return $res;
+    }
+
+    /* Relationships */
+
+    public function healthMetrics()
+    {
+        return $this->hasMany(HealthMetric::class);
+    }
+
+    public function rescheduleRequests()
+    {
+        return $this->hasMany(RescheduleRequest::class, 'requested_by');
+    }
+
+    public function sessionReports()
+    {
+        return $this->hasMany(SessionReport::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Gói đăng ký của người dùng
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+    /**
+     * Lấy gói tập đang hoạt động
+     */
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where('end_date', '>=', now()->toDateString())
+            ->first();
+    }
+
+    /**
+     * Lấy danh sách lịch sử thanh toán qua các gói đăng ký
+     */
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Subscription::class);
     }
 }

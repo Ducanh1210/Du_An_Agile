@@ -18,8 +18,11 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->has('package')) {
+            session(['package' => $request->package]);
+        }
         return view('auth.register');
     }
 
@@ -45,6 +48,11 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
+        if (session()->has('package')) {
+            $packageId = session()->pull('package');
+            return redirect()->route('payment.checkout', ['package' => $packageId]);
+        }
 
         return redirect(RouteServiceProvider::HOME);
     }

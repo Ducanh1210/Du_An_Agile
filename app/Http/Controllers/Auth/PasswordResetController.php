@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\Auth\ResetPasswordFinalRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -75,18 +76,8 @@ class PasswordResetController extends Controller
     }
 
     // BƯỚC 3: Đặt lại mật khẩu mới
-    public function resetPassword(Request $request)
+    public function resetPassword(ResetPasswordFinalRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'otp' => 'required|numeric|digits:6',
-            'password' => 'required|min:8|confirmed', 
-        ], [
-            'otp.required' => 'Thiếu mã OTP xác nhận.',
-            'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
-            'password.min' => 'Mật khẩu phải từ 8 ký tự trở lên.'
-        ]);
-
         $resetRequest = DB::table('password_reset_tokens')
             ->where('email', $request->email)
             ->where('token', $request->otp)

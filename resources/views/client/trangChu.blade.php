@@ -45,7 +45,7 @@
             Hành trình ngàn dặm bắt đầu từ một bước đi. Hãy để EXTRA FIT+ đồng hành cùng bạn với đội ngũ HLV chuyên nghiệp và cơ sở vật chất hiện đại hàng đầu.
         </p>
         <div class="hero-actions">
-            <a href="{{ url('/dang-ky') }}" class="btn btn-primary btn-xl">
+            <a href="{{ auth()->check() ? route('client.memberships') : route('login') }}" class="btn btn-primary btn-xl">
                 <i class="fas fa-dumbbell"></i> Đăng ký ngay
             </a>
             <a href="{{ url('/lich-lop') }}" class="btn btn-white btn-xl">
@@ -199,7 +199,7 @@
                 Đăng ký ngay hôm nay để nhận tháng đầu tiên với giá ưu đãi 50% và được tư vấn dinh dưỡng miễn phí.
             </p>
             <div class="cta-actions animate-on-scroll delay-3">
-                <a href="{{ url('/dang-ky') }}" class="btn btn-primary btn-xl">
+                <a href="{{ auth()->check() ? route('client.memberships') : route('login') }}" class="btn btn-primary btn-xl">
                     <i class="fas fa-rocket"></i> Đăng ký ngay
                 </a>
                 <a href="{{ url('/goi-tap') }}" class="btn btn-outline-primary btn-xl"
@@ -427,6 +427,70 @@
                 </div>
                 <div class="counter-label">Năm kinh nghiệm</div>
             </div>
+        </div>
+    </div>
+</section>
+
+
+{{-- ============================================================
+     PRICING / MEMBERSHIP PACKAGES SECTION
+     ============================================================ --}}
+<section class="section pricing-section" id="pricingSection" aria-labelledby="pricingTitle">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag animate-on-scroll">Bảng giá</span>
+            <h2 class="section-title animate-on-scroll delay-1" id="pricingTitle">
+                Chọn <span>Gói Tập</span> Phù Hợp
+            </h2>
+            <p class="section-desc animate-on-scroll delay-2">
+                Chúng tôi cung cấp nhiều lựa chọn linh hoạt để bạn bắt đầu hành trình thay đổi bản thân một cách dễ dàng nhất.
+            </p>
+        </div>
+
+        <div class="pricing-grid">
+            @foreach($memberships as $membership)
+            <div class="pricing-card animate-on-scroll {{ $membership->category == 'VIP' ? 'popular' : '' }}">
+                @if($membership->category == 'VIP')
+                    <div class="pricing-badge">Phổ biến nhất</div>
+                @endif
+                <h3 class="pricing-name">{{ $membership->name }}</h3>
+                <div class="pricing-price">
+                    <span class="amount">{{ number_format($membership->price, 0, ',', '.') }}</span>
+                    <span class="unit">đ / {{ $membership->duration_days }} ngày</span>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check-circle"></i> Tập luyện không giới hạn</li>
+                    <li><i class="fas fa-check-circle"></i> Đầy đủ trang thiết bị</li>
+                    <li>
+                        <i class="fas {{ $membership->allow_pt ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                        {{ $membership->pt_sessions }} buổi PT hướng dẫn
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> Tủ đồ & Phòng tắm nóng lạnh</li>
+                    @if($membership->category == 'VIP')
+                        <li><i class="fas fa-check-circle"></i> Ưu tiên đặt lịch PT</li>
+                        <li><i class="fas fa-check-circle"></i> Nước uống miễn phí</li>
+                    @endif
+                </ul>
+                <div class="pricing-action">
+                    @auth
+                        <button onclick="confirmPackage('{{ $membership->name }}', '{{ number_format($membership->price, 0, ',', '.') }}đ / {{ $membership->duration_days }} ngày', '{{ route('payment.checkout', ['package' => $membership->id]) }}')"
+                                class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                            Đăng ký gói này
+                        </button>
+                    @else
+                        <a href="{{ route('login', ['package' => $membership->id]) }}" class="btn {{ $membership->category == 'VIP' ? 'btn-primary' : 'btn-outline-primary' }} w-full">
+                            Đăng ký gói này
+                        </a>
+                    @endauth
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="text-center" style="margin-top:var(--space-4)">
+            <a href="{{ route('client.memberships') }}" class="btn btn-link animate-on-scroll">
+                Xem tất cả các loại gói tập <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
     </div>
 </section>
@@ -808,71 +872,7 @@
 {{-- ============================================================
      CONTACT QUICK / CALLBACK SECTION
      ============================================================ --}}
-<section class="section" id="callbackSection" style="background: var(--color-surface); border-top: 1px solid var(--color-border);" aria-labelledby="callbackTitle">
-    <div class="container">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items:center;">
-            <div class="animate-on-scroll">
-                <span class="section-tag">Liên hệ ngay</span>
-                <h2 class="section-title" id="callbackTitle" style="text-align:left; margin-top:8px;">
-                    Yêu Cầu <span>Tư Vấn</span> Miễn Phí
-                </h2>
-                <p style="color:var(--color-text-muted); margin-bottom:var(--space-3); line-height:1.8;">
-                    Để lại thông tin, chúng tôi sẽ liên hệ lại trong vòng 30 phút để tư vấn chương trình tập luyện phù hợp nhất với bạn.
-                </p>
-                <div style="display:flex; flex-direction:column; gap:12px;">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,107,53,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <i class="fas fa-phone" style="color:var(--color-primary)"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight:700;">0909 123 456</div>
-                            <div style="font-size:13px;color:var(--color-text-muted);">Hỗ trợ 7:00 – 22:00 hàng ngày</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,107,53,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <i class="fas fa-map-marker-alt" style="color:var(--color-primary)"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight:700;">123 Đường Thể Thao, Quận 1</div>
-                            <div style="font-size:13px;color:var(--color-text-muted);">TP. Hồ Chí Minh</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="animate-on-scroll delay-2">
-                <form class="callback-form" id="callbackForm" onsubmit="handleCallbackForm(event)"
-                      style="background:var(--color-bg); border:1.5px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-4);">
-                    <h3 style="font-size:var(--font-size-lg); font-weight:800; margin-bottom:var(--space-3);">Gọi lại cho tôi</h3>
-                    <div class="form-group">
-                        <label class="form-label" for="cbName">Họ và tên <span class="required">*</span></label>
-                        <input type="text" id="cbName" class="form-control" placeholder="Nguyễn Văn A" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="cbPhone">Số điện thoại <span class="required">*</span></label>
-                        <input type="tel" id="cbPhone" class="form-control" placeholder="0909 123 456" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="cbGoal">Mục tiêu tập luyện</label>
-                        <select id="cbGoal" class="form-control">
-                            <option value="">-- Chọn mục tiêu --</option>
-                            <option>Giảm cân, giảm mỡ</option>
-                            <option>Tăng cơ, thể hình</option>
-                            <option>Tăng sức bền</option>
-                            <option>Yoga / Thư giãn</option>
-                            <option>Võ thuật / Tự vệ</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-full" id="cbSubmitBtn">
-                        <i class="fas fa-paper-plane"></i>
-                        <span class="btn-text">Gửi yêu cầu tư vấn</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
 
 {{-- Scroll to Top --}}
 <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Về đầu trang">
@@ -884,30 +884,116 @@
 
 @section('scripts')
 <script>
-function handleCallbackForm(e) {
-    e.preventDefault();
-    const btn = document.getElementById('cbSubmitBtn');
-    btn.classList.add('btn-loading');
-    btn.disabled = true;
 
-    // Simulate API call
-    setTimeout(() => {
-        btn.classList.remove('btn-loading');
-        btn.disabled = false;
-        document.getElementById('callbackForm').reset();
-        showToast('success', 'Gửi thành công!', 'Chúng tôi sẽ liên hệ với bạn trong vòng 30 phút.');
-    }, 1500);
+// Confirmation modal
+function confirmPackage(name, price, url) {
+    document.getElementById('confirmPkgName').textContent = name;
+    document.getElementById('confirmPkgPrice').innerHTML = price;
+    document.getElementById('confirmPkgLink').href = url;
+    document.getElementById('confirmModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
-
-// Responsive callback section
-(function() {
-    const grid = document.querySelector('#callbackSection .container > div');
-    if (!grid) return;
-    function adjust() {
-        grid.style.gridTemplateColumns = window.innerWidth <= 768 ? '1fr' : '1fr 1fr';
-    }
-    window.addEventListener('resize', adjust);
-    adjust();
-})();
+function closeConfirm() {
+    document.getElementById('confirmModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+document.getElementById('confirmModal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeConfirm();
+});
 </script>
+
+{{-- Confirmation Modal --}}
+<style>
+    .confirm-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .confirm-overlay.active { opacity: 1; visibility: visible; }
+    .confirm-overlay.active .confirm-box { transform: scale(1) translateY(0); }
+    .confirm-box {
+        background: #fff;
+        border-radius: 20px;
+        padding: 40px 36px 32px;
+        max-width: 440px; width: 92%;
+        text-align: center;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .confirm-icon {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 32px; color: #fff;
+    }
+    .confirm-title {
+        font-size: 22px; font-weight: 800;
+        color: #1A1A2E; margin-bottom: 8px;
+    }
+    .confirm-desc {
+        font-size: 15px; color: #666;
+        margin-bottom: 20px; line-height: 1.5;
+    }
+    .confirm-package-info {
+        background: #f8f8fa;
+        border-radius: 14px;
+        padding: 20px; margin-bottom: 24px;
+        border: 1px solid #eee;
+    }
+    .confirm-package-name {
+        font-size: 18px; font-weight: 700;
+        color: #1A1A2E; margin-bottom: 6px;
+    }
+    .confirm-package-price {
+        font-size: 26px; font-weight: 900;
+        color: #FF6B35;
+    }
+    .confirm-actions {
+        display: flex; gap: 12px;
+    }
+    .confirm-actions .btn {
+        flex: 1; padding: 14px 20px;
+        border-radius: 12px; font-weight: 700;
+        font-size: 15px; cursor: pointer;
+        transition: all 0.2s;
+    }
+    .confirm-btn-cancel {
+        background: #f0f0f0; color: #555; border: none;
+    }
+    .confirm-btn-cancel:hover { background: #e4e4e4; }
+    .confirm-btn-ok {
+        background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+        color: #fff; border: none;
+        box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+    }
+    .confirm-btn-ok:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 24px rgba(255,107,53,0.45);
+    }
+</style>
+<div class="confirm-overlay" id="confirmModal">
+    <div class="confirm-box">
+        <div class="confirm-icon"><i class="fas fa-dumbbell"></i></div>
+        <h3 class="confirm-title">Xác nhận đăng ký</h3>
+        <p class="confirm-desc">Bạn có chắc chắn muốn đăng ký gói tập này không?</p>
+        <div class="confirm-package-info">
+            <div class="confirm-package-name" id="confirmPkgName"></div>
+            <div class="confirm-package-price" id="confirmPkgPrice"></div>
+        </div>
+        <div class="confirm-actions">
+            <button class="btn confirm-btn-cancel" onclick="closeConfirm()"><i class="fas fa-times"></i> Hủy bỏ</button>
+            <a href="#" class="btn confirm-btn-ok" id="confirmPkgLink"><i class="fas fa-check"></i> Đồng ý</a>
+        </div>
+    </div>
+</div>
 @endsection

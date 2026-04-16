@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminUserController extends Controller
 {
@@ -20,10 +21,25 @@ class AdminUserController extends Controller
     /**
      * Danh sách người dùng
      */
-    public function index()
+    public function index(Request $request)
     {
+        $role = $request->query('role');
+        $search = $request->query('search');
         $objUser = new User();
-        $this->view['listUser'] = $objUser->loadAllDataUserWithPage();
+        
+        // Lấy danh sách người dùng đã lọc, tìm kiếm và phân trang
+        $this->view['listUser'] = $objUser->loadAllDataUserWithPage($role, $search);
+        
+        // Thống kê số lượng (Loại trừ Admin ID 1)
+        $this->view['countAll'] = User::where('id', '!=', 1)->count();
+        $this->view['countStaffAdmin'] = User::where('id', '!=', 1)->whereIn('role', ['admin', 'staff'])->count();
+        $this->view['countTrainer'] = User::where('id', '!=', 1)->where('role', 'trainer')->count();
+        $this->view['countCustomer'] = User::where('id', '!=', 1)->where('role', 'user')->count();
+        
+        // Truyền role và search hiện tại để hiển thị trên giao diện
+        $this->view['currentRole'] = $role;
+        $this->view['currentSearch'] = $search;
+
         return view('admin.user.index', $this->view);
     }
 
@@ -35,14 +51,17 @@ class AdminUserController extends Controller
         return view('admin.user.create');
     }
 
-    /**
-     * Lưu người dùng mới
-     */
     public function store(StoreUserRequest $request)
     {
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
         
+        // Xử lý upload ảnh đại diện
+        if ($request->hasFile('avatar_url')) {
+            $path = $request->file('avatar_url')->store('avatars', 'public');
+            $data['avatar_url'] = '/storage/' . $path;
+        }
+
         $objUser = new User();
         $res = $objUser->insertDataUser($data);
         
@@ -80,6 +99,20 @@ class AdminUserController extends Controller
         } else {
             unset($data['password']);
         }
+
+        // Xử lý upload ảnh đại diện mới
+        if ($request->hasFile('avatar_url')) {
+            $user = User::findOrFail($id);
+            
+            // Xóa ảnh cũ nếu tồn tại
+            if ($user->avatar_url && str_contains($user->avatar_url, '/storage/avatars/')) {
+                $oldPath = str_replace('/storage/', '', $user->avatar_url);
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            $path = $request->file('avatar_url')->store('avatars', 'public');
+            $data['avatar_url'] = '/storage/' . $path;
+        }
         
         $objUser = new User();
         $res = $objUser->updateDataUser($id, $data);
@@ -92,22 +125,25 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Xóa người dùng
+     * Khóa/Mở khóa người dùng
      */
-    public function delete($id)
+    public function toggleStatus($id)
     {
-        // Không cho phép tự xóa bản thân hoặc xóa admin chính (ID = 1)
+        // Không cho phép tự khóa bản thân hoặc khóa admin chính (ID = 1)
         if ($id == auth()->id() || $id == 1) {
-            return redirect()->route('users.index')->with('error', 'Bạn không thể xóa tài khoản này!');
+            return redirect()->route('admin.users.index')->with('error', 'Bạn không thể khóa tài khoản này!');
         }
 
-        $objUser = new User();
-        $res = $objUser->deleteDataUser($id);
+        $user = User::findOrFail($id);
+        $newStatus = $user->is_active == 1 ? 0 : 1;
+        
+        $res = $user->update(['is_active' => $newStatus]);
         
         if ($res) {
-            return redirect()->route('users.index')->with('success', 'Xóa người dùng thành công!');
+            $msg = $newStatus == 0 ? 'Đã khóa tài khoản thành công!' : 'Đã mở khóa tài khoản thành công!';
+            return redirect()->route('admin.users.index')->with('success', $msg);
         } else {
-            return redirect()->route('users.index')->with('error', 'Xóa người dùng không thành công!');
+            return redirect()->route('admin.users.index')->with('error', 'Thao tác không thành công!');
         }
     }
 }

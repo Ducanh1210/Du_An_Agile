@@ -15,8 +15,11 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->has('package')) {
+            session(['package' => $request->package]);
+        }
         return view('auth.login');
     }
 
@@ -30,7 +33,16 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         if ($request->user()->role === 'admin') {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        if ($request->user()->role === 'trainer') {
+            return redirect()->intended('/trainer/dashboard');
+        }
+
+        if (session()->has('package')) {
+            $packageId = session()->pull('package');
+            return redirect()->route('payment.checkout', ['package' => $packageId]);
         }
 
         return redirect()->intended('/');

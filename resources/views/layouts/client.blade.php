@@ -36,6 +36,7 @@
             <a href="{{ url('/') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Trang chủ</a>
             <a href="{{ url('/huan-luyen-vien') }}" class="nav-link {{ request()->is('huan-luyen-vien*') ? 'active' : '' }}">Huấn luyện viên</a>
             <a href="{{ url('/lich-lop') }}" class="nav-link {{ request()->is('lich-lop*') ? 'active' : '' }}">Lịch lớp</a>
+            <a href="{{ route('client.memberships') }}" class="nav-link {{ request()->is('goi-tap*') ? 'active' : '' }}">Gói tập</a>
             <a href="{{ url('/tin-tuc') }}" class="nav-link {{ request()->is('tin-tuc*') ? 'active' : '' }}">Tin tức</a>
             <a href="{{ url('/lien-he') }}" class="nav-link {{ request()->is('lien-he*') ? 'active' : '' }}">Liên hệ</a>
         </nav>
@@ -66,7 +67,7 @@
             @auth
             <div class="user-dropdown" id="userDropdown">
                 <button class="user-trigger" id="userTrigger">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=FF6B35&color=fff&size=36" alt="Avatar" class="user-avatar">
+                    <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff&size=36' }}" alt="Avatar" class="user-avatar">
                     <span class="user-name">{{ auth()->user()->name }}</span>
                     <i class="fas fa-chevron-down user-chevron"></i>
                 </button>
@@ -74,7 +75,7 @@
                     <a href="{{ url('/ho-so') }}" class="dropdown-item"><i class="fas fa-user"></i> Hồ sơ</a>
                     <a href="{{ url('/goi-dang-ky') }}" class="dropdown-item"><i class="fas fa-star"></i> Gói đã đăng ký</a>
                     <a href="{{ url('/lich-ca-nhan') }}" class="dropdown-item"><i class="fas fa-calendar"></i> Lịch cá nhân</a>
-                    <a href="{{ url('/lich-su-thanh-toan') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
+                    <a href="{{ route('client.payment_history') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
                     <a href="{{ url('/check-in') }}" class="dropdown-item"><i class="fas fa-qrcode"></i> Check-in QR</a>
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" style="display: inline;">
@@ -108,17 +109,20 @@
         <a href="{{ url('/') }}" class="drawer-link {{ request()->is('/') ? 'active' : '' }}"><i class="fas fa-home"></i> Trang chủ</a>
         <a href="{{ url('/huan-luyen-vien') }}" class="drawer-link"><i class="fas fa-dumbbell"></i> Huấn luyện viên</a>
         <a href="{{ url('/lich-lop') }}" class="drawer-link"><i class="fas fa-calendar-alt"></i> Lịch lớp</a>
+        <a href="{{ route('client.memberships') }}" class="drawer-link"><i class="fas fa-tags"></i> Gói tập</a>
         <a href="{{ url('/tin-tuc') }}" class="drawer-link"><i class="fas fa-newspaper"></i> Tin tức</a>
         <a href="{{ url('/lien-he') }}" class="drawer-link"><i class="fas fa-envelope"></i> Liên hệ</a>
     </nav>
     <div class="drawer-footer">
+        @auth
         <div class="drawer-user">
-            <img src="https://ui-avatars.com/api/?name=Nguyen+Van+A&background=FF6B35&color=fff&size=40" alt="Avatar" class="drawer-avatar">
-            <div>
-                <div class="drawer-user-name">Nguyễn Văn A</div>
-                <div class="drawer-user-email">nguyenvana@email.com</div>
+            <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff&size=40' }}" alt="Avatar" class="drawer-avatar">
+            <div class="min-w-0">
+                <div class="drawer-user-name truncate">{{ auth()->user()->name }}</div>
+                <div class="drawer-user-email truncate">{{ auth()->user()->email }}</div>
             </div>
         </div>
+        @endauth
         <button class="btn btn-outline-primary w-full" id="drawerDarkToggle">
             <i class="fas fa-moon" id="drawerDarkIcon"></i> Chế độ tối
         </button>

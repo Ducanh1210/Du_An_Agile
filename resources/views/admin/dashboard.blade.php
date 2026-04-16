@@ -59,7 +59,7 @@
                     <h2 class="text-xl font-bold text-slate-900 tracking-tight ">Đăng ký tài khoản mới gần đây</h2>
                     <p class="text-sm text-slate-400 font-medium tracking-tighter uppercase whitespace-nowrap">Danh sách 5 tài khoản đăng ký mới nhất hệ thống.</p>
                 </div>
-                <a href="{{ route('users.index') }}" class="text-blue-600 font-bold text-xs uppercase tracking-widest hover:underline">Xem tất cả</a>
+                <a href="{{ route('admin.users.index') }}" class="text-blue-600 font-bold text-xs uppercase tracking-widest hover:underline">Xem tất cả</a>
             </div>
             
             <div class="overflow-x-auto">
@@ -106,7 +106,7 @@
         <div class="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
             <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-6">Truy cập nhanh</h2>
             <div class="space-y-4">
-                <a href="{{ route('memberships.create') }}" class="flex items-center justify-between p-4 bg-orange-50 border border-orange-100 rounded-2xl group hover:bg-orange-600 transition-all duration-300">
+                <a href="{{ route('admin.memberships.create') }}" class="flex items-center justify-between p-4 bg-orange-50 border border-orange-100 rounded-2xl group hover:bg-orange-600 transition-all duration-300">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-white text-orange-600 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-plus"></i>
@@ -116,9 +116,9 @@
                             <div class="text-[10px] text-slate-400 group-hover:text-orange-100">Cập nhật dịch vụ mới</div>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <a href="{{ route('users.create') }}" class="flex items-center justify-between p-4 bg-blue-50 border border-blue-100 rounded-2xl group hover:bg-blue-600 transition-all duration-300">
+                <a href="{{ route('admin.users.create') }}" class="flex items-center justify-between p-4 bg-blue-50 border border-blue-100 rounded-2xl group hover:bg-blue-600 transition-all duration-300">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-white text-blue-600 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-user-plus"></i>
@@ -128,7 +128,7 @@
                             <div class="text-[10px] text-slate-400 group-hover:text-blue-100">Thêm nhân viên/hội viên</div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <a href="{{ route('profile.edit') }}" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl group hover:bg-slate-900 transition-all duration-300">
                     <div class="flex items-center gap-4">
