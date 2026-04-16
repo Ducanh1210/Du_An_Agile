@@ -3,398 +3,283 @@
 @section('title', 'Lịch Lớp Học — EXTRA FIT+')
 
 @section('styles')
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#FF6B35',
+                    'primary-dark': '#E85520',
+                    'primary-light': '#FF8C5A',
+                    dark: '#0f172a',
+                    indigo: {
+                        50: '#f5f3ff',
+                        100: '#ede9fe',
+                        200: '#ddd6fe',
+                        500: '#6366f1',
+                        600: '#4f46e5',
+                    }
+                },
+                borderRadius: {
+                    '4xl': '2rem',
+                    '5xl': '3rem',
+                }
+            }
+        }
+    }
+</script>
+<!-- Alpine JS -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 <style>
-    /* Hero Section */
-    .schedule-hero {
-        position: relative;
-        height: 240px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80&auto=format&fit=crop') center/cover no-repeat;
-        color: #fff;
-        margin-bottom: 30px;
-    }
-    .schedule-hero::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, rgba(26, 26, 46, 0.8), rgba(26, 26, 46, 0.4));
-    }
-    .hero-content-wrap {
-        position: relative;
-        z-index: 2;
-        text-align: center;
+    :root {
+        --header-h: 72px;
+        --color-gym: #FF6B35;
+        --color-yoga: #6366f1;
+        --color-boxing: #ef4444;
     }
 
-    /* Filters Container */
-    .filters-section {
-        background: #fff;
-        padding: 20px 0;
-        border-bottom: 1px solid #f1f5f9;
-        margin-bottom: 1px;
-    }
-
-    /* Custom Select */
-    .custom-select-wrap {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .filter-label {
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: #94a3b8;
-        letter-spacing: 1px;
-    }
-    #timeframeFilter {
+    .premium-schedule {
         background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        padding: 10px 20px;
-        border-radius: 14px;
-        font-size: 14px;
-        font-weight: 700;
-        color: #334155;
-        outline: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 160px;
-    }
-    #timeframeFilter:focus {
-        border-color: #ff6b35;
-        background: #fff;
-        box-shadow: 0 0 0 4px rgba(255,107,53,0.1);
+        min-height: 100vh;
+        padding-top: var(--header-h);
+        font-family: 'Be Vietnam Pro', sans-serif;
     }
 
-    /* Date Selector Carousel */
-    .day-selector-container {
-        background: #fff;
-        padding: 30px 0;
-        border-bottom: 1px solid #f1f5f9;
-        margin-bottom: 40px;
-    }
-    .carousel-view {
-        position: relative;
-        display: flex;
-        align-items: center;
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-    .carousel-window {
-        overflow: hidden;
-        flex: 1;
-        margin: 0 15px;
-    }
-    .day-selector-strip {
-        display: flex;
-        gap: 12px;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .day-btn {
-        flex: 0 0 calc((100% - (12px * 6)) / 7);
-        padding: 12px 10px;
-        border-radius: 18px;
-        background: #fff;
-        border: 1.5px solid #f1f5f9;
-        text-align: center;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        min-width: 85px;
-    }
-    @media (max-width: 992px) {
-        .day-btn { flex: 0 0 calc((100% - (12px * 3)) / 4); }
-    }
-    @media (max-width: 640px) {
-        .day-btn { flex: 0 0 calc((100% - (12px * 2)) / 3); }
-    }
+    /* --- Category Backgrounds --- */
+    .bg-cl-bodybuilding { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80&auto=format&fit=crop'); }
+    .bg-cl-yoga { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80&auto=format&fit=crop'); }
+    .bg-cl-boxing { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1599058917223-952a220cf972?w=800&q=80&auto=format&fit=crop'); }
 
-    .day-btn .day-name { font-size: 9px; text-transform: uppercase; font-weight: 800; color: #94a3b8; display: block; margin-bottom: 4px; }
-    .day-btn .day-label { font-size: 17px; font-weight: 900; color: #1e293b; }
-
-    .day-btn.active {
-        background: #ff6b35;
-        border-color: #ff6b35;
-        box-shadow: 0 12px 20px -5px rgba(255,107,53,0.3);
-        transform: translateY(-4px);
-    }
-    .day-btn.active .day-name, .day-btn.active .day-label { color: #fff; }
-
-    .nav-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #fff;
-        border: 1.5px solid #f1f5f9;
-        color: #94a3b8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        z-index: 10;
-        flex-shrink: 0;
-    }
-    .nav-btn:hover:not(:disabled) {
-        border-color: #ff6b35;
-        color: #ff6b35;
-        transform: scale(1.1);
-        box-shadow: 0 10px 15px -3px rgba(255,107,53,0.2);
-    }
-    .nav-btn:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-    }
-
-    /* Schedule Content */
-    .schedule-panel { display: none; }
-    .schedule-panel.active { display: block; animation: slideUp 0.5s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Class Cards */
-    .class-card {
-        background: #fff;
-        border-radius: 28px;
-        padding: 26px;
+    /* --- Weekly Calendar Grid --- */
+    .timetable-grid {
         display: grid;
-        grid-template-columns: 100px 1fr 180px 160px;
-        align-items: center;
-        gap: 30px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #f8fafc;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1rem;
     }
-    .class-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); border-color: #ff6b35; }
 
-    .class-time { text-align: center; border-right: 1px solid #f1f5f9; }
-    .time-start { font-size: 24px; font-weight: 900; color: #1e293b; display: block; }
-    .time-end { font-size: 13px; color: #94a3b8; font-weight: 700; }
-
-    .class-info { display: flex; flex-direction: column; gap: 6px; }
-    .class-category { font-size: 10px; font-weight: 900; text-transform: uppercase; color: #ff6b35; letter-spacing: 2px; }
-    .class-title { font-size: 20px; font-weight: 900; color: #1e293b; letter-spacing: -0.5px; }
-    .class-meta { display: flex; gap: 15px; font-size: 13px; color: #64748b; font-weight: 600; }
-
-    .class-trainer { display: flex; align-items: center; gap: 14px; }
-    .trainer-avatar { width: 50px; height: 50px; border-radius: 16px; object-fit: cover; border: 2px solid #f1f5f9; }
-    .trainer-name-text { font-weight: 800; font-size: 15px; color: #334155; }
-
-    .btn-booking {
-        padding: 12px 24px;
-        border-radius: 14px;
-        font-size: 13px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
+    @media (max-width: 1024px) {
+        .timetable-grid { grid-template-columns: 1fr; }
     }
+
+    /* --- Sticky Sidebar --- */
+    .sticky-sidebar {
+        position: sticky;
+        top: calc(var(--header-h) + 2rem);
+        height: min-content;
+    }
+
+    /* --- Card Aesthetics --- */
+    .class-card {
+        background-size: cover;
+        background-position: center;
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .class-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Custom Scrollbar for side selection */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Transitions */
+    .fade-enter { opacity: 0; transform: translateY(10px); }
+    .fade-enter-active { opacity: 1; transform: translateY(0); transition: all 0.3s ease; }
+
+    [x-cloak] { display: none !important; }
 </style>
 @endsection
 
-@section('content')
-<section class="schedule-hero">
-    <div class="hero-content-wrap container">
-        <h1 style="font-size: 48px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 8px;">Hệ Thống Đặt Lịch</h1>
-        <p style="font-size: 16px; font-weight: 500; opacity: 0.8; max-width: 600px; margin: 0 auto;">Lên kế hoạch tập luyện chuyên nghiệp cùng đội ngũ chuyên gia hàng đầu tại EXTRA FIT+.</p>
+@section('breadcrumb')
+<div class="bg-slate-900 border-none py-4">
+    <div class="container mx-auto px-6 flex items-center gap-3">
+        <a href="{{ url('/') }}" class="text-slate-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Trang chủ</a>
+        <i class="fas fa-chevron-right text-slate-700 text-[8px]"></i>
+        <span class="text-white font-black text-xs uppercase tracking-[0.2em]">Lịch lớp & Đặt PT</span>
     </div>
-</section>
-
-<div class="filters-section">
-    <div class="container flex flex-wrap items-center justify-between gap-6">
-        <div class="custom-select-wrap">
-            <span class="filter-label">Thời gian</span>
-            <select id="timeframeFilter">
-                <option value="7">7 ngày tới</option>
-                <option value="14">14 ngày tới</option>
-                <option value="30">30 ngày tới</option>
-            </select>
-        </div>
-
-        @auth
-        @php $sub = Auth::user()->activeSubscription(); @endphp
-        @if($sub)
-        <div class="flex items-center gap-6 bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100 shadow-sm">
-            <div class="flex flex-col">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gói tập hiện tại</span>
-                <span class="text-sm font-black text-slate-800">{{ $sub->membership->name }}</span>
-            </div>
-            <div class="w-px h-8 bg-slate-200"></div>
-            <div class="flex flex-col">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Suất PT</span>
-                <span class="text-sm font-black text-orange-600">{{ $sub->pt_sessions_left }} buổi</span>
-            </div>
-        </div>
-        @endif
-        @endauth
-    </div>
-</div>
-
-<div class="day-selector-container">
-    <div class="container">
-        <div class="carousel-view">
-            <button class="nav-btn" id="prevBtn" disabled>
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <div class="carousel-window">
-                <div class="day-selector-strip" id="dateStrip">
-                    @foreach($dates as $index => $date)
-                    <button class="day-btn {{ $date['is_today'] ? 'active' : '' }}" 
-                            data-date="{{ $date['full'] }}" 
-                            data-index="{{ $index }}"
-                            style="{{ $index >= 7 ? 'display: none;' : '' }}">
-                        <span class="day-name">{{ $date['day_name'] }}</span>
-                        <span class="day-label">{{ $date['label'] }}</span>
-                    </button>
-                    @endforeach
-                </div>
-            </div>
-            <button class="nav-btn" id="nextBtn">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="container pb-24">
-    @if(session('success'))
-        <div class="mb-8 p-5 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-3xl font-bold text-sm text-center animate-bounce">
-            <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
-        </div>
-    @endif
-    
-    @if(session('error'))
-        <div class="mb-8 p-5 bg-red-50 border border-red-100 text-red-700 rounded-3xl font-bold text-sm text-center">
-            <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
-        </div>
-    @endif
-
-    @foreach($dates as $date)
-    <div class="schedule-panel {{ $date['is_today'] ? 'active' : '' }}" id="panel-{{ $date['full'] }}">
-        <div class="schedule-grid">
-            @if(isset($schedules[$date['full']]))
-                @foreach($schedules[$date['full']] as $item)
-                <div class="class-card group">
-                    <div class="class-time">
-                        <span class="time-start">{{ $item->start_time->format('H:i') }}</span>
-                        <span class="time-end">{{ $item->end_time->format('H:i') }}</span>
-                    </div>
-                    <div class="class-info">
-                        <span class="class-category">{{ $item->category }}</span>
-                        <h3 class="class-title">{{ $item->title }}</h3>
-                        <div class="class-meta">
-                            <span><i class="fas fa-users mr-1.5 opacity-40"></i> {{ $item->current_enrolled }}/{{ $item->capacity }} học viên</span>
-                            <span><i class="fas fa-map-marker-alt mr-1.5 opacity-40"></i> {{ $item->room ?? 'Studio A' }}</span>
-                        </div>
-                    </div>
-                    <div class="class-trainer">
-                        <img src="{{ $item->trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($item->trainer->user->name).'&background=FF6B35&color=fff' }}" class="trainer-avatar">
-                        <span class="trainer-name-text">{{ $item->trainer->user->name }}</span>
-                    </div>
-                    <div class="class-status-wrap">
-                        @if($item->current_enrolled >= $item->capacity)
-                            <span class="px-5 py-2.5 bg-red-50 text-red-500 rounded-xl text-xs font-black uppercase tracking-widest border border-red-100">Hết chỗ</span>
-                        @else
-                            <form action="{{ route('bookings.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="schedule_id" value="{{ $item->id }}">
-                                <button type="submit" class="btn-booking bg-slate-900 text-white hover:bg-orange-600 hover:scale-105 active:scale-95 shadow-xl shadow-slate-900/10">
-                                    Đăng ký
-                                </button>
-                            </form>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
-            @else
-                <div class="py-24 text-center bg-slate-50/50 rounded-[50px] border-2 border-dashed border-slate-200">
-                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                        <i class="far fa-calendar-times text-slate-200 text-3xl"></i>
-                    </div>
-                    <h3 class="text-xl font-black text-slate-300 uppercase tracking-widest mb-2">Chưa có lịch tập</h3>
-                    <p class="text-slate-400 text-sm font-medium">Lớp học và slot tập cho ngày này đang được cập nhật.</p>
-                </div>
-            @endif
-        </div>
-    </div>
-    @endforeach
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filter = document.getElementById('timeframeFilter');
-        const dayBtns = document.querySelectorAll('.day-btn');
-        const panels = document.querySelectorAll('.schedule-panel');
-        const nextBtn = document.getElementById('nextBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        
-        let currentIndex = 0;
-        let visibleCount = 7;
-        let maxDays = 7;
-
-        // Logic để cập nhật hiển thị nút
-        function updateCarousel() {
-            dayBtns.forEach((btn, idx) => {
-                if (idx >= currentIndex && idx < currentIndex + visibleCount && idx < maxDays) {
-                    btn.style.display = 'block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex + visibleCount >= maxDays;
-        }
-
-        // Thay đổi bộ lọc số ngày
-        filter.addEventListener('change', (e) => {
-            maxDays = parseInt(e.target.value);
-            currentIndex = 0;
+@section('content')
+<div class="premium-schedule" x-data="{ 
+    activeWeek: 0,
+    activeDay: '{{ $dates[0]['full'] }}',
+    loadingPT: false,
+    selectedTrainer: '',
+    selectedPTDate: '{{ date('Y-m-d') }}',
+    selectedStartTime: '08:00'
+}">
+    
+    <div class="container mx-auto px-6 py-12">
+        <div class="flex flex-col lg:flex-row gap-12">
             
-            // Nếu ngày đang chọn nằm ngoài phạm vi mới, nhảy về ngày đầu tiên
-            const activeBtn = document.querySelector('.day-btn.active');
-            if (activeBtn && parseInt(activeBtn.dataset.index) >= maxDays) {
-                dayBtns[0].click();
-            }
-            
-            updateCarousel();
-        });
+            <!-- Left: Weekly Timetable (75%) -->
+            <div class="lg:w-3/4">
+                <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
+                    <div>
+                        <h1 class="text-5xl font-black text-slate-900 uppercase tracking-tighter mb-2 italic">Lịch biểu <span class="text-primary italic">trong tuần</span></h1>
+                        <p class="text-slate-500 font-bold uppercase text-[10px] tracking-[0.4em]">Khám phá các lớp học mới cùng chuyên gia</p>
+                    </div>
 
-        // Nút Next/Prev
-        nextBtn.addEventListener('click', () => {
-            if (currentIndex + visibleCount < maxDays) {
-                currentIndex += visibleCount;
-                if (currentIndex + visibleCount > maxDays) {
-                    currentIndex = maxDays - visibleCount;
-                }
-                updateCarousel();
-            }
-        });
+                    <!-- Week Toggle -->
+                    <div class="flex bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100">
+                        <button @click="activeWeek = 0; activeDay = '{{ $dates[0]['full'] }}'" :class="activeWeek === 0 ? 'bg-slate-900 text-white' : 'text-slate-500'" class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Tuần này</button>
+                        <button @click="activeWeek = 1; activeDay = '{{ $dates[7]['full'] }}'" :class="activeWeek === 1 ? 'bg-slate-900 text-white' : 'text-slate-500'" class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Tuần tới</button>
+                    </div>
+                </div>
 
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex -= visibleCount;
-                if (currentIndex < 0) currentIndex = 0;
-                updateCarousel();
-            }
-        });
+                <!-- Horizontal Date Selector (Apple Style) -->
+                <div class="flex gap-4 mb-12 overflow-x-auto no-scrollbar pb-4">
+                    @foreach($dates as $date)
+                    <button 
+                        x-show="({{ $date['index'] }} >= activeWeek * 7) && ({{ $date['index'] }} < (activeWeek + 1) * 7)"
+                        @click="activeDay = '{{ $date['full'] }}'"
+                        :class="activeDay === '{{ $date['full'] }}' ? 'bg-primary text-white scale-105 shadow-xl shadow-primary/30 border-transparent' : 'bg-white text-slate-400 border-slate-100'"
+                        class="flex-shrink-0 w-24 h-28 rounded-3xl border flex flex-col items-center justify-center transition-all duration-300">
+                        <span class="text-[9px] font-black uppercase tracking-widest mb-2 opacity-60">{{ $date['day_name'] }}</span>
+                        <span class="text-3xl font-black mb-1 leading-none">{{ explode('/', $date['label'])[0] }}</span>
+                        <span class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60">Tháng {{ explode('/', $date['label'])[1] }}</span>
+                    </button>
+                    @endforeach
+                </div>
 
-        // Click chọn ngày
-        dayBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const date = btn.getAttribute('data-date');
-                dayBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                panels.forEach(p => p.classList.remove('active'));
-                document.getElementById('panel-' + date).classList.add('active');
-            });
-        });
+                <!-- Timetable Content -->
+                <div class="space-y-6">
+                    @foreach($dates as $date)
+                    <template x-if="activeDay === '{{ $date['full'] }}'">
+                        <div x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translateY-10" x-transition:enter-end="opacity-100 translateY-0" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            @php 
+                                $daySchedules = isset($schedules[$date['full']]) ? $schedules[$date['full']] : collect();
+                            @endphp
 
-        // Khởi tạo ban đầu
-        updateCarousel();
-    });
-</script>
+                            @forelse($daySchedules as $item)
+                                <div class="class-card bg-cl-{{ $item->category }} p-8 text-white relative overflow-hidden group">
+                                    <div class="relative z-10">
+                                        <div class="flex justify-between items-start mb-8">
+                                            <div class="flex flex-col">
+                                                <span class="text-4xl font-black tracking-tighter italic mb-1">{{ $item->start_time->format('H:i') }}</span>
+                                                <span class="text-[9px] font-black uppercase tracking-[0.3em] opacity-60">60 Minutes</span>
+                                            </div>
+                                            <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10">
+                                                {{ $item->category }}
+                                            </span>
+                                        </div>
+
+                                        <h3 class="text-3xl font-black uppercase tracking-tighter mb-6 leading-none group-hover:text-primary transition-colors cursor-default">{{ $item->title }}</h3>
+
+                                        <div class="flex items-center gap-4 mb-8">
+                                            <img src="{{ $item->trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($item->trainer->user->name) }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/20">
+                                            <div>
+                                                <div class="text-[8px] font-black uppercase tracking-widest opacity-50">Master Trainer</div>
+                                                <div class="text-sm font-bold">{{ $item->trainer->user->name }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div class="text-[10px] font-bold opacity-70 italic">
+                                                <i class="fas fa-users mr-1"></i> {{ $item->current_enrolled }} / {{ $item->capacity }} slots
+                                            </div>
+                                            
+                                            @auth
+                                                @if($item->isFull())
+                                                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Đã đầy chỗ</span>
+                                                @else
+                                                    <form action="{{ route('bookings.store') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="schedule_id" value="{{ $item->id }}">
+                                                        <button type="submit" class="px-6 py-3 bg-white text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-xl">Đăng ký ngay</button>
+                                                    </form>
+                                                @endif
+                                            @else
+                                                <a href="{{ route('login') }}" class="px-6 py-3 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl">Đăng nhập để đặt</a>
+                                            @endauth
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Decorative elements -->
+                                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-all"></div>
+                                </div>
+                            @empty
+                                <div class="col-span-1 md:col-span-2 py-32 bg-white rounded-[40px] border-2 border-dashed border-slate-100 flex flex-col items-center justify-center text-center">
+                                    <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                                        <i class="fas fa-calendar-times text-4xl text-slate-200"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-black text-slate-400 uppercase tracking-widest">Hôm nay không có lớp</h3>
+                                    <p class="text-slate-300 text-xs font-bold uppercase mt-2 tracking-widest">Vui lòng chọn ngày khác hoặc đặt PT riêng</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </template>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Right: Quick PT Booking Sticky Sidebar (25%) -->
+            <div class="lg:w-1/4">
+                <div class="sticky-sidebar">
+                    <div class="bg-white rounded-[40px] shadow-2xl shadow-slate-200/50 border border-slate-50 overflow-hidden relative">
+                        <div class="p-10">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-2xl rotate-6">
+                                    <i class="fas fa-user-ninja"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-black text-slate-900 uppercase tracking-tighter mb-1">Đặt lịch PT</h3>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Huấn luyện viên cá nhân</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-3xl p-6 mb-8 border border-slate-100">
+                                <p class="text-xs font-bold text-slate-500 leading-relaxed italic">"Không tìm thấy khung giờ phù hợp? Hãy đặt lịch tập 1-kèm-1 để đạt hiệu quả tối ưu nhất."</p>
+                            </div>
+
+                            <form action="{{ route('pt-bookings.store') }}" method="POST" @submit="loadingPT = true" class="space-y-6">
+                                @csrf
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Chọn Huấn luyện viên</label>
+                                    <select name="trainer_id" required x-model="selectedTrainer" 
+                                            class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
+                                        <option value="">-- Danh sách HLV --</option>
+                                        @foreach($trainers as $trainer)
+                                            <option value="{{ $trainer->id }}">{{ $trainer->user->name }} ({{ $trainer->specialization }})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Ngày tập dự kiến</label>
+                                    <input type="date" name="date" required x-model="selectedPTDate" min="{{ date('Y-m-d') }}"
+                                           class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Khung giờ (1 Tiếng)</label>
+                                    <input type="time" name="time_slot" required x-model="selectedStartTime"
+                                           class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
+                                </div>
+
+                                <button type="submit" :disabled="loadingPT || !selectedTrainer"
+                                        class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl shadow-slate-900/10 disabled:opacity-50 disabled:cursor-not-allowed group">
+                                    <span x-show="!loadingPT">ĐẶT LỊCH NGAY <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i></span>
+                                    <span x-show="loadingPT"><i class="fas fa-spinner fa-spin text-lg"></i></span>
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Premium Footer -->
+                        <div class="bg-slate-50/50 p-6 text-center border-t border-slate-50">
+                            <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Extra Fit+ Fitness & Yoga Center</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

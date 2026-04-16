@@ -19,7 +19,9 @@ Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
 Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.detail');
 Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
+Route::get('/huan-luyen-vien/{id}', [HomeController::class, 'trainerDetail'])->name('trainer.detail');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
+
 Route::get('/goi-tap', [HomeController::class, 'memberships'])->name('client.memberships');
 
 // Dashboard Redirect Logic
@@ -46,6 +48,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('/update/{id}', [\App\Http\Controllers\MembershipController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [\App\Http\Controllers\MembershipController::class, 'delete'])->name('delete');
     });
+
+
 
     Route::controller(\App\Http\Controllers\AdminUserController::class)
         ->name('users.')
@@ -104,8 +108,10 @@ Route::middleware(['auth'])->group(function () {
     // Personal Schedule & Booking Logic
     Route::get('/lich-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+    Route::post('/pt-bookings', [\App\Http\Controllers\PTBookingController::class, 'store'])->name('pt-bookings.store');
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
     Route::post('/reschedule/{id}/respond', [\App\Http\Controllers\HomeController::class, 'respondToReschedule'])->name('reschedule.respond');
+    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'cancel'])->name('bookings.cancel');
 });
 
 // Client Profile, Subscription & Calendar Routes

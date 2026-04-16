@@ -872,71 +872,7 @@
 {{-- ============================================================
      CONTACT QUICK / CALLBACK SECTION
      ============================================================ --}}
-<section class="section" id="callbackSection" style="background: var(--color-surface); border-top: 1px solid var(--color-border);" aria-labelledby="callbackTitle">
-    <div class="container">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items:center;">
-            <div class="animate-on-scroll">
-                <span class="section-tag">Liên hệ ngay</span>
-                <h2 class="section-title" id="callbackTitle" style="text-align:left; margin-top:8px;">
-                    Yêu Cầu <span>Tư Vấn</span> Miễn Phí
-                </h2>
-                <p style="color:var(--color-text-muted); margin-bottom:var(--space-3); line-height:1.8;">
-                    Để lại thông tin, chúng tôi sẽ liên hệ lại trong vòng 30 phút để tư vấn chương trình tập luyện phù hợp nhất với bạn.
-                </p>
-                <div style="display:flex; flex-direction:column; gap:12px;">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,107,53,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <i class="fas fa-phone" style="color:var(--color-primary)"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight:700;">0909 123 456</div>
-                            <div style="font-size:13px;color:var(--color-text-muted);">Hỗ trợ 7:00 – 22:00 hàng ngày</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,107,53,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <i class="fas fa-map-marker-alt" style="color:var(--color-primary)"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight:700;">123 Đường Thể Thao, Quận 1</div>
-                            <div style="font-size:13px;color:var(--color-text-muted);">TP. Hồ Chí Minh</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="animate-on-scroll delay-2">
-                <form class="callback-form" id="callbackForm" onsubmit="handleCallbackForm(event)"
-                      style="background:var(--color-bg); border:1.5px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-4);">
-                    <h3 style="font-size:var(--font-size-lg); font-weight:800; margin-bottom:var(--space-3);">Gọi lại cho tôi</h3>
-                    <div class="form-group">
-                        <label class="form-label" for="cbName">Họ và tên <span class="required">*</span></label>
-                        <input type="text" id="cbName" class="form-control" placeholder="Nguyễn Văn A" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="cbPhone">Số điện thoại <span class="required">*</span></label>
-                        <input type="tel" id="cbPhone" class="form-control" placeholder="0909 123 456" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="cbGoal">Mục tiêu tập luyện</label>
-                        <select id="cbGoal" class="form-control">
-                            <option value="">-- Chọn mục tiêu --</option>
-                            <option>Giảm cân, giảm mỡ</option>
-                            <option>Tăng cơ, thể hình</option>
-                            <option>Tăng sức bền</option>
-                            <option>Yoga / Thư giãn</option>
-                            <option>Võ thuật / Tự vệ</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-full" id="cbSubmitBtn">
-                        <i class="fas fa-paper-plane"></i>
-                        <span class="btn-text">Gửi yêu cầu tư vấn</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
 
 {{-- Scroll to Top --}}
 <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Về đầu trang">
@@ -948,31 +884,7 @@
 
 @section('scripts')
 <script>
-function handleCallbackForm(e) {
-    e.preventDefault();
-    const btn = document.getElementById('cbSubmitBtn');
-    btn.classList.add('btn-loading');
-    btn.disabled = true;
 
-    // Simulate API call
-    setTimeout(() => {
-        btn.classList.remove('btn-loading');
-        btn.disabled = false;
-        document.getElementById('callbackForm').reset();
-        showToast('success', 'Gửi thành công!', 'Chúng tôi sẽ liên hệ với bạn trong vòng 30 phút.');
-    }, 1500);
-}
-
-// Responsive callback section
-(function() {
-    const grid = document.querySelector('#callbackSection .container > div');
-    if (!grid) return;
-    function adjust() {
-        grid.style.gridTemplateColumns = window.innerWidth <= 768 ? '1fr' : '1fr 1fr';
-    }
-    window.addEventListener('resize', adjust);
-    adjust();
-})();
 // Confirmation modal
 function confirmPackage(name, price, url) {
     document.getElementById('confirmPkgName').textContent = name;

@@ -90,4 +90,24 @@ class Subscription extends Model
         $elapsed = $this->start_date->diffInDays(now());
         return min(100, round(($elapsed / $total) * 100, 1));
     }
+
+    /**
+     * Check if user has PT sessions left
+     */
+    public function canBookPT(): bool
+    {
+        return $this->isActive() && $this->pt_sessions_left > 0;
+    }
+
+    /**
+     * Deduct one PT session
+     */
+    public function deductPTSession(): bool
+    {
+        if ($this->canBookPT()) {
+            $this->decrement('pt_sessions_left');
+            return true;
+        }
+        return false;
+    }
 }

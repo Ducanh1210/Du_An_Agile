@@ -18,12 +18,17 @@ class ClientProfileController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $activeSubscriptions = Subscription::where('user_id', $user->id)
+        $activeSubscriptionsCount = Subscription::where('user_id', $user->id)
             ->where('status', 'active')
             ->count();
         $totalBookings = Booking::where('user_id', $user->id)->count();
+        
+        // Tính tổng số buổi PT còn lại từ tất cả các gói active
+        $ptSessionsLeft = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->sum('pt_sessions_left');
 
-        return view('client.hoSo', compact('user', 'activeSubscriptions', 'totalBookings'));
+        return view('client.hoSo', compact('user', 'activeSubscriptionsCount', 'totalBookings', 'ptSessionsLeft'));
     }
 
     /**

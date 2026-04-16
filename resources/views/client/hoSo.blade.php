@@ -26,8 +26,12 @@
                 <p class="profile-hero-email"><i class="fas fa-envelope" style="margin-right:6px;opacity:0.5"></i>{{ $user->email }}</p>
                 <div class="profile-hero-stats">
                     <div class="profile-stat">
-                        <div class="profile-stat-num">{{ $activeSubscriptions }}</div>
+                        <div class="profile-stat-num">{{ $activeSubscriptionsCount }}</div>
                         <div class="profile-stat-label">Gói đang dùng</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-num">{{ $ptSessionsLeft }}</div>
+                        <div class="profile-stat-label">Buổi PT</div>
                     </div>
                     <div class="profile-stat">
                         <div class="profile-stat-num">{{ $totalBookings }}</div>

@@ -1,134 +1,160 @@
-@extends('layouts.client')
+@section('styles')
+<style>
+    :root {
+        --p-color: #FF6B35;
+        --p-glow: rgba(255, 107, 53, 0.4);
+    }
+    body { background: #0f172a; color: #fff; }
+    
+    .schedule-hero {
+        padding: 80px 0;
+        background: radial-gradient(circle at 50% 100%, #1e293b, #0f172a);
+    }
+    
+    .booking-premium-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        overflow: hidden;
+        margin-bottom: 24px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .booking-premium-card:hover {
+        transform: scale(1.01);
+        border-color: rgba(255, 107, 53, 0.3);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
 
-@section('title', 'Lịch cá nhân - EXTRA FIT+')
+    .booking-type-indicator {
+        position: absolute;
+        top: 0; left: 0;
+        width: 6px; height: 100%;
+    }
+    .indicator-pt { background: var(--p-color); box-shadow: 4px 0 15px var(--p-glow); }
+    .indicator-class { background: #6366f1; box-shadow: 4px 0 15px rgba(99, 102, 241, 0.4); }
+
+    .status-badge {
+        font-size: 10px;
+        font-weight: 900;
+        padding: 6px 16px;
+        border-radius: 100px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .status-confirmed { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .status-completed { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }
+    .status-cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .trainer-avatar-sm {
+        width: 48px; height: 48px;
+        border-radius: 16px;
+        object-fit: cover;
+    }
+</style>
+@endsection
 
 @section('content')
-<div class="container py-5">
-    <div class="row mb-5">
-        <div class="col-lg-8 mx-auto text-center">
-            <h1 class="display-4 fw-bold mb-3" style="color: var(--primary);">Lịch cá nhân</h1>
-            <p class="text-muted">Theo dõi các lớp học và buổi tập PT của bạn.</p>
-        </div>
+<section class="schedule-hero">
+    <div class="container mx-auto px-6 text-center">
+        <span class="text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-4 inline-block">My Journey</span>
+        <h1 class="text-6xl font-black mb-4 tracking-tighter uppercase italic">Lịch biểu cá nhân</h1>
+        <p class="text-slate-400 font-medium">Theo dõi các lớp học và buổi tập PT của bạn tại Extra Fit.</p>
     </div>
+</section>
 
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+<div class="container mx-auto px-6 py-20 max-w-5xl">
+    
+    @if(session('success'))
+        <div class="bg-green-500/10 border border-green-500/20 text-green-500 p-4 rounded-2xl mb-8 flex items-center gap-3">
+            <i class="fas fa-check-circle"></i>
+            <span class="text-sm font-bold">{{ session('success') }}</span>
+        </div>
+    @endif
 
-            @if($bookings->isEmpty())
-                <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
-                    <div class="mb-4">
-                        <i class="fas fa-calendar-times display-1 text-light"></i>
-                    </div>
-                    <h3 class="fw-bold">Bạn chưa có lịch tập nào</h3>
-                    <p class="text-muted">Hãy tham khảo các lớp học hoặc đăng ký PT để bắt đầu nhé!</p>
-                    <div class="mt-4">
-                        <a href="{{ route('schedule') }}" class="btn btn-primary px-4 py-2">Xem lịch lớp</a>
-                    </div>
-                </div>
-            @else
-                <div class="space-y-4">
-                    @foreach($bookings as $booking)
-                        <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
-                            <div class="row g-0">
-                                <div class="col-md-3 bg-light d-flex flex-column justify-content-center align-items-center p-4 border-end">
-                                    <div class="text-center">
-                                        <div class="h2 fw-bold mb-0 text-primary">{{ $booking->start_time->format('H:i') }}</div>
-                                        <div class="text-muted small">{{ $booking->start_time->format('d/m/Y') }}</div>
-                                        <div class="mt-2">
-                                            @if($booking->booking_type === 'pt_session')
-                                                <span class="badge bg-warning text-dark">PT Session</span>
-                                            @else
-                                                <span class="badge bg-info text-dark">Lớp học</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-9 p-4">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <h4 class="fw-bold mb-1">
-                                                {{ $booking->booking_type === 'pt_session' ? 'Tập cùng PT' : ($booking->schedule?->title ?? 'Lớp học') }}
-                                            </h4>
-                                            <p class="text-muted mb-0">
-                                                <i class="fas fa-user-tie me-2"></i>
-                                                HLV: <strong>{{ $booking->trainer?->user?->name ?? 'N/A' }}</strong>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            @php
-                                                $statusClasses = [
-                                                    'confirmed' => 'bg-primary',
-                                                    'completed' => 'bg-success',
-                                                    'cancelled' => 'bg-danger'
-                                                ];
-                                            @endphp
-                                            <span class="badge {{ $statusClasses[$booking->status] }} px-3 py-2">
-                                                {{ ucfirst($booking->status) }}
-                                            </span>
-                                        </div>
-                                    </div>
+    @if($bookings->isEmpty())
+        <div class="text-center py-20 premium-glass rounded-[40px]">
+            <div class="text-slate-700 text-6xl mb-6"><i class="fas fa-calendar-alt"></i></div>
+            <h3 class="text-xl font-black text-white mb-2">CHƯA CÓ LỊCH TẬP</h3>
+            <p class="text-slate-500 mb-8 max-w-xs mx-auto text-sm">Hãy bắt đầu bằng việc đăng ký các lớp học hoặc đặt chỗ cùng huấn luyện viên.</p>
+            <a href="{{ route('schedule') }}" class="inline-block px-8 py-3 bg-white text-slate-900 font-black text-xs uppercase tracking-widest rounded-full hover:bg-primary hover:text-white transition-all">KHÁM PHÁ NGAY</a>
+        </div>
+    @else
+        <div class="space-y-6">
+            @foreach($bookings as $booking)
+                <div class="booking-premium-card group">
+                    <div class="booking-type-indicator {{ $booking->booking_type === 'pt_session' ? 'indicator-pt' : 'indicator-class' }}"></div>
+                    
+                    <div class="p-8 flex flex-col md:flex-row items-center gap-10">
+                        <!-- Time/Date -->
+                        <div class="text-center min-w-[120px]">
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">
+                                {{ $booking->start_time->format('D, d M') }}
+                            </div>
+                            <div class="text-4xl font-black text-white italic">
+                                {{ $booking->start_time->format('H:i') }}
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-[9px] font-black uppercase tracking-widest {{ $booking->booking_type === 'pt_session' ? 'text-primary' : 'text-indigo-400' }}">
+                                    {{ $booking->booking_type === 'pt_session' ? 'PT Session' : 'Group Class' }}
+                                </span>
+                            </div>
+                        </div>
 
-                                    @if($booking->rescheduleRequests->isNotEmpty())
-                                        @foreach($booking->rescheduleRequests as $request)
-                                            <div class="alert alert-warning border-0 rounded-3 p-3 mt-3">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <h6 class="fw-bold mb-1 underline"><i class="fas fa-clock me-2"></i> Yêu cầu đổi lịch từ PT</h6>
-                                                        <p class="small mb-0">
-                                                            PT muốn đổi từ <strong>{{ $request->original_start_time->format('H:i d/m') }}</strong> 
-                                                            sang <strong>{{ $request->new_start_time->format('H:i d/m') }}</strong>.
-                                                        </p>
-                                                        <p class="small italic text-muted mt-1">Lý do: "{{ $request->reason }}"</p>
-                                                    </div>
-                                                    <div class="d-flex gap-2">
-                                                        <form action="{{ route('reschedule.respond', $request->id) }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="approve">
-                                                            <button type="submit" class="btn btn-success btn-sm px-3">Đồng ý</button>
-                                                        </form>
-                                                        <form action="{{ route('reschedule.respond', $request->id) }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="action" value="reject">
-                                                            <button type="submit" class="btn btn-outline-danger btn-sm px-3">Từ chối</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-
-                                    @if($booking->sessionReport)
-                                        <div class="mt-4 p-3 bg-light rounded-3 border-start border-4 border-success">
-                                            <h6 class="fw-bold text-success mb-2"><i class="fas fa-clipboard-check me-2"></i> Báo cáo sau buổi tập</h6>
-                                            <p class="small mb-2 fst-italic">"{{ $booking->sessionReport->notes }}"</p>
-                                            <div class="d-flex gap-3 small">
-                                                <span><i class="fas fa-bolt text-warning me-1"></i> Nỗ lực: <strong>{{ $booking->sessionReport->effort_rating }}/10</strong></span>
-                                                <span><i class="fas fa-fire text-danger me-1"></i> Cường độ: <strong>{{ $booking->sessionReport->session_intensity }}</strong></span>
-                                            </div>
-                                        </div>
-                                    @endif
+                        <!-- Details -->
+                        <div class="flex-grow">
+                            <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-4">
+                                {{ $booking->booking_type === 'pt_session' ? 'Personal Training' : ($booking->schedule?->title ?? 'Group Class') }}
+                            </h3>
+                            
+                            <div class="flex items-center gap-4">
+                                <img src="{{ $booking->trainer?->user?->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($booking->trainer?->user?->name ?? 'T').'&background=FF6B35&color=fff' }}" 
+                                     class="trainer-avatar-sm" alt="Coach">
+                                <div>
+                                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Coach</div>
+                                    <div class="text-sm font-bold text-white">{{ $booking->trainer?->user?->name ?? 'N/A' }}</div>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+
+                        <!-- Status & Action -->
+                        <div class="text-right flex flex-col items-end gap-4 min-w-[150px]">
+                            <span class="status-badge status-{{ $booking->status }}">
+                                {{ $booking->status }}
+                            </span>
+
+                            @if($booking->status === 'confirmed' && now()->diffInHours($booking->start_time, false) >= 2)
+                                <form action="{{ route('bookings.cancel', $booking->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy lịch tập này?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-red-500 transition-colors">
+                                        Hủy lịch tập
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Reschedule Request & Report areas (Collapsed/Conditional) -->
+                    @if($booking->rescheduleRequests->where('status', 'pending')->isNotEmpty())
+                        <div class="bg-primary/5 border-t border-primary/10 p-6 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-black text-primary uppercase tracking-widest">Yêu cầu đổi lịch</div>
+                                    <div class="text-sm text-slate-400">Coach đề xuất khung giờ mới</div>
+                                </div>
+                            </div>
+                            <a href="{{ route('notifications.index') }}" class="px-6 py-2 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-full">Phản hồi</a>
+                        </div>
+                    @endif
                 </div>
-            @endif
-
+            @endforeach
         </div>
-    </div>
+    @endif
 </div>
-
-<style>
-    .card { transition: transform 0.2s; }
-    .card:hover { transform: translateY(-5px); }
-    .display-1 { font-size: 5rem; opacity: 0.1; }
-    .space-y-4 > * + * { margin-top: 1.5rem; }
-</style>
+@endsection
 @endsection

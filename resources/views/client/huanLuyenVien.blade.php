@@ -1,241 +1,225 @@
-@extends('layouts.client')
+    /* --- Ultimate Premium Trainer UI --- */
+    :root {
+        --p-color: #FF6B35;
+        --p-glow: rgba(255, 107, 53, 0.4);
+        --v-color: #6366f1;
+        --v-glow: rgba(99, 102, 241, 0.4);
+    }
 
-@section('title', 'Đội Ngũ Huấn Luyện Viên — EXTRA FIT+')
-
-@section('styles')
-<style>
-    /* Hero Section */
     .trainer-hero {
         position: relative;
-        height: 400px;
+        height: 500px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        background: url('https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=1600&q=80&auto=format&fit=crop') center/cover no-repeat;
-        color: #fff;
-        margin-bottom: var(--space-8);
+        background: #0f172a;
+        overflow: hidden;
     }
-    .trainer-hero::before {
+    .trainer-hero::after {
         content: '';
         position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, rgba(26,26,46,0.8), rgba(26,26,46,0.4));
-    }
-    .hero-content-wrap {
-        position: relative;
-        z-index: 2;
-        text-align: center;
+        width: 150%; height: 150%;
+        background: radial-gradient(circle at 70% 30%, rgba(255,107,53,0.15) 0%, transparent 50%);
+        top: -25%; left: -25%;
     }
     .hero-title {
-        font-size: clamp(32px, 5vw, 48px);
+        font-size: clamp(4rem, 8vw, 7rem);
         font-weight: 900;
-        margin-bottom: var(--space-2);
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-    .hero-subtitle {
-        font-size: var(--font-size-lg);
-        opacity: 0.9;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    /* Trainer Grid */
-    .trainers-page-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: var(--space-4);
-        margin-top: var(--space-6);
+        line-height: 0.9;
+        letter-spacing: -2px;
+        background: linear-gradient(to bottom, #fff 30%, rgba(255,255,255,0.4));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     /* Filter System */
-    .filter-wrap {
-        display: flex;
-        justify-content: center;
-        gap: var(--space-2);
-        margin-bottom: var(--space-6);
-        flex-wrap: wrap;
+    .premium-filter {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 8px;
+        border-radius: 100px;
+        display: inline-flex;
+        gap: 4px;
     }
     .filter-btn {
-        padding: 10px 24px;
-        border-radius: var(--radius-badge);
-        background: var(--color-surface);
-        border: 1.5px solid var(--color-border);
-        font-weight: 600;
-        transition: all var(--transition-base);
+        padding: 12px 28px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #94a3b8;
     }
-    .filter-btn.active, .filter-btn:hover {
-        background: var(--color-primary);
-        color: #fff;
-        border-color: var(--color-primary);
-        box-shadow: var(--shadow-btn);
-    }
-
-    /* Trainer Card Premium */
-    .trainer-card-wrapper {
-        perspective: 1000px;
-    }
-    .trainer-card-inner {
-        position: relative;
-        border-radius: var(--radius-card);
-        overflow: hidden;
-        background: var(--color-surface);
-        box-shadow: var(--shadow-card);
-        transition: all var(--transition-slow);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .trainer-card-inner:hover {
-        transform: translateY(-10px);
-        box-shadow: var(--shadow-card-hover);
+    .filter-btn.active {
+        background: #fff;
+        color: #0f172a;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    .trainer-img-container {
+    /* Trainer Card - The Masterpiece */
+    .trainer-card {
+        background: #1e293b;
+        border-radius: 40px;
+        overflow: hidden;
         position: relative;
-        padding-top: 125%; /* 4:5 ratio */
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .trainer-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5);
+        border-color: rgba(255, 107, 53, 0.3);
+    }
+    .card-img-wrap {
+        height: 420px;
+        position: relative;
         overflow: hidden;
     }
-    .trainer-img-src {
-        position: absolute;
-        top: 0; left: 0;
+    .card-img {
         width: 100%; height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
     }
-    .trainer-card-inner:hover .trainer-img-src {
-        transform: scale(1.1);
-    }
-
-    .trainer-badge-special {
+    .trainer-card:hover .card-img { transform: scale(1.1); }
+    
+    .overlay-glow {
         position: absolute;
-        top: 15px; right: 15px;
-        background: rgba(255, 107, 53, 0.9);
-        backdrop-filter: blur(4px);
+        inset: 0;
+        background: linear-gradient(to top, #1e293b 0%, transparent 40%);
+    }
+
+    .card-body {
+        padding: 40px;
+        position: relative;
+    }
+    .spec-tag {
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--p-color);
+        margin-bottom: 12px;
+        display: block;
+    }
+    .name-text {
+        font-size: 32px;
+        font-weight: 900;
         color: #fff;
-        padding: 4px 12px;
-        border-radius: var(--radius-badge);
-        font-weight: 700;
-        font-size: 12px;
-        z-index: 3;
+        margin-bottom: 8px;
+    }
+    .bio-text {
+        font-size: 14px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 24px;
     }
 
-    .trainer-details {
-        padding: var(--space-3);
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .trainer-name-main {
-        font-size: var(--font-size-xl);
+    .btn-book {
+        width: 100%;
+        padding: 20px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
         font-weight: 800;
-        margin-bottom: 4px;
-        color: var(--color-text);
-    }
-    .trainer-spec-text {
-        color: var(--color-primary);
-        font-weight: 600;
-        font-size: var(--font-size-sm);
-        margin-bottom: var(--space-2);
-    }
-    .trainer-bio {
-        font-size: var(--font-size-sm);
-        color: var(--color-text-muted);
-        margin-bottom: var(--space-3);
-        line-height: 1.5;
-    }
-
-    .trainer-social-links {
-        display: flex;
-        gap: 12px;
-        margin-top: auto;
-    }
-    .social-icon {
-        width: 36px; height: 36px;
-        border-radius: 50%;
-        background: var(--color-bg);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--color-text-muted);
-        transition: all var(--transition-base);
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .social-icon:hover {
-        background: var(--color-primary);
+    .trainer-card:hover .btn-book {
+        background: var(--p-color);
         color: #fff;
-        transform: translateY(-3px);
+        border-color: transparent;
+        box-shadow: 0 10px 30px var(--p-glow);
     }
 
-    [data-theme="dark"] .trainer-card-inner {
-        background: #1E1E2E;
-        border: 1px solid #2E2E3E;
+    /* Animations */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
+    .animate-up { animation: fadeInUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
 </style>
 @endsection
 
 @section('breadcrumb')
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb" style="display: flex; gap: 8px; font-size: 14px; padding: 16px 0;">
-        <li class="breadcrumb-item"><a href="{{ url('/') }}" style="color: var(--color-primary);">Trang chủ</a></li>
-        <li class="breadcrumb-item active" style="color: var(--color-text-muted);" aria-current="page"> / Huấn luyện viên</li>
-    </ol>
-</nav>
+<div class="bg-slate-900 border-none py-3">
+    <div class="container mx-auto px-6 flex items-center gap-3">
+        <div class="breadcrumb-item"><a href="{{ url('/') }}" class="text-slate-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest leading-none">Trang chủ</a></div>
+        <div class="text-slate-700 font-bold text-[8px]"><i class="fas fa-chevron-right"></i></div>
+        <div class="breadcrumb-item text-white font-black text-xs uppercase tracking-[0.2em] leading-none">Huấn luyện viên</div>
+    </div>
+</div>
 @endsection
 
 @section('content')
 <section class="trainer-hero">
-    <div class="hero-content-wrap container animate-on-scroll">
-        <h1 class="hero-title">Đội ngũ Huấn luyện viên</h1>
-        <p class="hero-subtitle">Những chuyên gia hàng đầu sẽ đồng hành cùng bạn trên hành trình chinh phục vóc dáng và sức khỏe lý tưởng.</p>
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-4xl">
+            <span class="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-black text-[10px] uppercase tracking-widest mb-6 animate-up opacity-0" style="animation-delay: 0.1s">Extra Fit Elite Coach</span>
+            <h1 class="hero-title mb-8 animate-up opacity-0" style="animation-delay: 0.2s">MASTER THE<br>CRAFT.</h1>
+            <p class="text-slate-400 text-lg md:text-xl font-medium max-w-2xl animate-up opacity-0" style="animation-delay: 0.3s">
+                Làm việc trực tiếp cùng những chuyên gia hàng đầu. Thay đổi tư duy, nâng tầm thể chất và phá vỡ mọi giới hạn bản thân.
+            </p>
+        </div>
     </div>
 </section>
 
-<div class="container pb-10">
-    <div class="filter-wrap animate-on-scroll delay-1" id="filterContainer">
-        <button class="filter-btn active" data-filter="all">Tất cả HLV</button>
-        <button class="filter-btn" data-filter="gym">Thể hình / Gym</button>
-        <button class="filter-btn" data-filter="yoga">Yoga chuyên sâu</button>
-        <button class="filter-btn" data-filter="both">Đa năng (Gym & Yoga)</button>
-    </div>
-
-    <div class="trainers-page-grid" id="trainersGrid">
-        @forelse($trainers as $trainer)
-        <div class="trainer-card-wrapper animate-on-scroll" data-specialization="{{ $trainer->specialization }}">
-            <div class="trainer-card-inner">
-                <div class="trainer-img-container">
-                    <img src="{{ $trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($trainer->user->name).'&background=FF6B35&color=fff&size=500' }}" 
-                         alt="{{ $trainer->user->name }}" class="trainer-img-src" loading="lazy">
-                    <div class="trainer-badge-special">
-                        {{ $trainer->specialization == 'both' ? 'Gym & Yoga' : ucwords($trainer->specialization) }}
-                    </div>
-                </div>
-                <div class="trainer-details">
-                    <div>
-                        <h3 class="trainer-name-main">{{ $trainer->user->name }}</h3>
-                        <p class="trainer-spec-text">
-                            <i class="fas fa-certificate"></i> Chuyên gia {{ $trainer->specialization == 'both' ? 'Gym & Yoga' : ucwords($trainer->specialization) }}
-                        </p>
-                        <p class="trainer-bio">
-                            Đã có hơn 5 năm kinh nghiệm trong việc huấn luyện và thay đổi hình thể cho hàng trăm hội viên thành công.
-                        </p>
-                    </div>
-                    <div class="trainer-social-links">
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="mailto:{{ $trainer->user->email }}" class="social-icon"><i class="fas fa-envelope"></i></a>
-                    </div>
-                </div>
+<div class="bg-slate-900 min-h-screen">
+    <!-- Filter Section (Sticky) -->
+    <div class="sticky top-0 z-50 py-10 bg-slate-900/80 backdrop-blur-xl border-b border-white/5">
+        <div class="container mx-auto px-6 text-center">
+            <div class="premium-filter animate-up opacity-0" style="animation-delay: 0.4s">
+                <button class="filter-btn active" data-filter="all">Tất cả coach</button>
+                <button class="filter-btn" data-filter="gym">Gym / Fitness</button>
+                <button class="filter-btn" data-filter="yoga">Yoga chuyên sâu</button>
+                <button class="filter-btn" data-filter="both">Đa năng (Dual)</button>
             </div>
         </div>
-        @empty
-        <div class="empty-state w-full py-20" style="grid-column: 1 / -1;">
-            <div class="empty-icon"><i class="fas fa-user-slash"></i></div>
-            <h3 class="empty-title">Chưa có huấn luyện viên nào</h3>
-            <p class="empty-desc">Chúng tôi đang cập nhật danh sách chuyên gia. Vui lòng quay lại sau!</p>
+    </div>
+
+    <!-- Trainers Grid -->
+    <div class="container mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="trainersGrid">
+            @forelse($trainers as $trainer)
+            <div class="trainer-card-wrapper animate-up opacity-0" data-specialization="{{ $trainer->specialization }}" style="animation-delay: {{ 0.1 * $loop->index + 0.5 }}s">
+                <a href="{{ route('trainer.detail', $trainer->id) }}" class="block">
+                    <article class="trainer-card group">
+                        <div class="card-img-wrap">
+                            <img src="{{ $trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($trainer->user->name).'&background=FF6B35&color=fff&size=500' }}" 
+                                 alt="{{ $trainer->user->name }}" class="card-img">
+                            <div class="overlay-glow"></div>
+                            <div class="absolute top-8 right-8">
+                                <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest">
+                                    Certified Coach
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="spec-tag">{{ $trainer->specialization == 'both' ? 'Hybrid Coach' : $trainer->specialization }} Master</span>
+                            <h3 class="name-text">{{ $trainer->user->name }}</h3>
+                            <p class="bio-text">
+                                Chuyên gia đào tạo với hơn 5 năm kinh nghiệm thực chiến. Giúp hơn 200+ học viên thay đổi hình thể hoàn toàn.
+                            </p>
+                            <div class="btn-book">
+                                <span>CHI TIẾT & ĐẶT LỊCH PT</span>
+                                <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-2"></i>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
+            @empty
+            <div class="col-span-full text-center py-20">
+                <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Hiện chưa có HLV vào danh sách này.</p>
+            </div>
+            @endforelse
         </div>
-        @endforelse
     </div>
 </div>
 @endsection

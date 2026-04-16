@@ -31,6 +31,15 @@ class HomeController extends Controller
         return view("client.huanLuyenVien", compact('trainers'));
     }
 
+    public function trainerDetail($id)
+    {
+        $trainer = Trainer::with(['user', 'schedules' => function($q) {
+            $q->where('start_time', '>=', now())->orderBy('start_time');
+        }])->findOrFail($id);
+        
+        return view("client.trainer-detail", compact('trainer'));
+    }
+
     public function schedule(Request $request)
     {
         // 1. Tạo danh sách 30 ngày kể từ hôm nay
@@ -42,7 +51,8 @@ class HomeController extends Controller
                 'full' => $date->toDateString(),
                 'day_name' => $date->dayOfWeek === 0 ? 'CN' : 'Thứ ' . ($date->dayOfWeek + 1),
                 'label' => $date->format('d/m'),
-                'is_today' => $i === 0
+                'is_today' => $i === 0,
+                'index' => $i
             ];
         }
 
@@ -57,7 +67,10 @@ class HomeController extends Controller
                 return $schedule->start_time->toDateString();
             });
 
-        return view("client.lichLop", compact('schedules', 'dates'));
+        // 3. Lấy danh sách HLV để đặt PT nhanh
+        $trainers = Trainer::with('user')->where('is_available', 1)->get();
+
+        return view("client.lichLop", compact('schedules', 'dates', 'trainers'));
     }
 
     public function contact(){

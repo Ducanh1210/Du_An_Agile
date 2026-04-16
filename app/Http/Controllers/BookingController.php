@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class BookingController extends Controller
 {
     /**
-     * Xử lý đăng ký lịch tập (Booking Eligibility Logic)
+     * Xử lý đặt chỗ cho Hội viên (Member Booking)
      */
     public function store(Request $request)
     {
@@ -20,46 +20,51 @@ class BookingController extends Controller
         ]);
 
         $user = Auth::user();
-        $schedule = Schedule::findOrFail($request->schedule_id);
-        
-        // 1. Kiểm tra xem đã đặt lịch này chưa
-        $exists = Booking::where('user_id', $user->id)
-            ->where('schedule_id', $schedule->id)
-            ->where('status', '!=', 'cancelled')
-            ->exists();
-            
-        if ($exists) {
-            return back()->with('error', 'Bạn đã đăng ký lịch tập này rồi!');
-        }
 
-        // 2. Kiểm tra súc chứa (Capacity)
-        if ($schedule->current_enrolled >= $schedule->capacity) {
-            return back()->with('error', 'Lớp học này đã hết chỗ!');
-        }
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($user, $request) {
+            // 1. Khóa bản ghi Schedule để tránh race condition (Overbooking)
+            $schedule = Schedule::where('id', $request->schedule_id)->lockForUpdate()->firstOrFail();
 
-        // 3. Kiểm tra Gói tập (Eligibility)
-        $subscription = $user->activeSubscription();
-
-        if (!$subscription) {
-            return back()->with('error', 'Bạn không có gói tập nào đang hoạt động. Vui lòng đăng ký gói mới!');
-        }
-
-        // Kiểm tra ngày tập có nằm trong hạn gói tập không
-        $bookingDate = Carbon::parse($schedule->start_time)->toDateString();
-        if ($bookingDate < $subscription->start_date->toDateString() || $bookingDate > $subscription->end_date->toDateString()) {
-            return back()->with('error', 'Ngày tập này nằm ngoài thời hạn gói tập của bạn (Hạn đến: ' . $subscription->end_date->format('d/m/Y') . ')');
-        }
-
-        // Kiểm tra số buổi PT (nếu gói có giới hạn PT)
-        if ($subscription->membership->allow_pt == 1) {
-            if ($subscription->pt_sessions_left <= 0) {
-                return back()->with('error', 'Bạn đã hết số buổi tập PT trong gói này!');
+            // 2. Kiểm tra súc chứa
+            if ($schedule->isFull()) {
+                return back()->with('error', 'Lớp học này đã hết chỗ!');
             }
-        }
 
-        // 4. Tiến hành Đặt lịch
-        \Illuminate\Support\Facades\DB::transaction(function () use ($user, $schedule, $subscription) {
-            // Tạo Booking
+            // 3. Kiểm tra đã đặt lịch này chưa (Unique booking)
+            $exists = Booking::where('user_id', $user->id)
+                ->where('schedule_id', $schedule->id)
+                ->where('status', 'confirmed')
+                ->exists();
+
+            if ($exists) {
+                return back()->with('error', 'Bạn đã đăng ký lớp học này rồi!');
+            }
+
+            // 4. Kiểm tra trùng lịch (Conflict check)
+            // (startA < endB) && (endA > startB)
+            $hasConflict = Booking::where('user_id', $user->id)
+                ->where('status', 'confirmed')
+                ->where(function ($query) use ($schedule) {
+                    $query->where('start_time', '<', $schedule->end_time)
+                        ->where('end_time', '>', $schedule->start_time);
+                })
+                ->exists();
+
+            if ($hasConflict) {
+                return back()->with('error', 'Bạn đã có một lịch tập khác trùng với khung giờ này!');
+            }
+
+            // 5. Kiểm tra Gói tập (Membership)
+            $subscription = $user->activeSubscription();
+            if (!$subscription) {
+                return back()->with('error', 'Bạn không có gói tập đang hoạt động!');
+            }
+
+            if ($schedule->start_time < $subscription->start_date || $schedule->start_time > $subscription->end_date) {
+                return back()->with('error', 'Gói tập của bạn không có hiệu lực vào ngày này!');
+            }
+
+            // 6. Thực hiện Đặt chỗ
             Booking::create([
                 'user_id' => $user->id,
                 'subscription_id' => $subscription->id,
@@ -68,18 +73,37 @@ class BookingController extends Controller
                 'start_time' => $schedule->start_time,
                 'end_time' => $schedule->end_time,
                 'status' => 'confirmed',
-                'booking_type' => $schedule->category == 'pt_session' ? 'pt' : 'class',
+                'booking_type' => 'class',
             ]);
 
-            // Cập nhật Schedule
             $schedule->increment('current_enrolled');
 
-            // Trừ số buổi trong Subscription (nếu có)
-            if ($subscription->membership->allow_pt == 1) {
-                $subscription->decrement('pt_sessions_left');
-            }
+            return back()->with('success', 'Đặt chỗ thành công! Hẹn gặp bạn tại phòng tập.');
+        });
+    }
+
+
+
+    /**
+     * Hủy lịch tập (Cancellation Window: 2 hours)
+     */
+    public function cancel($id)
+    {
+        $booking = Booking::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->where('status', 'confirmed')
+            ->firstOrFail();
+
+        // Kiểm tra điều kiện 2 giờ
+        if (now()->diffInHours($booking->start_time, false) < 2) {
+            return back()->with('error', 'Bạn chỉ có thể hủy lịch trước giờ tập ít nhất 2 tiếng.');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($booking) {
+            $booking->update(['status' => 'cancelled']);
+            $booking->schedule->decrement('current_enrolled');
         });
 
-        return back()->with('success', 'Đăng ký lịch tập thành công! Hãy kiểm tra trong Lịch cá nhân.');
+        return back()->with('success', 'Đã hủy lịch tập thành công.');
     }
 }
