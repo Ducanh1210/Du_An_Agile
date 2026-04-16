@@ -75,7 +75,7 @@
                     <a href="{{ url('/ho-so') }}" class="dropdown-item"><i class="fas fa-user"></i> Hồ sơ</a>
                     <a href="{{ url('/goi-dang-ky') }}" class="dropdown-item"><i class="fas fa-star"></i> Gói đã đăng ký</a>
                     <a href="{{ url('/lich-ca-nhan') }}" class="dropdown-item"><i class="fas fa-calendar"></i> Lịch cá nhân</a>
-                    <a href="{{ url('/lich-su-thanh-toan') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
+                    <a href="{{ route('client.payment_history') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
                     <a href="{{ url('/check-in') }}" class="dropdown-item"><i class="fas fa-qrcode"></i> Check-in QR</a>
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" style="display: inline;">

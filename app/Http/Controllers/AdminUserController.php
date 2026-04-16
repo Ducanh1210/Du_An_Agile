@@ -24,19 +24,21 @@ class AdminUserController extends Controller
     public function index(Request $request)
     {
         $role = $request->query('role');
+        $search = $request->query('search');
         $objUser = new User();
         
-        // Lấy danh sách người dùng đã lọc và phân trang
-        $this->view['listUser'] = $objUser->loadAllDataUserWithPage($role);
+        // Lấy danh sách người dùng đã lọc, tìm kiếm và phân trang
+        $this->view['listUser'] = $objUser->loadAllDataUserWithPage($role, $search);
         
-        // Thống kê số lượng (Luôn lấy tổng số trong DB, không phụ thuộc trang hiện tại)
-        $this->view['countAll'] = User::count();
-        $this->view['countStaffAdmin'] = User::whereIn('role', ['admin', 'staff'])->count();
-        $this->view['countTrainer'] = User::where('role', 'trainer')->count();
-        $this->view['countCustomer'] = User::where('role', 'user')->count();
+        // Thống kê số lượng (Loại trừ Admin ID 1)
+        $this->view['countAll'] = User::where('id', '!=', 1)->count();
+        $this->view['countStaffAdmin'] = User::where('id', '!=', 1)->whereIn('role', ['admin', 'staff'])->count();
+        $this->view['countTrainer'] = User::where('id', '!=', 1)->where('role', 'trainer')->count();
+        $this->view['countCustomer'] = User::where('id', '!=', 1)->where('role', 'user')->count();
         
-        // Truyền role hiện tại để hiển thị active trên giao diện
+        // Truyền role và search hiện tại để hiển thị trên giao diện
         $this->view['currentRole'] = $role;
+        $this->view['currentSearch'] = $search;
 
         return view('admin.user.index', $this->view);
     }
@@ -49,9 +51,6 @@ class AdminUserController extends Controller
         return view('admin.user.create');
     }
 
-    /**
-     * Lưu người dùng mới
-     */
     public function store(StoreUserRequest $request)
     {
         $data = $request->all();

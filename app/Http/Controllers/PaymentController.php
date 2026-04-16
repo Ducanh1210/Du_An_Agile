@@ -108,9 +108,9 @@ class PaymentController extends Controller
                     $payment->subscription->update(['status' => 'active']);
                 }
                 
-                // Nếu user vẫn còn session → redirect thẳng tới trang gói đăng ký
+                // Nếu user vẫn còn session → redirect thẳng tới trang lịch sử thanh toán
                 if (Auth::check()) {
-                    return redirect()->route('client.subscriptions')->with('success', 'Thanh toán thành công! Gói tập của bạn đã được kích hoạt.');
+                    return redirect()->route('client.payment_history')->with('success', 'Thanh toán thành công! Gói tập của bạn đã được kích hoạt.');
                 }
                 
                 // Nếu mất session → redirect tới login với thông báo thành công

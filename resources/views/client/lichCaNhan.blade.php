@@ -44,6 +44,9 @@
             <a href="{{ route('client.calendar') }}" class="profile-nav-link active">
                 <i class="fas fa-calendar-alt"></i> Lịch cá nhân
             </a>
+            <a href="{{ route('client.payment_history') }}" class="profile-nav-link">
+                <i class="fas fa-receipt"></i> Lịch sử thanh toán
+            </a>
         </nav>
 
         {{-- Filter Tabs --}}

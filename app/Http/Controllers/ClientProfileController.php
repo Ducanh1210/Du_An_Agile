@@ -163,4 +163,17 @@ class ClientProfileController extends Controller
 
         return view('client.lichCaNhan', compact('bookings', 'upcomingBookings'));
     }
+
+    /**
+     * Lịch sử thanh toán
+     */
+    public function paymentHistory()
+    {
+        $payments = Auth::user()->payments()
+            ->with('subscription.membership')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('client.history', compact('payments'));
+    }
 }

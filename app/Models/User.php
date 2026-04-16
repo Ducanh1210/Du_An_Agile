@@ -46,9 +46,24 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Lấy danh sách người dùng có phân trang
      */
-    public function loadAllDataUserWithPage($role = null)
+    public function loadAllDataUserWithPage($role = null, $search = null)
     {
-        $query = User::query()->latest('id');
+        $query = User::query();
+
+        // Ẩn tài khoản admin chính (ID 1) khỏi danh sách
+        $query->where('id', '!=', 1);
+
+        // Tìm kiếm theo tên hoặc email
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Sắp xếp theo ưu tiên: staff -> trainer -> user (admin đã bị ẩn)
+        $query->orderByRaw("FIELD(role, 'staff', 'trainer', 'user') ASC")
+            ->orderBy('id', 'asc');
 
         if ($role) {
             if ($role === 'staff_admin') {
@@ -140,5 +155,13 @@ class User extends Authenticatable implements MustVerifyEmail
             ->where('status', 'active')
             ->where('end_date', '>=', now()->toDateString())
             ->first();
+    }
+
+    /**
+     * Lấy danh sách lịch sử thanh toán qua các gói đăng ký
+     */
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Subscription::class);
     }
 }

@@ -72,8 +72,20 @@
             </h2>
             <p class="text-sm text-slate-400 font-medium tracking-tighter uppercase">Quản lý phân quyền và thông tin người dùng trong hệ thống.</p>
         </div>
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.users.create') }}" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all">
+        <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+            <!-- Search Bar -->
+            <form action="{{ route('admin.users.index') }}" method="GET" class="relative group w-full md:w-80">
+                @if($currentRole)
+                    <input type="hidden" name="role" value="{{ $currentRole }}">
+                @endif
+                <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Tìm tên hoặc email..." 
+                       class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </div>
+            </form>
+
+            <a href="{{ route('admin.users.create') }}" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-600/20 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all w-full md:w-auto text-center">
                 <i class="fa-solid fa-user-plus mr-2"></i> Thêm người dùng mới
             </a>
         </div>
@@ -142,20 +154,28 @@
                         {{ $user->created_at ? $user->created_at->format('d/m/Y') : '---' }}
                     </td>
                     <td class="px-8 py-5">
-                        <div class="flex items-center justify-center gap-2">
-                             <a href="{{ route('admin.users.edit', $user->id) }}" class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm shadow-blue-600/10" title="Chỉnh sửa">
-                                 <i class="fa-solid fa-user-pen text-sm"></i>
-                             </a>
+                        <div class="flex items-center justify-center gap-3">
+                             <!-- Nút Sửa (Icon Only) -->
+                             <!-- <a href="{{ route('admin.users.edit', $user->id) }}" 
+                                class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm shadow-blue-600/10 group" 
+                                title="Chỉnh sửa tài khoản">
+                                 <i class="fa-solid fa-pen-to-square text-sm transition-transform group-hover:scale-110"></i>
+                             </a> -->
+
                              @if($user->id != 1 && $user->id != auth()->id())
                              <form action="{{ route('admin.users.toggleStatus', $user->id) }}" method="POST" onsubmit="return confirm('{{ $user->is_active == 1 ? 'Xác nhận KHÓA tài khoản này?' : 'Xác nhận MỞ KHÓA tài khoản này?' }}')" class="inline">
                                  @csrf @method('PATCH')
                                  @if($user->is_active == 1)
-                                     <button type="submit" class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm shadow-red-600/10" title="Khóa tài khoản">
-                                         <i class="fa-solid fa-lock text-sm"></i>
+                                     <button type="submit" 
+                                             class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm shadow-red-600/10 group" 
+                                             title="Khóa tài khoản">
+                                         <i class="fa-solid fa-lock text-sm transition-transform group-hover:rotate-12"></i>
                                      </button>
                                  @else
-                                     <button type="submit" class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-sm shadow-emerald-600/10" title="Mở khóa tài khoản">
-                                         <i class="fa-solid fa-lock-open text-sm"></i>
+                                     <button type="submit" 
+                                             class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300 shadow-sm shadow-emerald-600/10 group" 
+                                             title="Mở khóa tài khoản">
+                                         <i class="fa-solid fa-lock-open text-sm transition-transform group-hover:-rotate-12"></i>
                                      </button>
                                  @endif
                              </form>
@@ -171,7 +191,7 @@
     <!-- Pagination Footer -->
     @if($listUser->hasPages())
     <div class="px-8 py-5 bg-slate-50/50 border-t border-gray-100">
-        {{ $listUser->appends(['role' => $currentRole])->links() }}
+        {{ $listUser->appends(['role' => $currentRole, 'search' => $currentSearch])->links() }}
     </div>
     @endif
 </div>

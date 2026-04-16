@@ -117,6 +117,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/goi-dang-ky/{id}/gia-han', [ClientProfileController::class, 'renewSubscription'])->name('client.subscription.renew');
     Route::post('/goi-dang-ky/{id}/huy', [ClientProfileController::class, 'cancelSubscription'])->name('client.subscription.cancel');
     Route::get('/lich-ca-nhan', [ClientProfileController::class, 'calendar'])->name('client.calendar');
+    Route::get('/lich-su-thanh-toan', [ClientProfileController::class, 'paymentHistory'])->name('client.payment_history');
 
     // VNPay Payment Routes (Checkout & initiate payment require auth)
     Route::get('/thanh-toan', [\App\Http\Controllers\PaymentController::class, 'checkout'])->name('payment.checkout');
