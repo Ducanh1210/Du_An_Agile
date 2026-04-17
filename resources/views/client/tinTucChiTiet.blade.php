@@ -1,244 +1,192 @@
 @extends('layouts.client')
 
-@section('title', 'Indoor Cycling — Những điều cần biết trước buổi tập đầu tiên | EXTRA FIT+')
+@section('title', $news->title . ' - EXTRA FIT+')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
-@endsection
-
-@section('breadcrumb')
-<nav class="breadcrumb" aria-label="breadcrumb">
-    <div class="breadcrumb-item"><a href="{{ url('/') }}">Trang chủ</a></div>
-    <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
-    <div class="breadcrumb-item"><a href="{{ url('/tin-tuc') }}">Tin tức</a></div>
-    <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
-    <div class="breadcrumb-item active" aria-current="page">Chi tiết bài viết</div>
-</nav>
+<style>
+    /* --- Article Detail Specifics --- */
+    .article-header {
+        position: relative;
+        padding: 120px 0 60px;
+        background: #0f172a;
+        color: #fff;
+        text-align: center;
+    }
+    .article-meta-large {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.5);
+    }
+    .article-content-wrap {
+        margin-top: -80px;
+        position: relative;
+        z-index: 10;
+    }
+    .article-main-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 40px;
+        padding: 60px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+    }
+    .article-content {
+        font-size: 18px;
+        line-height: 1.8;
+        color: var(--color-text-soft);
+    }
+    .article-content h2, .article-content h3 {
+        color: var(--color-text);
+        font-weight: 900;
+        margin: 40px 0 20px;
+        text-transform: uppercase;
+        letter-spacing: -0.5px;
+    }
+    .article-content p {
+        margin-bottom: 25px;
+    }
+    .article-content img {
+        border-radius: 24px;
+        margin: 40px 0;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .author-box {
+        background: var(--color-bg-soft);
+        border-radius: 24px;
+        padding: 30px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-top: 60px;
+    }
+    /* --- Related Section --- */
+    .section-title-premium {
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .section-title-premium::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--color-border);
+    }
+</style>
 @endsection
 
 @section('content')
-
-{{-- ============================================================
-     PAGE BANNER
-     ============================================================ --}}
-<section class="page-banner" aria-label="Banner Tin Tức">
-    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&q=80&auto=format&fit=crop"
-         alt="Tin tức background" class="page-banner-bg" loading="lazy">
-    <div class="page-banner-overlay"></div>
-    <div class="page-banner-content container">
-        <h1 class="page-banner-title animate-on-scroll">Tin Tức & Kiến Thức</h1>
+{{-- --- Article Header --- --}}
+<header class="article-header">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-tight mb-6">
+            {{ $news->title }}
+        </h1>
+        <div class="article-meta-large">
+            <span><i class="fa-solid fa-calendar-days text-primary mr-2"></i> {{ $news->published_at ? $news->published_at->format('d/m/Y') : $news->created_at->format('d/m/Y') }}</span>
+            <span><i class="fa-solid fa-eye text-primary mr-2"></i> {{ number_format($news->views) }} Lượt xem</span>
+        </div>
     </div>
-</section>
+</header>
 
-{{-- ============================================================
-     BLOG CONTENT SECTION
-     ============================================================ --}}
-<section class="section blog-section">
-    <div class="container blog-layout">
-        
-        {{-- MAIN CONTENT --}}
-        <main class="main-content">
-            
-            <article class="blog-content animate-on-scroll">
-                <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=1200&q=80&auto=format&fit=crop" alt="Indoor Cycling" class="blog-header-img">
-                
-                <div class="blog-body">
-                    <div class="blog-meta-tags">
-                        <span class="blog-meta-tag">Đạp xe trong nhà</span>
-                        <span class="blog-meta-tag">Giảm cân</span>
+<main class="news-container pt-0">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto article-content-wrap">
+            <article class="article-main-card">
+                {{-- Featured Image --}}
+                @if($news->image)
+                <div class="mb-12">
+                    <img src="{{ asset('storage/' . $news->image) }}" class="w-full max-h-[400px] object-cover rounded-[2.5rem] shadow-2xl shadow-slate-900/10" alt="{{ $news->title }}">
+                </div>
+                @endif
+
+                {{-- Body content --}}
+                <div class="article-content prose prose-orange max-w-none">
+                    {!! $news->content !!}
+                </div>
+
+                {{-- Comments Section --}}
+                <div class="mt-16">
+                    <h3 class="section-title-premium">Bình luận ({{ $news->comments_count ?? 0 }})</h3>
+
+                    @if(session('success'))
+                    <div class="bg-emerald-50 border border-emerald-100 text-emerald-700 px-6 py-4 rounded-2xl mb-8 font-bold text-sm">
+                        <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}
                     </div>
+                    @endif
 
-                    <h2 class="blog-title">Indoor Cycling — Những điều cần biết trước buổi tập đầu tiên</h2>
-
-                    <div class="blog-meta-info">
-                        <span><i class="fas fa-user"></i> Quản trị viên</span>
-                        <span><i class="fas fa-calendar-alt"></i> 20 Tháng 3, 2025</span>
-                        <span><i class="fas fa-comments"></i> 2 Bình luận</span>
-                    </div>
-
-                    <div class="blog-text-content">
-                        <p>Đó là khoảnh khắc mà nhiều người đam mê đạp xe hoặc các bộ môn cardio mơ ước khi hoàn thành xong một buổi tập nặng: Khoảng thời gian vài tuần trước ngày thi đấu khi chương trình tập luyện yêu cầu ít vận động hơn và chú trọng vào việc phục hồi, hay còn gọi là quá trình taper.</p>
-
-                        <p>Tapering cho phép cơ thể bạn "sửa chữa, bổ sung và sắp xếp lại" để chuẩn bị cho ngày quyết định. Nhưng mặc dù việc nghỉ ngơi khỏi lịch trình luyện tập gian khổ có vẻ hấp dẫn, nó đôi khi lại tạo cảm giác không quen thuộc khi bạn ít vận động hơn trước. Một chiến lược taper đáng tin cậy — đơn giản để thực hiện với hướng dẫn dưới đây từ các chuyên gia — sẽ giúp bạn khỏe mạnh và mạnh mẽ cho ngày đua.</p>
-
-                        <h4>Những Lợi Ích Cốt Lõi</h4>
-                        <ul>
-                            <li><i class="fas fa-check" style="color:var(--color-primary); margin-right:8px;"></i> Đốt cháy hàng lượng calo khổng lồ (400-600 calo/buổi)</li>
-                            <li><i class="fas fa-check" style="color:var(--color-primary); margin-right:8px;"></i> Cải thiện sức khỏe tim mạch và sức bền</li>
-                            <li><i class="fas fa-check" style="color:var(--color-primary); margin-right:8px;"></i> Phát triển cơ bắp chân, đùi và vùng lõi (core)</li>
-                            <li><i class="fas fa-check" style="color:var(--color-primary); margin-right:8px;"></i> Giảm căng thẳng cực kỳ hiệu quả thông qua hoạt động nhóm</li>
+                    @if($errors->any())
+                    <div class="bg-red-50 border border-red-100 text-red-700 px-6 py-4 rounded-2xl mb-8 font-bold text-sm">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
                         </ul>
-
-                        <h4>Những Cạm Bẫy Cần Tránh: Hãy Tin Tưởng Vào Taper</h4>
-                        <p>Sự cám dỗ về việc nghỉ ngơi quá mức hoặc không nghỉ ngơi đủ có thể khiến cho việc taper trở nên khó khăn. Bạn có thể cảm thấy kỳ lạ khi tập luyện ít hơn so với thông thường. Chuyên gia của chúng tôi khuyên bạn nên bỏ qua cả "những cơn đau ảo" và "sự nghi ngờ len lỏi". Rõ ràng rằng việc giảm số km, duy trì cường độ và tự chăm sóc bản thân là những phương pháp vinh danh thời gian và được khoa học kiểm chứng.</p>
-
-                        <blockquote class="blog-blockquote">
-                            "Bạn không thể xâu chuỗi các điểm nhìn về phía trước; bạn chỉ có thể xâu chuỗi chúng khi nhìn về quá khứ. Vì vậy bạn phải tin rằng các điểm sẽ kết nối ở tương lai của bạn. Cách tiếp cận này chưa bao giờ làm tôi thất vọng, và nó đã tạo ra mọi sự khác biệt trong cuộc đời tôi."
-                        </blockquote>
-
-                        <p>Bạn cũng được khuyên tránh thử bất cứ điều gì mới mẻ trong khoảng thời gian này, như một đôi giày mới hay một nhóm luyện tập và quy trình mới. “Hãy giữ mọi sự đơn giản và không áp lực trong những tuần taper đó,” cô ấy nói.</p>
-
                     </div>
+                    @endif
 
-                    {{-- Blog Footer: Tags & Share --}}
-                    <div class="blog-footer">
-                        <div class="blog-tags">
-                            <span class="blog-tags-label">Tags:</span>
-                            <a href="#" class="tag-btn">Đạp xe</a>
-                            <a href="#" class="tag-btn">HLV</a>
-                            <a href="#" class="tag-btn">Cardio</a>
-                        </div>
-
-                        <div class="blog-share">
-                            <span class="blog-share-label">Chia sẻ:</span>
-                            <div class="blog-share-links">
-                                <button class="share-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></button>
-                                <button class="share-link" aria-label="Twitter"><i class="fab fa-twitter"></i></button>
-                                <button class="share-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></button>
-                                <button class="share-link" aria-label="Copy Link"><i class="fas fa-link"></i></button>
+                    @auth
+                    <form action="{{ route('news.comment.store', $news->id) }}" method="POST" class="mb-12">
+                        @csrf
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                            <textarea name="content" rows="4" class="w-full bg-white border-none rounded-2xl p-5 text-slate-700 focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="Chia sẻ suy nghĩ của bạn..."></textarea>
+                            <div class="flex justify-end mt-4">
+                                <button type="submit" class="bg-primary hover:bg-orange-700 text-white px-8 py-3 rounded-xl font-bold uppercase text-xs tracking-widest transition-all">
+                                    Gửi bình luận
+                                </button>
                             </div>
                         </div>
+                    </form>
+                    @else
+                    <div class="bg-orange-50 border border-orange-100 p-8 rounded-3xl text-center mb-12">
+                        <p class="text-orange-900 font-bold mb-4">Bạn cần đăng nhập để tham gia thảo luận</p>
+                        <a href="{{ route('login') }}" class="inline-block bg-orange-600 text-white px-8 py-3 rounded-xl font-bold uppercase text-xs tracking-widest">Đăng nhập ngay</a>
+                    </div>
+                    @endauth
+
+                    <div class="space-y-8">
+                        @forelse($news->approvedComments as $comment)
+                        <div class="flex gap-5">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($comment->user->name) }}&background=ddd&color=333" class="w-12 h-12 rounded-xl flex-shrink-0">
+                            <div class="flex-1">
+                                <div class="bg-white border border-slate-100 p-5 rounded-2xl rounded-tl-none relative shadow-sm">
+                                    <h5 class="font-bold text-slate-900 text-sm mb-1">{{ $comment->user->name }}</h5>
+                                    <p class="text-slate-600 text-[15px] leading-relaxed">{{ $comment->content }}</p>
+                                    <span class="text-[10px] uppercase font-bold text-slate-400 mt-3 block">{{ $comment->created_at->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <p class="text-center text-slate-400 italic">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+                        @endforelse
                     </div>
                 </div>
             </article>
 
-            {{-- COMMENTS AREA --}}
-            <div class="comments-section animate-on-scroll delay-1">
-                <h3 class="comments-title">2 Bình Luận</h3>
-
-                <div class="comment-list">
-                    {{-- Comment 1 --}}
-                    <div class="comment-item">
-                        <img src="https://ui-avatars.com/api/?name=Brandon+Kelley&background=FF6B35&color=fff&size=56" alt="Avatar" class="comment-avatar">
-                        <div class="comment-body">
-                            <div class="comment-header">
-                                <span class="comment-author">Brandon Kelley</span>
-                                <span class="comment-date">21 Tháng 3, 2025</span>
-                            </div>
-                            <p class="comment-text">Bản thân tôi cũng là một người đam mê đạp xe và bài viết này cực kỳ chính xác. Tôi vừa tham gia lớp Indoor Cycling chạy thử tuần trước và nó tuyệt vời quá chừng, calo đốt cháy không tưởng.</p>
-                            <a href="#leaveCommentForm" class="comment-reply"><i class="fas fa-reply"></i> Trả lời</a>
+            {{-- Related News --}}
+            <div class="mt-20">
+                <h3 class="section-title-premium">Bài viết liên quan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                    @foreach($relatedNews as $rPost)
+                    <div class="group">
+                        <div class="h-32 rounded-2xl overflow-hidden mb-4 relative">
+                            <img src="{{ asset('storage/' . $rPost->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         </div>
+                        <h4 class="font-bold text-slate-900 group-hover:text-primary transition-colors leading-tight">
+                            <a href="{{ route('news.detail', $rPost->slug) }}">{{ $rPost->title }}</a>
+                        </h4>
                     </div>
-
-                    {{-- Comment 2 --}}
-                    <div class="comment-item" style="margin-left: 56px;">
-                        <img src="https://ui-avatars.com/api/?name=EXTRA+FIT&background=1A1A2E&color=fff&size=56" alt="Avatar" class="comment-avatar" style="border-width: 2px;">
-                        <div class="comment-body">
-                            <div class="comment-header">
-                                <span class="comment-author">Admin EXTRA FIT+</span>
-                                <span class="comment-date">22 Tháng 3, 2025</span>
-                            </div>
-                            <p class="comment-text">Cảm ơn đánh giá của Brandon! Chúc bạn có những giờ tập hiệu quả nhất với trung tâm chúng tôi. Hẹn gặp bạn ở các buổi tiếp theo nhé.</p>
-                            <a href="#leaveCommentForm" class="comment-reply"><i class="fas fa-reply"></i> Trả lời</a>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Leave A Comment Form --}}
-                <div class="leave-comment-form" id="leaveCommentForm">
-                    <h4>Để Lại Bình Luận</h4>
-                    <form action="#" method="POST" onsubmit="event.preventDefault(); showToast('success', 'Thành công', 'Bình luận của bạn đã được gửi và đang chờ duyệt.'); this.reset();">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Tên / Biệt danh của bạn *" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Email của bạn *" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" placeholder="Nội dung bình luận của bạn..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg mt-1">Gửi Bình Luận</button>
-                    </form>
-                </div>
-
-            </div>
-        </main>
-
-        {{-- SIDEBAR --}}
-        <aside class="blog-sidebar">
-            
-            {{-- Recent News Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-2">
-                <h4 class="widget-title">Bài Viết Gần Đây</h4>
-                <div class="recent-news-list">
-                    <a href="#" class="recent-news-item">
-                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&q=80&auto=format&fit=crop" class="recent-news-thumb" alt="News">
-                        <div class="recent-news-title">5 Bí quyết tập gym hiệu quả cho người mới bắt đầu</div>
-                    </a>
-                    <a href="#" class="recent-news-item">
-                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200&q=80&auto=format&fit=crop" class="recent-news-thumb" alt="News">
-                        <div class="recent-news-title">Chế độ dinh dưỡng tối ưu để tăng cơ giảm mỡ nhanh nhất</div>
-                    </a>
-                    <a href="#" class="recent-news-item">
-                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&q=80&auto=format&fit=crop" class="recent-news-thumb" alt="News">
-                        <div class="recent-news-title">Chạy đua đạt đỉnh dễ dàng với những tip hoàn hảo</div>
-                    </a>
-                    <a href="#" class="recent-news-item">
-                        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&q=80&auto=format&fit=crop" class="recent-news-thumb" alt="News">
-                        <div class="recent-news-title">13 Cách để nâng tạ hiệu quả và an toàn hơn</div>
-                    </a>
+                    @endforeach
                 </div>
             </div>
-
-            {{-- Categories Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-3">
-                <h4 class="widget-title">Danh Mục Thể Thao</h4>
-                <div class="category-list">
-                    <a href="#" class="category-item">
-                        <span>Thể hình (Body Building)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Giáo án HLV (Gym Trainer)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Đạp xe (Free Cycling)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Cardio (Cardio Class)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Dinh dưỡng (Food Healthy)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Popular Tags Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-4">
-                <h4 class="widget-title">Tags Phổ Biến</h4>
-                <div class="tags-list">
-                    <a href="#" class="tag-btn">Đạp xe</a>
-                    <a href="#" class="tag-btn">Thể hình</a>
-                    <a href="#" class="tag-btn">Tập tạ</a>
-                    <a href="#" class="tag-btn">Giảm cân</a>
-                    <a href="#" class="tag-btn">HLV cá nhân</a>
-                    <a href="#" class="tag-btn">Sức bền</a>
-                    <a href="#" class="tag-btn">Dinh dưỡng</a>
-                </div>
-            </div>
-
-        </aside>
-
+        </div>
     </div>
-</section>
-
-@endsection
-
-@section('scripts')
-<script>
-    document.querySelectorAll('.share-link').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            if(window.showToast) {
-                window.showToast('info', 'Chia sẻ', 'Tính năng đang trong quá trình nâng cấp!');
-            }
-        });
-    });
-</script>
+</main>
 @endsection

@@ -12,6 +12,32 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_CONTENT_ADMIN = 'content_admin';
+    const ROLE_STAFF = 'staff';
+    const ROLE_TRAINER = 'trainer';
+    const ROLE_USER = 'user';
+
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isContentAdmin()
+    {
+        return $this->role === self::ROLE_CONTENT_ADMIN;
+    }
+
+    public function isStaff()
+    {
+        return $this->role === self::ROLE_STAFF;
+    }
+
+    public function canManageNews()
+    {
+        return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_CONTENT_ADMIN, self::ROLE_STAFF]);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,6 +52,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'height',
         'avatar_url',
         'is_active',
+        'provider_name',
+        'provider_id',
     ];
 
     /**

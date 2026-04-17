@@ -15,7 +15,7 @@ class AdminRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->role !== 'admin') {
+        if ($request->user() && !in_array($request->user()->role, ['admin', 'staff', 'content_admin'])) {
             return redirect('/')->with('error', 'Bạn không có quyền truy cập trang quản trị!');
         }
 

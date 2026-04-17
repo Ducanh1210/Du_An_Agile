@@ -799,65 +799,33 @@
         </div>
 
         <div class="news-grid">
-            {{-- News 1 --}}
-            <article class="news-card animate-on-scroll delay-1">
+            @forelse($latestNews as $item)
+            <article class="news-card animate-on-scroll">
                 <div class="news-thumb-wrap">
-                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80&auto=format&fit=crop"
-                         alt="5 bí quyết tập gym" class="news-thumb" loading="lazy">
-                    <span class="news-cat">Tập luyện</span>
+                    @if($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}" class="news-thumb" loading="lazy">
+                    @else
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80&auto=format&fit=crop" alt="News" class="news-thumb" loading="lazy">
+                    @endif
                 </div>
                 <div class="news-body">
                     <div class="news-meta">
-                        <span><i class="far fa-calendar"></i> 28 Tháng 3, 2025</span>
-                        <span><i class="far fa-clock"></i> 5 phút đọc</span>
+                        <span><i class="far fa-calendar-alt"></i> {{ $item->created_at->format('d/m/Y') }}</span>
                     </div>
-                    <h3 class="news-title">5 Bí quyết tập gym hiệu quả cho người mới bắt đầu</h3>
-                    <p class="news-excerpt">Bắt đầu hành trình tập gym có thể khiến nhiều người bỡ ngỡ. Dưới đây là những bí quyết quan trọng giúp bạn...</p>
-                    <a href="{{ url('/tin-tuc/1') }}" class="news-read-more">
-                        Đọc thêm <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <h3 class="news-card-title uppercase" style="font-family: '{{ $item->title_font_family }}'; font-size: 1.2rem; line-height: 1.3;">
+                        <a href="{{ route('news.detail', $item->id) }}">{{ $item->title }}</a>
+                    </h3>
+                    <p class="news-card-desc" style="text-transform: lowercase;">
+                        {{ Str::limit(strip_tags($item->content), 100) }}
+                    </p>
+                    <a href="{{ route('news.detail', $item->id) }}" class="news-link">Đọc thêm <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
-
-            {{-- News 2 --}}
-            <article class="news-card animate-on-scroll delay-2">
-                <div class="news-thumb-wrap">
-                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80&auto=format&fit=crop"
-                         alt="Dinh dưỡng tăng cơ" class="news-thumb" loading="lazy">
-                    <span class="news-cat">Dinh dưỡng</span>
-                </div>
-                <div class="news-body">
-                    <div class="news-meta">
-                        <span><i class="far fa-calendar"></i> 25 Tháng 3, 2025</span>
-                        <span><i class="far fa-clock"></i> 7 phút đọc</span>
-                    </div>
-                    <h3 class="news-title">Chế độ dinh dưỡng tối ưu để tăng cơ giảm mỡ nhanh nhất</h3>
-                    <p class="news-excerpt">Tập luyện chăm chỉ là chưa đủ. Dinh dưỡng đúng cách chiếm đến 70% kết quả. Hãy cùng tìm hiểu...</p>
-                    <a href="{{ url('/tin-tuc/2') }}" class="news-read-more">
-                        Đọc thêm <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </article>
-
-            {{-- News 3 --}}
-            <article class="news-card animate-on-scroll delay-3">
-                <div class="news-thumb-wrap">
-                    <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80&auto=format&fit=crop"
-                         alt="Yoga cho người bận rộn" class="news-thumb" loading="lazy">
-                    <span class="news-cat">Yoga</span>
-                </div>
-                <div class="news-body">
-                    <div class="news-meta">
-                        <span><i class="far fa-calendar"></i> 20 Tháng 3, 2025</span>
-                        <span><i class="far fa-clock"></i> 4 phút đọc</span>
-                    </div>
-                    <h3 class="news-title">Indoor Cycling — Những điều cần biết trước buổi tập đầu tiên</h3>
-                    <p class="news-excerpt">Indoor Cycling đang trở thành xu hướng fitness được yêu thích nhất năm 2025. Đây là những gì bạn cần biết...</p>
-                    <a href="{{ url('/tin-tuc/3') }}" class="news-read-more">
-                        Đọc thêm <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </article>
+            @empty
+            <div class="col-span-3 text-center py-10">
+                <p class="text-slate-400 uppercase tracking-widest text-sm font-bold">Hiện chưa có tin tức nào mới.</p>
+            </div>
+            @endforelse
         </div>
 
         <div class="text-center" style="margin-top:var(--space-4)">
@@ -903,6 +871,41 @@ document.getElementById('confirmModal')?.addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeConfirm();
 });
+    // Featured News Slider
+    const featuredSlides = document.querySelectorAll('.featured-slide');
+    const dotBtns = document.querySelectorAll('[data-slide-to]');
+    
+    if (dotBtns.length > 0) {
+        dotBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-slide-to'));
+                
+                // Update slides
+                featuredSlides.forEach((slide, i) => {
+                    if (i === index) {
+                        slide.classList.replace('opacity-0', 'opacity-100');
+                        slide.classList.replace('z-0', 'z-10');
+                    } else {
+                        slide.classList.replace('opacity-100', 'opacity-0');
+                        slide.classList.replace('z-10', 'z-0');
+                    }
+                });
+                
+                // Update dots
+                dotBtns.forEach((dot, i) => {
+                    dot.classList.toggle('bg-primary', i === index);
+                    dot.classList.toggle('bg-white/20', i !== index);
+                });
+            });
+        });
+
+        // Auto slide
+        let currentSlide = 0;
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % featuredSlides.length;
+            dotBtns[currentSlide].click();
+        }, 8000);
+    }
 </script>
 
 {{-- Confirmation Modal --}}
