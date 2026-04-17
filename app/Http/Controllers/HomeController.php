@@ -7,6 +7,7 @@ use App\Models\Schedule;
 use App\Models\Booking;
 use App\Models\RescheduleRequest;
 use App\Models\Membership;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -16,7 +17,8 @@ class HomeController extends Controller
     //
     public function index(){
         $memberships = Membership::where('is_active', 1)->take(4)->get();
-        return view("client.trangChu", compact('memberships'));    
+        $latestNews = News::where('is_published', 1)->orderBy('created_at', 'desc')->take(3)->get();
+        return view("client.trangChu", compact('memberships', 'latestNews'));    
     }
 
     public function memberships()
@@ -78,11 +80,15 @@ class HomeController extends Controller
     }
 
     public function news(){
-        return view("client.tinTuc");
+        $news = News::where('is_published', 1)->orderBy('created_at', 'desc')->paginate(6);
+        $recentNews = News::where('is_published', 1)->orderBy('created_at', 'desc')->take(4)->get();
+        return view("client.tinTuc", compact('news', 'recentNews'));
     }
 
     public function newsDetail($id){
-        return view("client.tinTucChiTiet");
+        $news = News::findOrFail($id);
+        $recentNews = News::where('is_published', 1)->where('id', '!=', $id)->orderBy('created_at', 'desc')->take(4)->get();
+        return view("client.tinTucChiTiet", compact('news', 'recentNews'));
     }
 
     /**

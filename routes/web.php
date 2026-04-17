@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/dang-ky', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register.vn');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
 Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.detail');
@@ -84,6 +85,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('/update/{id}', [\App\Http\Controllers\AdminController::class, 'updateSchedule'])->name('update');
         Route::delete('/delete/{id}', [\App\Http\Controllers\AdminController::class, 'deleteSchedule'])->name('delete');
     });
+
+    // Quản lý Tin tức
+    Route::prefix('news')->name('news.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NewsController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\NewsController::class, 'create'])->name('create');
+        Route::post('/store', [\App\Http\Controllers\Admin\NewsController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('delete');
+    });
 });
 
 // Trainer Portal Routes
@@ -130,8 +141,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/thanh-toan/vnpay', [\App\Http\Controllers\PaymentController::class, 'createPayment'])->name('payment.vnpay');
 });
 
+
 // VNPay Callback - MUST be public (cross-site redirect from VNPay can drop session cookies)
 Route::get('/thanh-toan/callback', [\App\Http\Controllers\PaymentController::class, 'vnpayReturn'])->name('payment.callback');
+
+// Social Login Routes
+Route::get('auth/{provider}', [\App\Http\Controllers\Auth\SocialAuthController::class, 'redirectToProvider'])
+    ->name('login.social');
+Route::get('auth/{provider}/callback', [\App\Http\Controllers\Auth\SocialAuthController::class, 'handleProviderCallback']);
 
 // Password Reset OTP Routes
 Route::controller(PasswordResetController::class)->group(function () {
