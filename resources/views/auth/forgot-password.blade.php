@@ -122,7 +122,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
+            <form method="POST" action="{{ route('otp.send') }}" class="space-y-6">
                 @csrf
                 <div class="space-y-2">
                     <label class="font-label text-xs font-bold uppercase tracking-wider text-on-surface-variant/70 ml-1" for="email">Địa chỉ Email</label>
@@ -138,7 +138,7 @@
                     @enderror
                 </div>
                 <button class="w-full kinetic-gradient text-on-primary font-bold py-4 rounded-2xl shadow-xl shadow-electric-orange/20 hover:shadow-electric-orange/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group" type="submit">
-                    Gửi yêu cầu khôi phục
+                    Gửi mã xác thực OTP
                     <span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
                 </button>
             </form>
