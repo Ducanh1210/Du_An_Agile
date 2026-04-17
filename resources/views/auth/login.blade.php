@@ -3,63 +3,67 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Đăng nhập | GYMFIT+</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <title>Đăng nhập | GYM FIT+</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script id="tailwind-config">
           tailwind.config = {
             darkMode: "class",
             theme: {
               extend: {
                 "colors": {
-                        "tertiary": "#1e333f",
-                        "tertiary-container": "#d0e6f5",
-                        "surface-variant": "#e2e2e2",
-                        "surface-tint": "#007AFF",
-                        "primary-container": "#E5F1FF",
-                        "inverse-primary": "#E5F1FF",
-                        "secondary-fixed": "#B2D7FF",
-                        "on-primary": "#ffffff",
-                        "on-secondary-fixed": "#001B3D",
-                        "on-secondary": "#ffffff",
-                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#803f00",
+                        "tertiary-dim": "#6b4900",
+                        "on-tertiary": "#fff1df",
+                        "error": "#b02500",
+                        "tertiary-fixed": "#fbb423",
+                        "on-secondary": "#fff0e8",
+                        "error-container": "#f95630",
+                        "background": "#fff4ef",
+                        "surface-container-high": "#ffdcc6",
+                        "on-tertiary-container": "#523700",
+                        "surface-dim": "#ffc9a6",
+                        "on-primary": "#fff0ea",
+                        "surface-tint": "#9c3f00",
+                        "primary-fixed": "#ff7a2f",
+                        "error-dim": "#b92902",
+                        "secondary-dim": "#7e3e00",
+                        "primary-container": "#ff7a2f",
+                        "secondary-container": "#ffc69f",
+                        "surface": "#fff4ef",
+                        "tertiary-fixed-dim": "#eba60f",
+                        "on-secondary-container": "#723700",
                         "surface-container-lowest": "#ffffff",
-                        "surface-container-high": "#f0f0f0",
-                        "inverse-on-surface": "#f4f4f4",
-                        "on-primary-fixed": "#001B3D",
-                        "secondary": "#0056B3",
-                        "on-tertiary-fixed-variant": "#354956",
-                        "surface-container-low": "#f7f7f7",
-                        "surface-container": "#f1f1f1",
-                        "outline-variant": "#c3caac",
-                        "on-primary-fixed-variant": "#003A7A",
-                        "surface": "#fafafa",
-                        "surface-container-highest": "#e2e2e2",
-                        "secondary-container": "#D1E9FF",
-                        "on-background": "#1b1b1b",
-                        "primary-fixed-dim": "#4D9FFF",
-                        "on-surface": "#1b1b1b",
-                        "tertiary-fixed-dim": "#b4c9d9",
-                        "error-container": "#ffdad6",
-                        "error": "#ba1a1a",
-                        "on-secondary-container": "#001B3D",
-                        "on-tertiary-fixed": "#071e29",
-                        "outline": "#767d60",
-                        "surface-dim": "#dedede",
-                        "secondary-fixed-dim": "#80BFFF",
-                        "primary": "#007AFF",
-                        "on-surface-variant": "#434933",
-                        "tertiary-fixed": "#d0e6f5",
-                        "on-secondary-fixed-variant": "#003A7A",
-                        "background": "#fafafa",
-                        "on-primary-container": "#001B3D",
-                        "on-error-container": "#410002",
-                        "surface-bright": "#ffffff",
-                        "inverse-surface": "#303030",
-                        "primary-fixed": "#E5F1FF",
-                        "on-tertiary-container": "#001e2e",
-                        "on-error": "#ffffff"
+                        "surface-variant": "#ffd4b9",
+                        "inverse-primary": "#fe6b00",
+                        "on-surface-variant": "#7f512e",
+                        "surface-container-low": "#ffede4",
+                        "tertiary-container": "#fbb423",
+                        "on-error": "#ffefec",
+                        "primary": "#9c3f00",
+                        "on-surface": "#4a2506",
+                        "tertiary": "#7a5400",
+                        "on-primary-fixed": "#000000",
+                        "secondary-fixed": "#ffc69f",
+                        "on-tertiary-fixed-variant": "#5e4000",
+                        "on-error-container": "#520c00",
+                        "secondary-fixed-dim": "#ffb37d",
+                        "surface-container": "#ffe3d2",
+                        "inverse-surface": "#1c0900",
+                        "outline": "#9e6b47",
+                        "inverse-on-surface": "#c99169",
+                        "surface-bright": "#fff4ef",
+                        "surface-container-highest": "#ffd4b9",
+                        "outline-variant": "#dba078",
+                        "on-secondary-fixed": "#552800",
+                        "primary-dim": "#893600",
+                        "on-tertiary-fixed": "#372400",
+                        "on-primary-fixed-variant": "#4f1c00",
+                        "secondary": "#904800",
+                        "primary-fixed-dim": "#f66700",
+                        "on-primary-container": "#401500",
+                        "on-background": "#4a2506"
                 },
                 "borderRadius": {
                         "DEFAULT": "0.125rem",
@@ -68,148 +72,123 @@
                         "full": "0.75rem"
                 },
                 "fontFamily": {
-                        "headline": ["Lexend"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
                 }
               },
             },
           }
-        </script>
+    </script>
     <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
         .material-symbols-outlined {
-            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
-        }
-        .kinetic-gradient {
-            background: linear-gradient(45deg, #007AFF 0%, #4D9FFF 100%)
-        }
-        .mesh-overlay {
-            background-image: radial-gradient(at 0% 0%, hsla(210, 100%, 20%, 0.4) 0, transparent 50%), radial-gradient(at 100% 100%, hsla(210, 100%, 40%, 0.2) 0, transparent 50%)
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.6)
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         body {
-            min-height: 100dvh
-        }
-        .bg-gym {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuBkBbzdNT14wafTViDAovVIbLB10OVvPB06MGPmPXRtCsC_1gx6xegRHIkdmHk16s4OPWasTHRqdsGv8VXS261PZyjDJL5fnX9ksthsLk8zNHZRgi4G84YNVUz1YIOF1AWK7plqtMkFO0XpK47zCcQgzmKF34TMqXZz1X7AOlFuP_HCmpGXgp0urhed-ky0NDp-5D7vNKk_FFu8-lKxYE6X_FB4kCSUA0AhzfdKyEEKeBj5kFsfwDVIXuYtNDhdw7aGX-JqurEd18Q);
-            background-size: cover;
-            background-position: center
+            min-height: 100dvh;
         }
     </style>
 </head>
-<body class="bg-gym font-body text-on-surface flex items-center justify-center overflow-x-hidden p-4">
-    <!-- Main Content Container -->
-    <main class="relative z-10 w-full max-w-md flex flex-col gap-8">
-        <!-- Header/Logo Section -->
-        <header class="flex flex-col items-center text-center">
-            <h1 class="font-headline font-black italic text-6xl tracking-widest text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] mb-2">
-                GYMFIT+
-            </h1>
-            <p class="font-headline font-bold text-white/90 text-lg uppercase tracking-[0.2em] drop-shadow-md">
-                VƯỢT QUA MỌI GIỚI HẠN
-            </p>
-        </header>
+<body class="bg-background text-on-surface min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Full Background Section -->
+<div class="fixed inset-0 z-0">
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBeZgJmEcHm3JCQ9WHcfyeLZ3ivceFiE8J4XbJMGvY-lZUbW8wsssY5izr0C1O-xrgaDtAFCESn_W4Gu6lQIMz4c-PfRWwOsata7_4hKcbcYLZ-a4YX4GySKVtBNHbXfFNeBhzNhNQPCWienNsp9V5d0XzLoNjQmNu_tpBRtPksiaiO3pHBRGYaUNAJOzCtKuL9R8Xl3y76vvtmP7LFxa-DFR-hoc0WS62MnWcLhXXcNvM0qTaA3H5yexUvCY9_OinAoxV1mft5SZ_C')"></div>
+    <!-- Gradient Overlay for readability -->
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-primary/20"></div>
+</div>
+
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center justify-center px-6 py-12 relative z-10">
+    <!-- Brand Logo -->
+    <div class="mb-10 text-center">
+        <h1 class="font-headline font-black italic text-5xl md:text-6xl tracking-tighter text-on-primary-container drop-shadow-2xl">
+            GYM FIT+
+        </h1>
+        <p class="font-headline font-bold text-primary tracking-[0.3em] text-xs mt-3 uppercase opacity-90">Kinetic Performance</p>
+    </div>
+
+    <!-- Login Form Container -->
+    <div class="w-full max-w-md bg-surface-container-lowest/95 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 shadow-[0_32px_64px_rgba(74,37,6,0.18)]">
+        <div class="mb-10 text-center">
+            <h2 class="font-headline text-3xl font-bold text-on-surface leading-tight">Chào mừng trở lại</h2>
+            <p class="text-on-surface-variant mt-3 text-sm">Vui lòng đăng nhập để tiếp tục hành trình.</p>
+        </div>
 
         <!-- Session Status -->
         @if (session('status'))
-            <div class="glass-card p-4 rounded-xl text-center text-primary font-bold">
+            <div class="mb-4 font-medium text-sm text-green-600">
                 {{ session('status') }}
             </div>
         @endif
 
-        <!-- Login Form Section -->
-        <section class="flex flex-col gap-6">
-            <!-- Glassmorphism Form Card -->
-            <div class="glass-card p-1 rounded-2xl shadow-2xl">
-                <form action="{{ route('login') }}" method="POST" class="bg-white/50 p-8 rounded-xl flex flex-col gap-6">
-                    @csrf
-                    <!-- Email Input Group -->
-                    <div class="flex flex-col gap-2">
-                        <label class="font-label text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase pl-1 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[14px]">mail</span> Địa chỉ Email
-                        </label>
-                        <div class="relative group">
-                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-focus-within:scale-y-100 transition-transform duration-300 rounded-full"></div>
-                            <input class="w-full bg-white/80 border-none focus:ring-2 focus:ring-primary/20 text-on-surface py-4 px-4 placeholder:text-zinc-400 font-medium rounded-lg transition-all" 
-                                   placeholder="athlete@gymfit.com" type="email" name="email" value="{{ old('email') }}" required autofocus/>
-                        </div>
-                        @error('email')
-                            <p class="text-error text-[10px] font-bold mt-1 ml-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <!-- Password Input Group -->
-                    <div class="flex flex-col gap-2">
-                        <label class="font-label text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase pl-1 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[14px]">lock</span> Mật khẩu
-                        </label>
-                        <div class="relative group">
-                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary scale-y-0 group-focus-within:scale-y-100 transition-transform duration-300 rounded-full"></div>
-                            <input class="w-full bg-white/80 border-none focus:ring-2 focus:ring-primary/20 text-on-surface py-4 px-4 placeholder:text-zinc-400 font-medium rounded-lg transition-all" 
-                                   placeholder="••••••••" type="password" name="password" required/>
-                        </div>
-                        @error('password')
-                            <p class="text-error text-[10px] font-bold mt-1 ml-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+        <form action="{{ route('login') }}" class="space-y-6" method="POST">
+            @csrf
+            
+            <!-- Email Input -->
+            <div class="space-y-2">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1" for="email">Email</label>
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">mail</span>
+                    <input class="w-full bg-surface-container-low/50 border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 pl-12 pr-4 focus:ring-0 transition-all placeholder:text-on-surface-variant/40 text-on-surface font-semibold" 
+                           id="email" name="email" value="{{ old('email') }}" placeholder="example@gmail.com" type="email" required autofocus/>
+                </div>
+                @error('email')
+                    <p class="text-error text-xs ml-1 font-medium">{{ $message }}</p>
+                @enderror
+            </div>
 
-                    <!-- Remember Me -->
-                    <div class="flex items-center gap-2 pl-1">
-                        <input id="remember_me" type="checkbox" name="remember" class="rounded border-gray-300 text-primary shadow-sm focus:ring-primary/20">
-                        <label for="remember_me" class="font-label text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Ghi nhớ đăng nhập</label>
-                    </div>
-
-                    <!-- Primary Action -->
-                    <button type="submit" class="kinetic-gradient w-full py-4 rounded-lg font-headline font-black text-on-primary text-center uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/25 mt-2">
-                        ĐĂNG NHẬP NGAY
+            <!-- Password Input -->
+            <div class="space-y-2">
+                <label class="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1" for="password">Mật khẩu</label>
+                <div class="relative group" x-data="{ show: false }">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">lock</span>
+                    <input x-bind:type="show ? 'text' : 'password'" class="w-full bg-surface-container-low/50 border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 pl-12 pr-12 focus:ring-0 transition-all placeholder:text-on-surface-variant/40 text-on-surface font-semibold" 
+                           id="password" name="password" placeholder="••••••••" required/>
+                    <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button" @click="show = !show">
+                        <span class="material-symbols-outlined" x-text="show ? 'visibility_off' : 'visibility'">visibility</span>
                     </button>
-                </form>
+                </div>
+                @error('password')
+                    <p class="text-error text-xs ml-1 font-medium">{{ $message }}</p>
+                @enderror
             </div>
-            <!-- Divider -->
-            <div class="flex items-center gap-4 px-4">
-                <div class="h-[1px] flex-1 bg-white/30"></div>
-                <span class="font-label text-[10px] font-bold text-white/80 uppercase tracking-[0.3em]">Hoặc kết nối với</span>
-                <div class="h-[1px] flex-1 bg-white/30"></div>
+
+            <!-- Remember Me -->
+            <div class="flex items-center mt-4" style="display: none;">
+                <input id="remember_me" type="checkbox" name="remember" class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2">
+                <label for="remember_me" class="ml-2 text-sm text-on-surface-variant">Ghi nhớ đăng nhập</label>
             </div>
-            <!-- Social Logins Grid -->
-            <div class="grid grid-cols-2 gap-4">
-                <a href="{{ route('login.social', 'google') }}" aria-label="Đăng nhập với Google" class="flex items-center justify-center bg-white hover:bg-white/90 py-4 rounded-xl transition-all active:scale-95 border border-white/50 shadow-md group">
-                    <svg class="w-6 h-6" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
-                    </svg>
-                </a>
-                <a href="{{ route('login.social', 'facebook') }}" aria-label="Đăng nhập với Facebook" class="flex items-center justify-center bg-white hover:bg-white/90 py-4 rounded-xl transition-all active:scale-95 border border-white/50 shadow-md group">
-                    <svg class="w-6 h-6" fill="#1877F2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
-                    </svg>
-                </a>
+
+            <!-- Action Button -->
+            <div class="pt-4">
+                <button class="w-full bg-gradient-to-r from-primary to-primary-fixed text-on-primary font-headline font-extrabold py-5 rounded-2xl shadow-xl shadow-primary/30 active:scale-[0.97] transition-all hover:brightness-110 uppercase tracking-widest text-sm" type="submit">
+                    Đăng nhập
+                </button>
             </div>
-        </section>
-        <!-- Footer / Redirect -->
-        <footer class="mt-4 text-center flex flex-col gap-3">
-            <p class="font-body text-white/80 text-sm drop-shadow-sm">
-                Chưa có tài khoản? 
-                <a class="text-white font-bold underline decoration-white/50 underline-offset-4 hover:decoration-white transition-colors" href="{{ route('register') }}">Đăng ký ngay</a>
-            </p>
+        </form>
+
+        <!-- Links Section -->
+        <div class="mt-10 flex flex-row items-center justify-between text-[13px] font-bold">
+            <a class="text-inverse-primary hover:text-primary transition-colors" href="{{ route('register') }}">Đăng ký ngay</a>
+            <span class="w-px h-4 bg-surface-variant"></span>
             @if (Route::has('password.request'))
-                <a class="font-label text-[10px] font-bold text-white/60 hover:text-white transition-colors uppercase tracking-[0.2em] drop-shadow-sm" href="{{ route('password.request') }}">
+                <a class="text-on-surface-variant hover:text-primary transition-colors italic font-medium" href="{{ route('password.request') }}">
                     Quên mật khẩu?
                 </a>
             @endif
-        </footer>
-    </main>
-    <!-- Subtle floating fitness icons in corners -->
-    <div class="fixed top-8 right-8 text-white/10 pointer-events-none select-none">
-        <span class="material-symbols-outlined text-8xl">fitness_center</span>
+        </div>
     </div>
-    <div class="fixed bottom-8 left-8 text-white/10 pointer-events-none select-none">
-        <span class="material-symbols-outlined text-8xl">exercise</span>
-    </div>
+</main>
+
+<!-- Footer -->
+<footer class="py-8 px-6 text-center relative z-10">
+    <p class="text-[10px] text-on-surface-variant/60 uppercase tracking-[0.25em] font-bold">
+        © {{ date('Y') }} GYM FIT+ PERFORMANCE CENTER
+    </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </body>
 </html>

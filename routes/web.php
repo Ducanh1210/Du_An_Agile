@@ -18,7 +18,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/dang-ky', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register.vn');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
-Route::get('/tin-tuc/{id}', [HomeController::class, 'newsDetail'])->name('news.detail');
+Route::get('/tin-tuc/{slug}', [HomeController::class, 'newsDetail'])->name('news.detail');
+Route::post('/tin-tuc/{id}/comment', [HomeController::class, 'storeComment'])->name('news.comment.store');
 Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
 Route::get('/huan-luyen-vien/{id}', [HomeController::class, 'trainerDetail'])->name('trainer.detail');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
@@ -86,14 +87,31 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('/delete/{id}', [\App\Http\Controllers\AdminController::class, 'deleteSchedule'])->name('delete');
     });
 
-    // Quản lý Tin tức
+    // Quản lý Tin tức (CMS)
     Route::prefix('news')->name('news.')->group(function () {
+        // Categories
+        Route::get('categories', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'index'])->name('categories.index');
+        Route::post('categories', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'store'])->name('categories.store');
+        Route::put('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'update'])->name('categories.update');
+        Route::delete('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'delete'])->name('categories.delete');
+
+        // Tags
+        Route::get('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'index'])->name('tags.index');
+        Route::post('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'store'])->name('tags.store');
+        Route::delete('tags/{id}', [\App\Http\Controllers\Admin\NewsTagController::class, 'delete'])->name('tags.delete');
+
+        // Comments
+        Route::get('comments', [\App\Http\Controllers\Admin\NewsCommentController::class, 'index'])->name('comments.index');
+        Route::post('comments/{id}/toggle', [\App\Http\Controllers\Admin\NewsCommentController::class, 'toggleApproval'])->name('comments.toggle');
+        Route::delete('comments/{id}', [\App\Http\Controllers\Admin\NewsCommentController::class, 'delete'])->name('comments.delete');
+
+        // Posts
         Route::get('/', [\App\Http\Controllers\Admin\NewsController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\NewsController::class, 'create'])->name('create');
-        Route::post('/store', [\App\Http\Controllers\Admin\NewsController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('delete');
+        Route::get('create', [\App\Http\Controllers\Admin\NewsController::class, 'create'])->name('create');
+        Route::post('store', [\App\Http\Controllers\Admin\NewsController::class, 'store'])->name('store');
+        Route::get('edit/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'edit'])->name('edit');
+        Route::put('update/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('delete');
     });
 });
 
@@ -145,10 +163,10 @@ Route::middleware(['auth'])->group(function () {
 // VNPay Callback - MUST be public (cross-site redirect from VNPay can drop session cookies)
 Route::get('/thanh-toan/callback', [\App\Http\Controllers\PaymentController::class, 'vnpayReturn'])->name('payment.callback');
 
-// Social Login Routes
-Route::get('auth/{provider}', [\App\Http\Controllers\Auth\SocialAuthController::class, 'redirectToProvider'])
-    ->name('login.social');
-Route::get('auth/{provider}/callback', [\App\Http\Controllers\Auth\SocialAuthController::class, 'handleProviderCallback']);
+// Social Login Routes -- TẠM ẨN DO THIẾU CONTROLLER
+// Route::get('auth/{provider}', [\App\Http\Controllers\Auth\SocialAuthController::class, 'redirectToProvider'])
+//     ->name('login.social');
+// Route::get('auth/{provider}/callback', [\App\Http\Controllers\Auth\SocialAuthController::class, 'handleProviderCallback']);
 
 // Password Reset OTP Routes
 Route::controller(PasswordResetController::class)->group(function () {

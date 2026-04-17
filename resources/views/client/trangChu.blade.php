@@ -871,6 +871,41 @@ document.getElementById('confirmModal')?.addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeConfirm();
 });
+    // Featured News Slider
+    const featuredSlides = document.querySelectorAll('.featured-slide');
+    const dotBtns = document.querySelectorAll('[data-slide-to]');
+    
+    if (dotBtns.length > 0) {
+        dotBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = parseInt(btn.getAttribute('data-slide-to'));
+                
+                // Update slides
+                featuredSlides.forEach((slide, i) => {
+                    if (i === index) {
+                        slide.classList.replace('opacity-0', 'opacity-100');
+                        slide.classList.replace('z-0', 'z-10');
+                    } else {
+                        slide.classList.replace('opacity-100', 'opacity-0');
+                        slide.classList.replace('z-10', 'z-0');
+                    }
+                });
+                
+                // Update dots
+                dotBtns.forEach((dot, i) => {
+                    dot.classList.toggle('bg-primary', i === index);
+                    dot.classList.toggle('bg-white/20', i !== index);
+                });
+            });
+        });
+
+        // Auto slide
+        let currentSlide = 0;
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % featuredSlides.length;
+            dotBtns[currentSlide].click();
+        }, 8000);
+    }
 </script>
 
 {{-- Confirmation Modal --}}

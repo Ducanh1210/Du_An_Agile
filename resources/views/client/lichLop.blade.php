@@ -49,7 +49,7 @@
     }
 
     /* --- Category Backgrounds --- */
-    .bg-cl-bodybuilding { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80&auto=format&fit=crop'); }
+    .bg-cl-bodybuilding, .bg-cl-gym { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80&auto=format&fit=crop'); }
     .bg-cl-yoga { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80&auto=format&fit=crop'); }
     .bg-cl-boxing { background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1599058917223-952a220cf972?w=800&q=80&auto=format&fit=crop'); }
 

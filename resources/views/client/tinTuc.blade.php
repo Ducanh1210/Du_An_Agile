@@ -1,156 +1,150 @@
 @extends('layouts.client')
 
-@section('title', 'Tin Tức & Sự Kiện | EXTRA FIT+')
+@section('title', 'Tin tức & Sự kiện - EXTRA FIT+ GYM')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
 @endsection
 
-@section('breadcrumb')
-<nav class="breadcrumb" aria-label="breadcrumb">
-    <div class="breadcrumb-item"><a href="{{ url('/') }}">Trang chủ</a></div>
-    <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
-    <div class="breadcrumb-item active" aria-current="page">Tin tức</div>
-</nav>
+@section('content')
+{{-- --- News Hero --- --}}
+<section class="news-hero">
+    <div class="container text-center">
+        <div class="news-hero-content animate-on-scroll">
+            <span class="section-tag">Thế giới thể hình</span>
+            <h1 class="news-hero-title">TIN TỨC <span>&</span> SỰ KIỆN</h1>
+            <p class="news-hero-subtitle">
+                Cập nhật những kiến thức tập luyện mới nhất, chế độ dinh dưỡng khoa học 
+                và những ưu đãi độc quyền chỉ có tại EXTRA FIT+.
+            </p>
+        </div>
+    </div>
+</section>
+
+{{-- --- Main Content --- --}}
+<section class="news-container bg-light-soft">
+    <div class="container">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            
+            {{-- Left: News Feed --}}
+            <div class="lg:col-span-8">
+                <div class="news-grid">
+                    @forelse($news as $post)
+                    <article class="news-card animate-on-scroll">
+                        <div class="news-card-img-wrap">
+                            <a href="{{ route('news.detail', $post->slug) }}">
+                                @if($post->image)
+                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="news-card-img">
+                                @else
+                                    <div class="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">
+                                        <i class="fa-solid fa-newspaper text-5xl"></i>
+                                    </div>
+                                @endif
+                            </a>
+                        </div>
+                        <div class="news-card-content">
+                            <div class="news-card-meta">
+                                <span><i class="fa-solid fa-calendar-days mr-2"></i> {{ $post->published_at ? $post->published_at->format('d/m/Y') : $post->created_at->format('d/m/Y') }}</span>
+                                <span><i class="fa-solid fa-eye mr-2"></i> {{ number_format($post->views) }}</span>
+                            </div>
+                            <h3 class="news-card-title">
+                                <a href="{{ route('news.detail', $post->slug) }}">{{ $post->title }}</a>
+                            </h3>
+                            <p class="news-card-desc">
+                                {{ $post->excerpt ?: Str::limit(strip_tags($post->content), 120) }}
+                            </p>
+                            <div class="news-card-footer">
+                                <a href="{{ route('news.detail', $post->slug) }}" class="text-primary font-bold text-sm tracking-wide group flex items-center gap-1">
+                                    Chi tiết <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    @empty
+                    <div class="lg:col-span-2 text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+                        <i class="fa-solid fa-magnifying-glass text-5xl text-gray-200 mb-4"></i>
+                        <p class="text-gray-400 font-bold uppercase tracking-widest text-sm">Không tìm thấy bài viết phù hợp</p>
+                    </div>
+                    @endforelse
+                </div>
+
+                <div class="pagination-wrapper flex justify-center">
+                    {{ $news->links() }}
+                </div>
+            </div>
+
+            {{-- Right: Sidebar --}}
+            <aside class="lg:col-span-4 space-y-8">
+                {{-- Search Widget --}}
+                <div class="widget">
+                    <h4 class="widget-title">Tìm kiếm</h4>
+                    <form action="{{ route('news') }}" method="GET" class="search-box">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Bạn muốn tìm gì..." class="search-input">
+                        <i class="fa-solid fa-search"></i>
+                    </form>
+                </div>
+
+                {{-- Categories Widget --}}
+                <div class="widget">
+                    <h4 class="widget-title">Danh mục</h4>
+                    <div class="category-list">
+                        <a href="{{ route('news') }}" class="category-item {{ !request('category') ? 'active' : '' }}">
+                            <span>Tất cả</span>
+                        </a>
+                        @foreach($categories as $cat)
+                        <a href="{{ route('news', ['category' => $cat->slug]) }}" class="category-item {{ request('category') == $cat->slug ? 'active' : '' }}">
+                            <span>{{ $cat->name }}</span>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Featured Post Widget --}}
+                <div class="widget">
+                    <h4 class="widget-title">Tin nổi bật</h4>
+                    <div class="space-y-6">
+                        @foreach($featuredNews as $fPost)
+                        <div class="featured-item group">
+                            <div class="featured-thumb">
+                                <img src="{{ asset('storage/' . $fPost->image) }}" class="group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="featured-content">
+                                <span class="text-[10px] font-bold text-primary uppercase mb-1">{{ $fPost->category->name ?? 'Hot' }}</span>
+                                <h5 class="text-sm font-bold leading-tight group-hover:text-primary transition-colors">
+                                    <a href="{{ route('news.detail', $fPost->slug) }}">{{ Str::limit($fPost->title, 45) }}</a>
+                                </h5>
+                                <span class="text-[10px] text-gray-400 mt-2 font-semibold"><i class="fa-regular fa-clock mr-1"></i> {{ $fPost->created_at->format('d/m/Y') }}</span>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Recommended Section/Placeholder --}}
+                <div class="widget">
+                    <div class="bg-primary/5 p-8 rounded-3xl border border-primary/10">
+                        <h4 class="font-black text-slate-900 uppercase tracking-tighter mb-2 italic small">Elite Fitness+</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed font-medium">Bắt đầu hành trình thay đổi vóc dáng cùng đội ngũ chuyên gia hàng đầu.</p>
+                        <a href="{{ route('client.memberships') }}" class="mt-4 inline-block text-[10px] font-black uppercase tracking-widest text-primary hover:text-orange-700 transition-colors">Tìm hiểu thêm →</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
 @endsection
 
-@section('content')
+@section('scripts')
+<script>
+    // Reveal animation logic (reuse if in main.js)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+            }
+        });
+    }, { threshold: 0.1 });
 
-{{-- ============================================================
-     PAGE BANNER
-     ============================================================ --}}
-<section class="page-banner" aria-label="Banner Tin Tức">
-    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1600&q=80&auto=format&fit=crop"
-         alt="Tin tức background" class="page-banner-bg" loading="lazy">
-    <div class="page-banner-overlay"></div>
-    <div class="page-banner-content container">
-        <h1 class="page-banner-title animate-on-scroll">Tin Tức & Sự Kiện</h1>
-    </div>
-</section>
-
-{{-- ============================================================
-     BLOG LIST SECTION
-     ============================================================ --}}
-<section class="section blog-section">
-    <div class="container blog-layout">
-        
-        {{-- MAIN CONTENT: NEWS LIST --}}
-        <main class="main-content">
-            <div class="blog-list">
-                @forelse($news as $item)
-                {{-- Blog Item --}}
-                <article class="blog-item-card animate-on-scroll">
-                    <a href="{{ route('news.detail', $item->id) }}" class="blog-item-img-wrap">
-                        @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}" class="blog-item-img">
-                        @else
-                            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80&auto=format&fit=crop" alt="Default image" class="blog-item-img">
-                        @endif
-                    </a>
-                    <div class="blog-item-body">
-                        <div class="blog-meta-info" style="margin-bottom: 12px; border-bottom: none; padding-bottom: 0;">
-                            <span><i class="fas fa-calendar-alt"></i> {{ $item->created_at->format('d/m/Y') }}</span>
-                        </div>
-                        <h2 class="blog-item-title" style="font-family: '{{ $item->title_font_family }}'; font-size: {{ $item->title_font_size * 0.8 }}px; text-transform: uppercase;">
-                            <a href="{{ route('news.detail', $item->id) }}">{{ $item->title }}</a>
-                        </h2>
-                        <div class="blog-item-excerpt" style="text-transform: lowercase;">
-                            {{ Str::limit(strip_tags($item->content), 150) }}
-                        </div>
-                        <a href="{{ route('news.detail', $item->id) }}" class="read-more-btn">ĐỌC TIẾP <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-                @empty
-                <div class="text-center py-20 bg-slate-50 rounded-3xl">
-                    <i class="far fa-newspaper text-5xl text-slate-300 mb-4"></i>
-                    <p class="text-slate-500 font-medium uppercase tracking-widest">Hiện chưa có tin tức nào được đăng.</p>
-                </div>
-                @endforelse
-            </div>
-
-            {{-- Pagination --}}
-            <div class="blog-pagination animate-on-scroll delay-1">
-                {{ $news->links() }}
-            </div>
-
-        </main>
-
-        {{-- SIDEBAR --}}
-        <aside class="blog-sidebar">
-            
-            {{-- Search Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-1">
-                <form action="#" class="sidebar-search" onsubmit="event.preventDefault(); showToast('info', 'Tìm kiếm', 'Chức năng đang cập nhật.');">
-                    <div class="form-group" style="position:relative; margin-bottom:0;">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm bài viết..." style="padding-right:48px;">
-                        <button type="submit" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:var(--color-primary); font-size:18px; cursor:pointer;">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {{-- Recent News Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-2">
-                <h4 class="widget-title">Bài Viết Gần Đây</h4>
-                <div class="recent-news-list">
-                    @foreach($recentNews as $recent)
-                    <a href="{{ route('news.detail', $recent->id) }}" class="recent-news-item">
-                        @if($recent->image)
-                            <img src="{{ asset('storage/' . $recent->image) }}" class="recent-news-thumb" alt="{{ $recent->title }}">
-                        @else
-                            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200&q=80&auto=format&fit=crop" class="recent-news-thumb" alt="News">
-                        @endif
-                        <div class="recent-news-title uppercase" style="font-family: '{{ $recent->title_font_family }}'; font-size: 11px;">{{ $recent->title }}</div>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Categories Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-3">
-                <h4 class="widget-title">Danh Mục Thể Thao</h4>
-                <div class="category-list">
-                    <a href="#" class="category-item">
-                        <span>Thể hình (Body Building)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Giáo án HLV (Gym Trainer)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Đạp xe (Free Cycling)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Cardio (Cardio Class)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                    <a href="#" class="category-item">
-                        <span>Dinh dưỡng (Food Healthy)</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Popular Tags Widget --}}
-            <div class="sidebar-widget animate-on-scroll delay-4">
-                <h4 class="widget-title">Tags Phổ Biến</h4>
-                <div class="tags-list">
-                    <a href="#" class="tag-btn">Đạp xe</a>
-                    <a href="#" class="tag-btn">Thể hình</a>
-                    <a href="#" class="tag-btn">Tập tạ</a>
-                    <a href="#" class="tag-btn">Giảm cân</a>
-                    <a href="#" class="tag-btn">HLV cá nhân</a>
-                    <a href="#" class="tag-btn">Sức bền</a>
-                    <a href="#" class="tag-btn">Dinh dưỡng</a>
-                </div>
-            </div>
-
-        </aside>
-
-    </div>
-</section>
-
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
+</script>
 @endsection
