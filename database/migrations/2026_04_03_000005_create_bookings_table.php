@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('trainer_id')->nullable()->constrained('trainers');
             $table->datetime('start_time');
             $table->datetime('end_time');
+            $table->decimal('price', 12, 2)->default(0.00);
+            $table->enum('payment_status', ['free', 'pending', 'paid'])->default('free');
             $table->enum('status', ['confirmed', 'cancelled', 'completed'])->default('confirmed');
             $table->timestamps();
         });

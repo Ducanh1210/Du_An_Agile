@@ -17,6 +17,8 @@ class Booking extends Model
         'trainer_id',
         'start_time',
         'end_time',
+        'price',
+        'payment_status',
         'status',
     ];
 

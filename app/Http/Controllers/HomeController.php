@@ -21,7 +21,7 @@ class HomeController extends Controller
         $memberships = Membership::where('is_active', 1)->take(4)->get();
         // Updated for CMS
         $latestNews = News::where('news_status', 'published')->orderBy('published_at', 'desc')->take(3)->get();
-        $featuredNews = News::where('news_status', 'published')->where('is_featured', true)->orderBy('published_at', 'desc')->take(5)->get();
+        $featuredNews = News::where('news_status', 'published')->orderBy('views', 'desc')->take(5)->get();
         
         return view("client.trangChu", compact('memberships', 'latestNews', 'featuredNews'));    
     }

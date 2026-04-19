@@ -417,14 +417,29 @@
     height: 38px;
     padding: 0 12px;
 }
-.btn-cancel-sub {
-    background: rgba(239,68,68,0.08);
-    color: var(--color-error);
-    border: 1.5px solid transparent;
-}
 .btn-cancel-sub:hover {
     background: rgba(239,68,68,0.15);
     border-color: var(--color-error);
+}
+
+.btn-book-pt {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #FF8C5A 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(255,107,53,0.3);
+    transition: all 0.3s ease !important;
+}
+.btn-book-pt:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,107,53,0.4);
+    filter: brightness(1.1);
 }
 
 /* Price */
