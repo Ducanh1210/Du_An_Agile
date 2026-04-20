@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('specialization', ['gym', 'yoga', 'both'])->comment('Chuyên môn: thể hình / yoga / cả hai');
+            $table->decimal('price_per_session', 12, 2)->default(500000.00);
             $table->tinyInteger('is_available')->default(1)->comment('Đang nhận học viên');
             $table->timestamps();
         });

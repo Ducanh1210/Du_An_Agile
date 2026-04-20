@@ -150,24 +150,36 @@
                 @endif
 
                 {{-- Actions --}}
-                @if($sub->status === 'pending_payment')
-                {{-- ===== PENDING PAYMENT: Thanh toán ngay + Hủy đăng ký ===== --}}
                 <div class="sub-actions">
-                    <a href="{{ route('payment.checkout', ['package' => $sub->membership_id]) }}" class="btn btn-primary" id="btnPay{{ $sub->id }}">
-                        <i class="fas fa-credit-card"></i> Thanh toán ngay
-                    </a>
-                    <button class="btn btn-cancel-sub" onclick="openModal('cancelModal{{ $sub->id }}')" id="btnCancel{{ $sub->id }}">
-                        <i class="fas fa-times"></i> Hủy đăng ký
-                    </button>
+                    @if($sub->status === 'pending_payment')
+                        {{-- ===== PENDING PAYMENT: Thanh toán ngay + Hủy đăng ký ===== --}}
+                        <a href="{{ route('payment.checkout', ['package' => $sub->membership_id]) }}" class="btn btn-primary" id="btnPay{{ $sub->id }}">
+                            <i class="fas fa-credit-card"></i> Thanh toán ngay
+                        </a>
+                        <button class="btn btn-cancel-sub" onclick="openModal('cancelModal{{ $sub->id }}')" id="btnCancel{{ $sub->id }}">
+                            <i class="fas fa-times"></i> Hủy đăng ký
+                        </button>
+                    @elseif($sub->status === 'active')
+                        {{-- ===== ACTIVE: Hẹn lịch PT nếu có quyền ===== --}}
+                        @if($sub->membership->allow_pt && $sub->pt_sessions_left > 0)
+                            <a href="{{ route('trainers') }}" class="btn btn-book-pt">
+                                <i class="fas fa-user-tie"></i> Hẹn lịch với Huấn luyện viên
+                            </a>
+                        @endif
+                        
+                        {{-- Warning nếu sắp hết hạn --}}
+                        @if($isDanger)
+                            <div class="expired-warning" style="margin-top: 10px; color: var(--color-error); font-size: 0.85rem; font-weight: 600;">
+                                <i class="fas fa-exclamation-triangle"></i> Gói sắp hết hạn! Hãy gia hạn sớm.
+                            </div>
+                        @endif
+                    @elseif($sub->status === 'expired')
+                        {{-- ===== EXPIRED: Cho phép gia hạn ===== --}}
+                        <button class="btn btn-primary" onclick="openModal('renewModal{{ $sub->id }}')" id="btnRenew{{ $sub->id }}">
+                            <i class="fas fa-sync-alt"></i> Gia hạn gói
+                        </button>
+                    @endif
                 </div>
-                @elseif($sub->status === 'expired')
-                {{-- ===== EXPIRED: Cho phép gia hạn ===== --}}
-                <div class="sub-actions">
-                    <button class="btn btn-primary" onclick="openModal('renewModal{{ $sub->id }}')" id="btnRenew{{ $sub->id }}">
-                        <i class="fas fa-sync-alt"></i> Gia hạn
-                    </button>
-                </div>
-                @endif
             </div>
 
             {{-- ============ RENEW MODAL ============ --}}

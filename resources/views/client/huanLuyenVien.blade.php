@@ -1,3 +1,7 @@
+@extends('layouts.client')
+
+@section('styles')
+<style>
     /* --- Ultimate Premium Trainer UI --- */
     :root {
         --p-color: #FF6B35;
@@ -72,7 +76,7 @@
         border-color: rgba(255, 107, 53, 0.3);
     }
     .card-img-wrap {
-        height: 420px;
+        height: 380px;
         position: relative;
         overflow: hidden;
     }
@@ -90,7 +94,7 @@
     }
 
     .card-body {
-        padding: 40px;
+        padding: 32px;
         position: relative;
     }
     .spec-tag {
@@ -103,7 +107,7 @@
         display: block;
     }
     .name-text {
-        font-size: 32px;
+        font-size: 28px;
         font-weight: 900;
         color: #fff;
         margin-bottom: 8px;
@@ -117,8 +121,8 @@
 
     .btn-book {
         width: 100%;
-        padding: 20px;
-        border-radius: 20px;
+        padding: 18px;
+        border-radius: 18px;
         background: rgba(255, 255, 255, 0.05);
         color: #fff;
         font-weight: 800;
@@ -185,7 +189,7 @@
 
     <!-- Trainers Grid -->
     <div class="container mx-auto px-6 py-20">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="trainersGrid">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="trainersGrid">
             @forelse($trainers as $trainer)
             <div class="trainer-card-wrapper animate-up opacity-0" data-specialization="{{ $trainer->specialization }}" style="animation-delay: {{ 0.1 * $loop->index + 0.5 }}s">
                 <a href="{{ route('trainer.detail', $trainer->id) }}" class="block">
