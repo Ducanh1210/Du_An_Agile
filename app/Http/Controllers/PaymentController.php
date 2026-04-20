@@ -108,15 +108,19 @@ class PaymentController extends Controller
                     $payment->subscription->update(['status' => 'active']);
                 }
                 
-                // Nếu user vẫn còn session → redirect thẳng tới trang lịch sử thanh toán
-                if (Auth::check()) {
-                    return redirect()->route('client.payment_history')->with('success', 'Thanh toán thành công! Gói tập của bạn đã được kích hoạt.');
+                // Đảm bảo người dùng được đăng nhập (nếu chẳng may bị mất session khi redirect từ VNPay)
+                if (!Auth::check()) {
+                    Auth::login($payment->subscription->user);
                 }
                 
-                // Nếu mất session → redirect tới login với thông báo thành công
-                return redirect()->route('login')->with('success', 'Thanh toán thành công! Vui lòng đăng nhập để xem gói tập đã kích hoạt.');
+                return redirect()->route('client.payment_history')->with('success', 'Thanh toán thành công! Gói tập của bạn đã được kích hoạt.');
             } else {
-                // Thanh toán thất bại hoặc hủy
+                // Thanh toán thất bại hoặc khách chủ động hủy trên cổng VNPay
+                if ($payment->status === 'pending') {
+                    $payment->update(['status' => 'cancelled', 'note' => 'Người dùng hủy thanh toán hoặc giao dịch thất bại.']);
+                    $payment->subscription->update(['status' => 'cancelled', 'cancel_reason' => 'Thanh toán VNPay không thành công.']);
+                }
+
                 return redirect()->route('client.memberships')->with('error', 'Thanh toán không thành công hoặc đã bị hủy.');
             }
         }

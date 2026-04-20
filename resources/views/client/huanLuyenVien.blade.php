@@ -1,3 +1,9 @@
+@extends('layouts.client')
+
+@section('title', 'Đội ngũ Huấn luyện viên — EXTRA FIT+')
+
+@section('styles')
+<style>
     /* --- Ultimate Premium Trainer UI --- */
     :root {
         --p-color: #FF6B35;
@@ -206,10 +212,10 @@
                             <p class="bio-text">
                                 Chuyên gia đào tạo với hơn 5 năm kinh nghiệm thực chiến. Giúp hơn 200+ học viên thay đổi hình thể hoàn toàn.
                             </p>
-                            <div class="btn-book">
-                                <span>CHI TIẾT & ĐẶT LỊCH PT</span>
-                                <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-2"></i>
-                            </div>
+                            <a href="{{ route('booking.pt', ['trainer_id' => $trainer->id]) }}" class="btn-book">
+                                <span>ĐẶT LỊCH PT NGAY</span>
+                                <i class="fas fa-calendar-check text-xs transition-transform group-hover:scale-125"></i>
+                            </a>
                         </div>
                     </article>
                 </a>

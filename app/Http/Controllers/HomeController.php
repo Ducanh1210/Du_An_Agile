@@ -43,8 +43,28 @@ class HomeController extends Controller
         $trainer = Trainer::with(['user', 'schedules' => function($q) {
             $q->where('start_time', '>=', now())->orderBy('start_time');
         }])->findOrFail($id);
+
+        // Lấy danh sách các buổi đã được đặt trước của HLV này (Bao gồm lịch dạy lớp và lịch PT)
+        $bookedSlots = \App\Models\Booking::where('trainer_id', $id)
+            ->whereIn('status', ['confirmed', 'completed'])
+            ->where('start_time', '>=', now())
+            ->get(['start_time', 'end_time'])
+            ->map(function($booking) {
+                return [
+                    'date' => $booking->start_time->format('Y-m-d'),
+                    'time' => $booking->start_time->format('H:i'),
+                ];
+            })->toArray();
+
+        // Thêm lịch dạy lớp tập thể vào danh sách bận
+        foreach ($trainer->schedules as $schedule) {
+            $bookedSlots[] = [
+                'date' => $schedule->start_time->format('Y-m-d'),
+                'time' => $schedule->start_time->format('H:i'),
+            ];
+        }
         
-        return view("client.trainer-detail", compact('trainer'));
+        return view("client.trainer-detail", compact('trainer', 'bookedSlots'));
     }
 
     public function schedule(Request $request)
@@ -128,14 +148,21 @@ class HomeController extends Controller
 
     public function personalSchedule()
     {
+        $user = Auth::user();
         $bookings = Booking::with(['trainer.user', 'schedule', 'rescheduleRequests' => function($q) {
                 $q->where('status', 'pending');
             }])
-            ->where('user_id', Auth::id())
+            ->where('user_id', $user->id)
             ->orderBy('start_time', 'desc')
             ->get();
 
-        return view('client.personal-schedule', compact('bookings'));
+        $activeSubscription = $user->subscriptions()
+            ->with('membership')
+            ->where('status', 'active')
+            ->where('end_date', '>=', now())
+            ->first();
+
+        return view('client.personal-schedule', compact('bookings', 'activeSubscription'));
     }
 
     public function notifications()

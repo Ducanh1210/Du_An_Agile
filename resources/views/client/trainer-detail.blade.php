@@ -169,12 +169,16 @@
                     <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Đặt lịch tập 1-Kèm-1</h2>
                     <p class="text-slate-500 text-sm mb-8 font-medium">Chọn thời gian phù hợp để bắt đầu hành trình của bạn.</p>
 
-                    @php
-                        $subscription = auth()->user()->subscriptions()
-                            ->where('status', 'active')
-                            ->where('pt_sessions_left', '>', 0)
-                            ->first();
-                    @endphp
+                    @auth
+                        @php
+                            $subscription = auth()->user()->subscriptions()
+                                ->where('status', 'active')
+                                ->where('pt_sessions_left', '>', 0)
+                                ->first();
+                        @endphp
+                    @else
+                        @php $subscription = null; @endphp
+                    @endauth
 
                     @if($subscription)
                         <div class="flex items-center gap-3 p-4 bg-primary/10 rounded-2xl border border-primary/20 mb-10">
@@ -199,10 +203,19 @@
                                     <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3">2. Chọn khung giờ (1 giờ/buổi)</label>
                                     <div class="time-slot-grid">
                                         <template x-for="slot in slots">
-                                            <div class="time-slot" 
-                                                 :class="{ 'active': selectedSlot === slot }"
-                                                 @click="selectedSlot = slot"
-                                                 x-text="slot"></div>
+                                            <button type="button" 
+                                                 :disabled="isBooked(slot)"
+                                                 class="time-slot w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-600" 
+                                                 :class="{ 
+                                                     'active': selectedSlot === slot,
+                                                     'border-primary/50 bg-primary/10': isBooked(slot)
+                                                 }"
+                                                 @click="selectedSlot = slot">
+                                                <span x-text="slot"></span>
+                                                <template x-if="isBooked(slot)">
+                                                    <div class="text-[7px] uppercase mt-1">Đã bận</div>
+                                                </template>
+                                            </button>
                                         </template>
                                     </div>
                                 </div>
@@ -250,10 +263,14 @@
         return {
             selectedDate: '{{ date('Y-m-d') }}',
             selectedSlot: '',
+            bookedSlots: @json($bookedSlots),
             slots: [
                 '08:00', '09:00', '10:00', '11:00',
                 '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
-            ]
+            ],
+            isBooked(slot) {
+                return this.bookedSlots.some(b => b.date === this.selectedDate && b.time === slot);
+            }
         }
     }
 </script>

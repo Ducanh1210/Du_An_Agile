@@ -20,7 +20,7 @@ Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
 Route::get('/tin-tuc/{slug}', [HomeController::class, 'newsDetail'])->name('news.detail');
 Route::post('/tin-tuc/{id}/comment', [HomeController::class, 'storeComment'])->name('news.comment.store');
-Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
+Route::get('/huan-luyen-vien', [\App\Http\Controllers\PTBookingController::class, 'index'])->name('trainers');
 Route::get('/huan-luyen-vien/{id}', [HomeController::class, 'trainerDetail'])->name('trainer.detail');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
 
@@ -113,6 +113,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('update/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('delete');
     });
+
+    // Quản lý Doanh thu & Thanh toán
+    Route::prefix('revenue')->name('revenue.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PaymentManagementController::class, 'index'])->name('index');
+        Route::patch('/{id}/status', [\App\Http\Controllers\Admin\PaymentManagementController::class, 'updateStatus'])->name('updateStatus');
+    });
 });
 
 // Trainer Portal Routes
@@ -136,6 +146,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Personal Schedule & Booking Logic
     Route::get('/lich-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
+    Route::get('/dat-lich-pt', [\App\Http\Controllers\PTBookingController::class, 'index'])->name('booking.pt');
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::post('/pt-bookings', [\App\Http\Controllers\PTBookingController::class, 'store'])->name('pt-bookings.store');
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');

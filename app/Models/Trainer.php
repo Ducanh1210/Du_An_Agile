@@ -13,6 +13,7 @@ class Trainer extends Model
         'user_id',
         'specialization',
         'is_available',
+        'price_per_session',
     ];
 
     /**
