@@ -26,7 +26,7 @@ class PaymentManagementController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,completed,refunded,cancelled'
+            'status' => 'required|in:completed,cancelled'
         ]);
 
         $payment = Payment::findOrFail($id);

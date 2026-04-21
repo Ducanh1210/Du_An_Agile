@@ -197,6 +197,10 @@
             <i class="fa-solid fa-user-group"></i>
             <span>Học viên</span>
         </a>
+        <a href="{{ route('trainer.schedule') }}" class="nav-item {{ request()->routeIs('trainer.schedule') ? 'active' : '' }}">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Lịch dạy</span>
+        </a>
         <a href="{{ url('/') }}" class="nav-item">
             <i class="fa-solid fa-house"></i>
             <span>Client</span>

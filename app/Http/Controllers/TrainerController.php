@@ -8,8 +8,9 @@ use App\Models\HealthMetric;
 use App\Models\SessionReport;
 use App\Models\RescheduleRequest;
 use App\Models\User;
+use App\Models\LeaveRequest;
 use App\Notifications\SessionReportNotification;
-use App\Notifications\RescheduleRequestNotification;
+use App\Notifications\LeaveRequestCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -153,29 +154,73 @@ class TrainerController extends Controller
     }
 
     /**
-     * Yêu cầu đổi lịch tập
+     * Lịch dạy của HLV (PT & Group Classes)
      */
-    public function requestReschedule(Request $request, $id)
+    public function schedule()
+    {
+        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        
+        // Lịch PT (Bookings)
+        $bookings = Booking::with('user')
+            ->where('trainer_id', $trainer->id)
+            ->where('start_time', '>=', Carbon::today())
+            ->orderBy('start_time')
+            ->get()->map(function ($item) {
+                $item->is_pt = true;
+                return $item;
+            });
+
+        // Lịch Lớp Nhóm (Schedules)
+        $classes = \App\Models\Schedule::where('trainer_id', $trainer->id)
+            ->where('start_time', '>=', Carbon::today())
+            ->orderBy('start_time')
+            ->get()->map(function ($item) {
+                $item->is_pt = false;
+                return $item;
+            });
+
+        $allSchedules = $bookings->concat($classes)->sortBy('start_time');
+
+        // Lấy danh sách đơn xin nghỉ để kiểm tra trạng thái
+        $leaveRequests = LeaveRequest::where('trainer_id', $trainer->id)->get();
+
+        return view('trainer.schedule', compact('allSchedules', 'leaveRequests', 'trainer'));
+    }
+
+    /**
+     * Xin nghỉ dạy (Theo ca)
+     */
+    public function submitLeaveRequest(Request $request)
     {
         $request->validate([
-            'new_start_time' => 'required|date|after:now',
-            'reason' => 'required|string',
+            'item_id' => 'required|integer',
+            'item_type' => 'required|string',
+            'reason' => 'required|string|min:5',
         ]);
 
-        $booking = Booking::findOrFail($id);
-        
-        $reschedule = RescheduleRequest::create([
-            'booking_id' => $booking->id,
-            'requested_by' => Auth::id(),
-            'original_start_time' => $booking->start_time,
-            'new_start_time' => $request->new_start_time,
+        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+
+        // Check xem đã xin nghỉ chưa
+        $exists = LeaveRequest::where('item_id', $request->item_id)
+            ->where('item_type', $request->item_type)
+            ->exists();
+            
+        if ($exists) {
+            return back()->with('error', 'Bạn đã nộp đơn xin nghỉ cho ca dạy này rồi!');
+        }
+
+        $leaveReq = LeaveRequest::create([
+            'trainer_id' => $trainer->id,
+            'item_type' => $request->item_type,
+            'item_id' => $request->item_id,
             'reason' => $request->reason,
             'status' => 'pending',
         ]);
 
-        // Gửi thông báo cho học viên
-        $booking->user->notify(new RescheduleRequestNotification($reschedule));
+        // Gửi thông báo cho Admin & Staff
+        $adminsAndStaff = User::whereIn('role', ['admin', 'staff'])->get();
+        \Illuminate\Support\Facades\Notification::send($adminsAndStaff, new LeaveRequestCreatedNotification($leaveReq));
 
-        return back()->with('success', 'Yêu cầu đổi lịch đã được gửi tới học viên!');
+        return back()->with('success', 'Đã nộp đơn xin nghỉ dạy thành công. Vui lòng chờ duyệt!');
     }
 }

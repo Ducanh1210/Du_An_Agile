@@ -210,10 +210,10 @@
                             <p class="bio-text">
                                 Chuyên gia đào tạo với hơn 5 năm kinh nghiệm thực chiến. Giúp hơn 200+ học viên thay đổi hình thể hoàn toàn.
                             </p>
-                            <a href="{{ route('booking.pt', ['trainer_id' => $trainer->id]) }}" class="btn-book">
+                            <span class="btn-book">
                                 <span>ĐẶT LỊCH PT NGAY</span>
                                 <i class="fas fa-calendar-check text-xs transition-transform group-hover:scale-125"></i>
-                            </a>
+                            </span>
                         </div>
                     </article>
                 </a>

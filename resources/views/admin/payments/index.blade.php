@@ -57,13 +57,11 @@
                         </td>
                         <td class="p-4 text-center">
                             @if($payment->status === 'completed')
-                                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold border border-emerald-200">Hoàn tất</span>
-                            @elseif($payment->status === 'pending')
-                                <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-bold border border-yellow-200">Chờ duyệt</span>
-                            @elseif($payment->status === 'refunded')
-                                <span class="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs font-bold border border-purple-200">Hoàn tiền</span>
+                                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold border border-emerald-200">Đã thanh toán</span>
                             @elseif($payment->status === 'cancelled')
                                 <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded-lg text-xs font-bold border border-red-200">Đã hủy</span>
+                            @else
+                                <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold border border-gray-200">{{ ucfirst($payment->status) }}</span>
                             @endif
                         </td>
                         <td class="p-4 text-right text-sm text-slate-500">
@@ -108,9 +106,7 @@
             <div class="p-6">
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Trạng thái mới</label>
                 <select name="status" id="paymentStatus" class="w-full border-gray-300 rounded-xl focus:ring-primary focus:border-primary shadow-sm">
-                    <option value="pending">Chờ duyệt (Pending)</option>
-                    <option value="completed">Đã hoàn tất (Completed)</option>
-                    <option value="refunded">Đã hoàn tiền (Refunded)</option>
+                    <option value="completed">Đã thanh toán (Completed)</option>
                     <option value="cancelled">Đã hủy (Cancelled)</option>
                 </select>
             </div>

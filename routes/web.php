@@ -130,6 +130,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/', [\App\Http\Controllers\Admin\PaymentManagementController::class, 'index'])->name('index');
         Route::patch('/{id}/status', [\App\Http\Controllers\Admin\PaymentManagementController::class, 'updateStatus'])->name('updateStatus');
     });
+
+    // Quản lý Xin nghỉ dạy (dùng chung Admin & Staff)
+    Route::prefix('leave-requests')->name('leave_requests.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\LeaveRequestController::class, 'index'])->name('index');
+        Route::patch('/{id}/resolve', [\App\Http\Controllers\Admin\LeaveRequestController::class, 'resolve'])->name('resolve');
+    });
 });
 
 // Trainer Portal Routes
@@ -137,12 +143,13 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::get('/dashboard', [\App\Http\Controllers\TrainerController::class, 'dashboard'])->name('dashboard');
     Route::get('/students', [\App\Http\Controllers\TrainerController::class, 'students'])->name('students');
     Route::get('/students/{id}', [\App\Http\Controllers\TrainerController::class, 'studentDetail'])->name('student.detail');
+    Route::get('/schedule', [\App\Http\Controllers\TrainerController::class, 'schedule'])->name('schedule');
     
     // Actions
     Route::post('/bookings/{id}/check-in', [\App\Http\Controllers\TrainerController::class, 'checkIn'])->name('booking.checkin');
     Route::post('/students/{id}/metrics', [\App\Http\Controllers\TrainerController::class, 'updateMetrics'])->name('student.metrics');
     Route::post('/bookings/{id}/report', [\App\Http\Controllers\TrainerController::class, 'submitReport'])->name('booking.report');
-    Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'requestReschedule'])->name('booking.reschedule');
+    Route::post('/leave-requests', [\App\Http\Controllers\TrainerController::class, 'submitLeaveRequest'])->name('leave.submit');
 });
 
 // User Profile Routes (Breeze default)

@@ -122,6 +122,13 @@
                     <i class="fa-solid fa-file-invoice-dollar w-5"></i>
                     <span class="font-medium text-[15px]">Quản lý Thanh toán</span>
                 </a>
+
+                <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Quản lý Nhân sự</div>
+
+                <a href="{{ route('admin.leave_requests.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.leave_requests.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-hand w-5"></i>
+                    <span class="font-medium text-[15px]">Yêu Cầu Nghỉ Dạy</span>
+                </a>
             </nav>
 
             <!-- Bottom Profile -->
