@@ -14,6 +14,7 @@ class Trainer extends Model
         'specialization',
         'price_per_session',
         'is_available',
+        'price_per_session',
     ];
 
     /**

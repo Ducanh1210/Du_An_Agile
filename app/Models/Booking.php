@@ -15,6 +15,8 @@ class Booking extends Model
         'booking_type',
         'schedule_id',
         'trainer_id',
+        'price',
+        'payment_status',
         'start_time',
         'end_time',
         'price',
