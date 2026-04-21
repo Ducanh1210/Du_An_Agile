@@ -177,7 +177,9 @@
 
     <header class="header">
         <div class="header-title">PRO TRAINER</div>
-        <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff' }}" alt="Avatar" class="user-avatar">
+        <a href="{{ route('trainer.profile') }}">
+            <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff' }}" alt="Avatar" class="user-avatar">
+        </a>
     </header>
 
     <main class="container">
@@ -193,13 +195,17 @@
             <i class="fa-solid fa-calendar-check"></i>
             <span>Nhiệm vụ</span>
         </a>
+        <a href="{{ route('trainer.schedule') }}" class="nav-item {{ request()->routeIs('trainer.schedule') ? 'active' : '' }}">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span>Lịch</span>
+        </a>
         <a href="{{ route('trainer.students') }}" class="nav-item {{ request()->routeIs('trainer.students*') ? 'active' : '' }}">
             <i class="fa-solid fa-user-group"></i>
             <span>Học viên</span>
         </a>
-        <a href="{{ url('/') }}" class="nav-item">
-            <i class="fa-solid fa-house"></i>
-            <span>Client</span>
+        <a href="{{ route('trainer.profile') }}" class="nav-item {{ request()->routeIs('trainer.profile') ? 'active' : '' }}">
+            <i class="fa-regular fa-user"></i>
+            <span>Hồ sơ</span>
         </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
         <a href="#" class="nav-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

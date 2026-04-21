@@ -121,11 +121,17 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::get('/students', [\App\Http\Controllers\TrainerController::class, 'students'])->name('students');
     Route::get('/students/{id}', [\App\Http\Controllers\TrainerController::class, 'studentDetail'])->name('student.detail');
     
+    // Profile & Schedule
+    Route::get('/profile', [\App\Http\Controllers\TrainerController::class, 'profile'])->name('profile');
+    Route::post('/profile', [\App\Http\Controllers\TrainerController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/schedule', [\App\Http\Controllers\TrainerController::class, 'schedule'])->name('schedule');
+
     // Actions
     Route::post('/bookings/{id}/check-in', [\App\Http\Controllers\TrainerController::class, 'checkIn'])->name('booking.checkin');
     Route::post('/students/{id}/metrics', [\App\Http\Controllers\TrainerController::class, 'updateMetrics'])->name('student.metrics');
     Route::post('/bookings/{id}/report', [\App\Http\Controllers\TrainerController::class, 'submitReport'])->name('booking.report');
     Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'requestReschedule'])->name('booking.reschedule');
+    Route::post('/students/{id}/training-plans', [\App\Http\Controllers\TrainerController::class, 'storeTrainingPlan'])->name('student.training_plan.store');
 });
 
 // User Profile Routes (Breeze default)

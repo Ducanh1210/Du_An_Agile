@@ -1,3 +1,9 @@
+@extends('layouts.client')
+
+@section('title', 'Huấn Luyện Viên - EXTRA FIT+')
+
+@section('styles')
+<style>
     /* --- Ultimate Premium Trainer UI --- */
     :root {
         --p-color: #FF6B35;

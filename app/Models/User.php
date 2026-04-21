@@ -165,6 +165,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Booking::class);
     }
 
+    public function trainingPlans()
+    {
+        return $this->hasMany(TrainingPlan::class);
+    }
+
     /**
      * Gói đăng ký của người dùng
      */

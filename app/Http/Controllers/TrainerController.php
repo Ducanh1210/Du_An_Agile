@@ -8,10 +8,13 @@ use App\Models\HealthMetric;
 use App\Models\SessionReport;
 use App\Models\RescheduleRequest;
 use App\Models\User;
+use App\Models\Schedule;
+use App\Models\TrainingPlan;
 use App\Notifications\SessionReportNotification;
 use App\Notifications\RescheduleRequestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class TrainerController extends Controller
@@ -64,6 +67,8 @@ class TrainerController extends Controller
     {
         $student = User::with(['healthMetrics' => function($query) {
             $query->orderBy('created_at', 'asc');
+        }, 'trainingPlans' => function($query) {
+            $query->orderBy('created_at', 'desc');
         }])->findOrFail($id);
 
         // Chuẩn bị dữ liệu cho Chart.js (30 bản ghi gần nhất)
@@ -177,5 +182,92 @@ class TrainerController extends Controller
         $booking->user->notify(new RescheduleRequestNotification($reschedule));
 
         return back()->with('success', 'Yêu cầu đổi lịch đã được gửi tới học viên!');
+    }
+
+    /**
+     * Hiển thị form Hồ sơ PT
+     */
+    public function profile()
+    {
+        $user = Auth::user();
+        $trainer = Trainer::where('user_id', $user->id)->firstOrFail();
+        return view('trainer.profile', compact('user', 'trainer'));
+    }
+
+    /**
+     * Cập nhật Hồ sơ PT
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $trainer = Trainer::where('user_id', $user->id)->firstOrFail();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'specialization' => 'required|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Cập nhật User
+        $user->name = $request->name;
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar_url = Storage::url($path);
+        }
+        $user->save();
+
+        // Cập nhật Trainer
+        $trainer->specialization = $request->specialization;
+        $trainer->save();
+
+        return back()->with('success', 'Đã cập nhật hồ sơ thành công!');
+    }
+
+    /**
+     * Hiển thị Lịch dạy (Group class) & Lịch làm việc (1-1 Booking)
+     */
+    public function schedule()
+    {
+        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+
+        // Lấy lịch 1-1 (Bookings) từ hôm nay trở đi
+        $bookings = Booking::with('user')
+            ->where('trainer_id', $trainer->id)
+            ->whereDate('start_time', '>=', Carbon::today())
+            ->orderBy('start_time')
+            ->get();
+
+        // Lấy lịch lớp (Schedules) của PT từ hôm nay trở đi
+        $schedules = Schedule::where('trainer_id', $trainer->id)
+            ->whereDate('start_time', '>=', Carbon::today())
+            ->orderBy('start_time')
+            ->get();
+
+        return view('trainer.schedule', compact('bookings', 'schedules'));
+    }
+
+    /**
+     * Lưu giáo án tập luyện mới cho học viên
+     */
+    public function storeTrainingPlan(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        $student = User::findOrFail($id);
+
+        TrainingPlan::create([
+            'trainer_id' => $trainer->id,
+            'user_id' => $student->id,
+            'title' => $request->title,
+            'content' => $request->content,
+            'status' => 'active',
+        ]);
+
+        return back()->with('success', 'Đã lưu giáo án thành công!');
     }
 }

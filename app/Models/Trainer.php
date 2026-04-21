@@ -45,4 +45,9 @@ class Trainer extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function trainingPlans()
+    {
+        return $this->hasMany(TrainingPlan::class);
+    }
 }

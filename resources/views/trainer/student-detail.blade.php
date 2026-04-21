@@ -22,6 +22,7 @@
 <!-- Tabs (Simple JS Toggle) -->
 <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px;">
     <button onclick="switchTab('progress')" id="tab-progress" class="btn btn-primary" style="padding: 8px 16px; font-size: 13px; width: auto; white-space: nowrap;">Tiến độ (Biểu đồ)</button>
+    <button onclick="switchTab('plan')" id="tab-plan" class="btn btn-outline" style="padding: 8px 16px; font-size: 13px; width: auto; white-space: nowrap;">Giáo án tập luyện</button>
     <button onclick="switchTab('update')" id="tab-update" class="btn btn-outline" style="padding: 8px 16px; font-size: 13px; width: auto; white-space: nowrap;">Cập nhật chỉ số</button>
     <button onclick="switchTab('reschedule')" id="tab-reschedule" class="btn btn-outline" style="padding: 8px 16px; font-size: 13px; width: auto; white-space: nowrap; border-color: #64748B; color: #64748B;">Đổi lịch</button>
 </div>
@@ -72,6 +73,44 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
+
+<!-- Training Plan Tab -->
+<div id="content-plan" style="display: none;">
+    <div class="card">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">Tạo giáo án mới</h3>
+        <form action="{{ route('trainer.student.training_plan.store', $student->id) }}" method="POST">
+            @csrf
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Tiêu đề giáo án</label>
+                <input type="text" name="title" placeholder="VD: Giáo án tuần 1 - Giảm mỡ" 
+                       style="width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; font-size: 16px; outline: none;" required>
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Nội dung bài tập</label>
+                <textarea name="content" rows="6" placeholder="Nhập chi tiết các bài tập, số hiệp, số lần..." 
+                          style="width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; font-size: 15px; outline: none; font-family: inherit;" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu giáo án</button>
+        </form>
+    </div>
+
+    <div style="margin-top: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Lịch sử giáo án</h3>
+        @forelse($student->trainingPlans as $plan)
+            <div class="card" style="margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h4 style="font-size: 16px; font-weight: 700; color: var(--primary);">{{ $plan->title }}</h4>
+                    <span style="font-size: 12px; color: var(--text-muted);">{{ $plan->created_at->format('d/m/Y') }}</span>
+                </div>
+                <div style="font-size: 14px; color: var(--text-main); white-space: pre-line; line-height: 1.6;">{{ $plan->content }}</div>
+            </div>
+        @empty
+            <div class="card" style="text-align: center; padding: 30px;">
+                <p style="color: var(--text-muted); font-size: 14px;">Chưa có giáo án nào được tạo.</p>
+            </div>
+        @endforelse
     </div>
 </div>
 
@@ -133,11 +172,12 @@
     function switchTab(tab) {
         // Hide all
         document.getElementById('content-progress').style.display = 'none';
+        document.getElementById('content-plan').style.display = 'none';
         document.getElementById('content-update').style.display = 'none';
         document.getElementById('content-reschedule').style.display = 'none';
         
         // Reset buttons
-        ['progress', 'update', 'reschedule'].forEach(t => {
+        ['progress', 'plan', 'update', 'reschedule'].forEach(t => {
             const btn = document.getElementById('tab-' + t);
             btn.classList.remove('btn-primary');
             btn.classList.add('btn-outline');
