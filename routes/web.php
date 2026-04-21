@@ -32,9 +32,16 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     } elseif (auth()->user()->role === 'trainer') {
         return redirect()->route('trainer.dashboard');
+    } elseif (auth()->user()->role === 'staff') {
+        return redirect()->route('staff.dashboard');
     }
     return redirect()->route('home');
 })->middleware(['auth'])->name('dashboard');
+
+// Staff Dashboard
+Route::middleware(['auth', \App\Http\Middleware\StaffRole::class])->prefix('staff')->name('staff.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\StaffController::class, 'dashboard'])->name('dashboard');
+});
 
 // Dashboard & Admin Management
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
