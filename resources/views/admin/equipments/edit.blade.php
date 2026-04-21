@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(auth()->user()->role === 'staff' ? 'layouts.staff' : 'layouts.admin')
 
 @section('title', 'Cập nhật Dụng cụ')
 
@@ -73,3 +73,4 @@
     </div>
 </div>
 @endsection
+

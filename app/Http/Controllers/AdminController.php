@@ -15,6 +15,10 @@ class AdminController extends Controller
      */
     public function index()
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Bạn không có quyền truy cập trang này.');
+        }
+
         $stats = [
             'total_users' => User::count(),
             'total_memberships' => Membership::count(),
@@ -28,29 +32,65 @@ class AdminController extends Controller
 
     /* Quản lý Lịch lớp (Schedules) */
 
-    public function schedules()
+    public function schedules(Request $request)
     {
         $now = now();
-        $oneMonthLater = now()->addDays(30);
+        $currentMonth = (int) $request->get('month', $now->month);
+        $currentYear = (int) $request->get('year', $now->year);
 
-        // Chỉ lấy lịch từ hiện tại đến 30 ngày tới, sắp xếp theo thời gian bắt đầu gần nhất
+        // Validate: chỉ cho phép xem tháng hiện tại và 2 tháng tiếp theo
+        $allowedMonths = [];
+        for ($i = 0; $i < 3; $i++) {
+            $d = $now->copy()->addMonths($i);
+            $allowedMonths[] = $d->year . '-' . $d->month;
+        }
+
+        if (!in_array($currentYear . '-' . $currentMonth, $allowedMonths)) {
+            $currentMonth = $now->month;
+            $currentYear = $now->year;
+        }
+
+        $startOfMonth = \Carbon\Carbon::create($currentYear, $currentMonth, 1)->startOfMonth();
+        $endOfMonth = $startOfMonth->copy()->endOfMonth();
+
+        // Lấy tất cả schedule trong tháng đang xem
         $schedules = Schedule::with('trainer.user')
-            ->where('start_time', '>=', $now)
-            ->where('start_time', '<=', $oneMonthLater)
+            ->whereBetween('start_time', [$startOfMonth, $endOfMonth])
             ->orderBy('start_time', 'asc')
-            ->paginate(15);
-        
+            ->get();
+
+        // Group theo ngày
+        $schedulesByDate = $schedules->groupBy(function ($schedule) {
+            return \Carbon\Carbon::parse($schedule->start_time)->format('Y-m-d');
+        });
+
         $stats = [
             'countAll' => Schedule::count(),
-            'countToday' => Schedule::whereDate('start_time', now()->toDateString())->count(),
-            // Cập nhật: Chỉ đếm là "Sắp diễn ra" nếu trạng thái là upcoming và chưa tới giờ bắt đầu
+            'countToday' => Schedule::whereDate('start_time', $now->toDateString())->count(),
             'countUpcoming' => Schedule::where('status', 'upcoming')
                 ->where('start_time', '>', $now)
                 ->count(),
             'countCancelled' => Schedule::where('status', 'cancelled')->count(),
+            'countThisMonth' => $schedules->count(),
         ];
 
-        return view('admin.schedules.index', compact('schedules', 'stats'));
+        // Build allowed months data for navigation
+        $monthsNav = [];
+        for ($i = 0; $i < 3; $i++) {
+            $d = $now->copy()->addMonths($i);
+            $monthsNav[] = [
+                'month' => $d->month,
+                'year' => $d->year,
+                'label' => 'Tháng ' . $d->month . '/' . $d->year,
+                'active' => ($d->month == $currentMonth && $d->year == $currentYear),
+            ];
+        }
+
+        return view('admin.schedules.index', compact(
+            'schedules', 'schedulesByDate', 'stats',
+            'currentMonth', 'currentYear', 'monthsNav',
+            'startOfMonth', 'endOfMonth'
+        ));
     }
 
     public function createSchedule()
