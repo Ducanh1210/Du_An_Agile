@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Apr 21, 2026 at 01:40 PM
--- Server version: 8.0.30
--- PHP Version: 8.5.1
+-- Máy chủ: localhost:3306
+-- Thời gian đã tạo: Th4 21, 2026 lúc 04:59 PM
+-- Phiên bản máy phục vụ: 8.0.30
+-- Phiên bản PHP: 8.3.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,54 +18,55 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gym_management`
+-- Cơ sở dữ liệu: `gym_management`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookings`
+-- Cấu trúc bảng cho bảng `bookings`
 --
 
 CREATE TABLE `bookings` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `subscription_id` bigint UNSIGNED NOT NULL,
-  `booking_type` enum('class','pt_session') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `booking_type` enum('class','pt_session') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `schedule_id` bigint UNSIGNED DEFAULT NULL,
   `trainer_id` bigint UNSIGNED DEFAULT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
   `price` decimal(12,2) NOT NULL DEFAULT '0.00',
-  `payment_status` enum('free','pending','paid') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'free',
-  `status` enum('confirmed','cancelled','completed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'confirmed',
+  `payment_status` enum('free','pending','paid') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'free',
+  `status` enum('confirmed','cancelled','completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'confirmed',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bookings`
+-- Đang đổ dữ liệu cho bảng `bookings`
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `subscription_id`, `booking_type`, `schedule_id`, `trainer_id`, `start_time`, `end_time`, `price`, `payment_status`, `status`, `created_at`, `updated_at`) VALUES
 (1, 3, 5, 'class', 121, 6, '2026-04-17 08:00:00', '2026-04-17 09:00:00', 0.00, 'free', 'confirmed', '2026-04-15 20:58:20', '2026-04-15 20:58:20'),
 (2, 3, 5, 'class', 45, 1, '2026-04-16 15:00:00', '2026-04-16 16:00:00', 0.00, 'free', 'confirmed', '2026-04-15 21:02:35', '2026-04-15 21:02:35'),
-(3, 3, 5, 'pt_session', NULL, 4, '2026-04-18 17:00:00', '2026-04-18 18:00:00', 0.00, 'free', 'confirmed', '2026-04-17 18:28:28', '2026-04-17 18:28:28');
+(3, 3, 5, 'pt_session', NULL, 4, '2026-04-18 17:00:00', '2026-04-18 18:00:00', 0.00, 'free', 'confirmed', '2026-04-17 18:28:28', '2026-04-17 18:28:28'),
+(4, 3, 5, 'class', 59, 1, '2026-04-22 15:00:00', '2026-04-22 16:00:00', 0.00, 'free', 'confirmed', '2026-04-21 16:48:08', '2026-04-21 16:48:08');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `checkins`
+-- Cấu trúc bảng cho bảng `checkins`
 --
 
 CREATE TABLE `checkins` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `subscription_id` bigint UNSIGNED NOT NULL,
-  `qr_token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Token QR động (UUID hoặc JWT ngắn hạn)',
+  `qr_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Token QR động (UUID hoặc JWT ngắn hạn)',
   `expires_at` datetime NOT NULL,
   `checked_in_at` datetime DEFAULT NULL,
-  `status` enum('active','used','expired') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `status` enum('active','used','expired') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -73,21 +74,21 @@ CREATE TABLE `checkins` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `equipments`
+-- Cấu trúc bảng cho bảng `equipments`
 --
 
 CREATE TABLE `equipments` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `status` enum('active','maintenance','broken') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `status` enum('active','maintenance','broken') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   `last_maintained_at` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `equipments`
+-- Đang đổ dữ liệu cho bảng `equipments`
 --
 
 INSERT INTO `equipments` (`id`, `name`, `description`, `status`, `last_maintained_at`, `created_at`, `updated_at`) VALUES
@@ -105,23 +106,23 @@ INSERT INTO `equipments` (`id`, `name`, `description`, `status`, `last_maintaine
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Cấu trúc bảng cho bảng `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
   `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `health_metrics`
+-- Cấu trúc bảng cho bảng `health_metrics`
 --
 
 CREATE TABLE `health_metrics` (
@@ -131,7 +132,7 @@ CREATE TABLE `health_metrics` (
   `weight` double(8,2) NOT NULL COMMENT 'Cân nặng (kg)',
   `bmi` double(8,2) NOT NULL COMMENT 'Chỉ số BMI',
   `fat_percent` double(8,2) DEFAULT NULL COMMENT 'Phần trăm mỡ (%)',
-  `recorded_by` enum('user','trainer') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'trainer',
+  `recorded_by` enum('user','trainer') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'trainer',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -139,14 +140,49 @@ CREATE TABLE `health_metrics` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `memberships`
+-- Cấu trúc bảng cho bảng `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint UNSIGNED NOT NULL,
+  `reserved_at` int UNSIGNED DEFAULT NULL,
+  `available_at` int UNSIGNED NOT NULL,
+  `created_at` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `leave_requests`
+--
+
+CREATE TABLE `leave_requests` (
+  `id` bigint UNSIGNED NOT NULL,
+  `trainer_id` bigint UNSIGNED NOT NULL,
+  `item_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `item_id` bigint UNSIGNED NOT NULL,
+  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `admin_note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `resolved_by` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `memberships`
 --
 
 CREATE TABLE `memberships` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên gói (VD: Gym Cơ Bản, Yoga 1 Tháng)',
-  `category` enum('gym','yoga') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Loại gói: thể hình hoặc yoga',
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên gói (VD: Gym Cơ Bản, Yoga 1 Tháng)',
+  `category` enum('gym','yoga') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Loại gói: thể hình hoặc yoga',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `duration_days` int NOT NULL COMMENT 'Số ngày hiệu lực',
   `price` decimal(12,2) NOT NULL COMMENT 'Giá cố định',
   `allow_pt` tinyint NOT NULL DEFAULT '0' COMMENT 'Gói có kèm PT không',
@@ -157,7 +193,7 @@ CREATE TABLE `memberships` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `memberships`
+-- Đang đổ dữ liệu cho bảng `memberships`
 --
 
 INSERT INTO `memberships` (`id`, `name`, `category`, `description`, `duration_days`, `price`, `allow_pt`, `pt_sessions`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -170,17 +206,17 @@ INSERT INTO `memberships` (`id`, `name`, `category`, `description`, `duration_da
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Cấu trúc bảng cho bảng `migrations`
 --
 
 CREATE TABLE `migrations` (
   `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Đang đổ dữ liệu cho bảng `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -213,30 +249,33 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (27, '2026_04_18_084232_create_news_categories_table', 1),
 (28, '2026_04_18_084233_create_news_tags_table', 1),
 (29, '2026_04_18_084234_create_news_comments_table', 1),
-(30, '2026_04_18_084242_create_news_post_tag_table', 1);
+(30, '2026_04_18_084242_create_news_post_tag_table', 1),
+(31, '2026_04_21_214542_create_leave_requests_table', 2),
+(32, '2026_04_21_234145_create_jobs_table', 3),
+(33, '2026_04_21_235312_fix_notifications_table_structure', 4);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `news`
+-- Cấu trúc bảng cho bảng `news`
 --
 
 CREATE TABLE `news` (
   `id` bigint UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `excerpt` text COLLATE utf8mb4_unicode_ci,
-  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `excerpt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `category_id` bigint UNSIGNED DEFAULT NULL,
   `author_id` bigint UNSIGNED DEFAULT NULL,
-  `news_status` enum('draft','pending','published','hidden') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `news_status` enum('draft','pending','published','hidden') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
   `is_featured` tinyint NOT NULL DEFAULT '0',
   `views` int NOT NULL DEFAULT '0',
-  `title_font_family` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Outfit',
-  `title_font_size` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '24',
-  `meta_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `meta_description` text COLLATE utf8mb4_unicode_ci,
+  `title_font_family` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Outfit',
+  `title_font_size` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '24',
+  `meta_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `published_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -244,7 +283,7 @@ CREATE TABLE `news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `news`
+-- Đang đổ dữ liệu cho bảng `news`
 --
 
 INSERT INTO `news` (`id`, `title`, `slug`, `image`, `excerpt`, `content`, `category_id`, `author_id`, `news_status`, `is_featured`, `views`, `title_font_family`, `title_font_size`, `meta_title`, `meta_description`, `published_at`, `deleted_at`, `created_at`, `updated_at`) VALUES
@@ -262,21 +301,21 @@ INSERT INTO `news` (`id`, `title`, `slug`, `image`, `excerpt`, `content`, `categ
 -- --------------------------------------------------------
 
 --
--- Table structure for table `news_categories`
+-- Cấu trúc bảng cho bảng `news_categories`
 --
 
 CREATE TABLE `news_categories` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `news_categories`
+-- Đang đổ dữ liệu cho bảng `news_categories`
 --
 
 INSERT INTO `news_categories` (`id`, `name`, `slug`, `description`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -288,14 +327,14 @@ INSERT INTO `news_categories` (`id`, `name`, `slug`, `description`, `is_active`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `news_comments`
+-- Cấu trúc bảng cho bảng `news_comments`
 --
 
 CREATE TABLE `news_comments` (
   `id` bigint UNSIGNED NOT NULL,
   `news_id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_approved` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -304,7 +343,7 @@ CREATE TABLE `news_comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `news_post_tag`
+-- Cấu trúc bảng cho bảng `news_post_tag`
 --
 
 CREATE TABLE `news_post_tag` (
@@ -316,7 +355,7 @@ CREATE TABLE `news_post_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `news_post_tag`
+-- Đang đổ dữ liệu cho bảng `news_post_tag`
 --
 
 INSERT INTO `news_post_tag` (`id`, `news_id`, `news_tag_id`, `created_at`, `updated_at`) VALUES
@@ -345,19 +384,19 @@ INSERT INTO `news_post_tag` (`id`, `news_id`, `news_tag_id`, `created_at`, `upda
 -- --------------------------------------------------------
 
 --
--- Table structure for table `news_tags`
+-- Cấu trúc bảng cho bảng `news_tags`
 --
 
 CREATE TABLE `news_tags` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `news_tags`
+-- Đang đổ dữ liệu cho bảng `news_tags`
 --
 
 INSERT INTO `news_tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
@@ -371,16 +410,16 @@ INSERT INTO `news_tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUE
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
+-- Cấu trúc bảng cho bảng `notifications`
 --
 
 CREATE TABLE `notifications` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('system','reminder','booking','payment') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'system',
-  `is_read` tinyint NOT NULL DEFAULT '0',
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_id` bigint UNSIGNED NOT NULL,
+  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -388,17 +427,17 @@ CREATE TABLE `notifications` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_reset_tokens`
+-- Cấu trúc bảng cho bảng `password_reset_tokens`
 --
 
 CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `password_reset_tokens`
+-- Đang đổ dữ liệu cho bảng `password_reset_tokens`
 --
 
 INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
@@ -407,60 +446,60 @@ INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payments`
+-- Cấu trúc bảng cho bảng `payments`
 --
 
 CREATE TABLE `payments` (
   `id` bigint UNSIGNED NOT NULL,
   `subscription_id` bigint UNSIGNED NOT NULL,
   `amount` decimal(12,2) NOT NULL,
-  `method` enum('cash','transfer','e_wallet') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','completed','refunded','cancelled') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
-  `invoice_code` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Mã hóa đơn tự sinh',
-  `note` text COLLATE utf8mb4_unicode_ci,
+  `method` enum('cash','transfer','e_wallet') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','completed','refunded','cancelled') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `invoice_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Mã hóa đơn tự sinh',
+  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `confirmed_by` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `payments`
+-- Đang đổ dữ liệu cho bảng `payments`
 --
 
 INSERT INTO `payments` (`id`, `subscription_id`, `amount`, `method`, `status`, `invoice_code`, `note`, `confirmed_by`, `created_at`, `updated_at`) VALUES
-(1, 2, 900000.00, 'e_wallet', 'pending', 'VNP1776087760', NULL, NULL, '2026-04-13 06:42:40', '2026-04-13 06:42:40'),
-(2, 3, 900000.00, 'e_wallet', 'pending', 'VNP1776087996', NULL, NULL, '2026-04-13 06:46:36', '2026-04-13 06:46:36'),
-(3, 4, 900000.00, 'e_wallet', 'pending', 'VNP1776088052', NULL, NULL, '2026-04-13 06:47:32', '2026-04-13 06:47:32'),
+(1, 2, 900000.00, 'e_wallet', 'cancelled', 'VNP1776087760', NULL, 1, '2026-04-13 06:42:40', '2026-04-21 14:01:25'),
+(2, 3, 900000.00, 'e_wallet', 'cancelled', 'VNP1776087996', NULL, 1, '2026-04-13 06:46:36', '2026-04-21 14:01:22'),
+(3, 4, 900000.00, 'e_wallet', 'cancelled', 'VNP1776088052', NULL, 1, '2026-04-13 06:47:32', '2026-04-21 14:01:19'),
 (4, 5, 900000.00, 'e_wallet', 'completed', 'VNP1776088131', NULL, NULL, '2026-04-13 06:48:51', '2026-04-13 06:49:56'),
-(5, 6, 800000.00, 'e_wallet', 'pending', 'VNP1776090417', NULL, NULL, '2026-04-13 07:26:57', '2026-04-13 07:26:57'),
-(6, 7, 800000.00, 'e_wallet', 'pending', 'VNP1776090435', NULL, NULL, '2026-04-13 07:27:15', '2026-04-13 07:27:15'),
-(7, 8, 800000.00, 'e_wallet', 'pending', 'VNP1776090475', NULL, NULL, '2026-04-13 07:27:55', '2026-04-13 07:27:55'),
-(8, 9, 300000.00, 'e_wallet', 'pending', 'VNP1776135937', NULL, NULL, '2026-04-13 20:05:37', '2026-04-13 20:05:37'),
+(5, 6, 800000.00, 'e_wallet', 'cancelled', 'VNP1776090417', NULL, 1, '2026-04-13 07:26:57', '2026-04-21 14:01:13'),
+(6, 7, 800000.00, 'e_wallet', 'cancelled', 'VNP1776090435', NULL, 1, '2026-04-13 07:27:15', '2026-04-21 14:01:09'),
+(7, 8, 800000.00, 'e_wallet', 'cancelled', 'VNP1776090475', NULL, 1, '2026-04-13 07:27:55', '2026-04-21 14:01:06'),
+(8, 9, 300000.00, 'e_wallet', 'cancelled', 'VNP1776135937', NULL, 1, '2026-04-13 20:05:37', '2026-04-21 14:01:02'),
 (9, 10, 300000.00, 'e_wallet', 'completed', 'VNP1776136124', NULL, NULL, '2026-04-13 20:08:44', '2026-04-13 20:09:19'),
 (10, 11, 300000.00, 'e_wallet', 'completed', 'VNP1776138882', NULL, NULL, '2026-04-13 20:54:42', '2026-04-13 20:55:02'),
 (11, 12, 1500000.00, 'e_wallet', 'cancelled', 'VNP1776213837', NULL, NULL, '2026-04-14 17:43:57', '2026-04-14 18:36:15'),
 (12, 13, 1500000.00, 'e_wallet', 'completed', 'VNP1776213842', NULL, NULL, '2026-04-14 17:44:02', '2026-04-14 17:45:28'),
 (13, 14, 800000.00, 'e_wallet', 'completed', 'VNP1776214104', NULL, NULL, '2026-04-14 17:48:24', '2026-04-14 17:48:40'),
-(14, 15, 900000.00, 'e_wallet', 'pending', 'VNP1776214432', NULL, NULL, '2026-04-14 17:53:52', '2026-04-14 17:53:52'),
+(14, 15, 900000.00, 'e_wallet', 'cancelled', 'VNP1776214432', NULL, 1, '2026-04-14 17:53:52', '2026-04-21 14:00:53'),
 (15, 16, 300000.00, 'e_wallet', 'cancelled', 'VNP1776214605', NULL, NULL, '2026-04-14 17:56:45', '2026-04-14 18:36:29'),
-(16, 17, 300000.00, 'e_wallet', 'pending', 'VNP1776214778', NULL, NULL, '2026-04-14 17:59:38', '2026-04-14 17:59:38'),
-(17, 20, 800000.00, 'e_wallet', 'pending', 'VNP1776215168', NULL, NULL, '2026-04-14 18:06:08', '2026-04-14 18:06:08'),
+(16, 17, 300000.00, 'e_wallet', 'cancelled', 'VNP1776214778', NULL, 1, '2026-04-14 17:59:38', '2026-04-21 14:00:42'),
+(17, 20, 800000.00, 'e_wallet', 'cancelled', 'VNP1776215168', NULL, 1, '2026-04-14 18:06:08', '2026-04-21 14:00:46'),
 (18, 23, 1500000.00, 'e_wallet', 'completed', 'VNP1776215868', NULL, NULL, '2026-04-14 18:17:48', '2026-04-14 18:18:05'),
-(19, 24, 1500000.00, 'e_wallet', 'pending', 'VNP1776218166', NULL, NULL, '2026-04-14 18:56:06', '2026-04-14 18:56:06');
+(19, 24, 1500000.00, 'e_wallet', 'cancelled', 'VNP1776218166', NULL, 1, '2026-04-14 18:56:06', '2026-04-21 14:00:50');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personal_access_tokens`
+-- Cấu trúc bảng cho bảng `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
   `id` bigint UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -470,7 +509,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reschedule_requests`
+-- Cấu trúc bảng cho bảng `reschedule_requests`
 --
 
 CREATE TABLE `reschedule_requests` (
@@ -479,8 +518,8 @@ CREATE TABLE `reschedule_requests` (
   `requested_by` bigint UNSIGNED NOT NULL,
   `original_start_time` datetime NOT NULL,
   `new_start_time` datetime NOT NULL,
-  `reason` text COLLATE utf8mb4_unicode_ci,
-  `status` enum('pending','approved','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -488,7 +527,7 @@ CREATE TABLE `reschedule_requests` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reviews`
+-- Cấu trúc bảng cho bảng `reviews`
 --
 
 CREATE TABLE `reviews` (
@@ -497,7 +536,7 @@ CREATE TABLE `reviews` (
   `trainer_id` bigint UNSIGNED NOT NULL,
   `booking_id` bigint UNSIGNED DEFAULT NULL,
   `rating` int NOT NULL COMMENT '1-5 sao',
-  `comment` text COLLATE utf8mb4_unicode_ci,
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -505,25 +544,25 @@ CREATE TABLE `reviews` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `schedules`
+-- Cấu trúc bảng cho bảng `schedules`
 --
 
 CREATE TABLE `schedules` (
   `id` bigint UNSIGNED NOT NULL,
-  `title` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `category` enum('gym','yoga') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category` enum('gym','yoga') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `trainer_id` bigint UNSIGNED DEFAULT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
   `capacity` int NOT NULL DEFAULT '20',
   `current_enrolled` int NOT NULL DEFAULT '0',
-  `status` enum('upcoming','ongoing','completed','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'upcoming',
+  `status` enum('upcoming','ongoing','completed','cancelled') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'upcoming',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `schedules`
+-- Đang đổ dữ liệu cho bảng `schedules`
 --
 
 INSERT INTO `schedules` (`id`, `title`, `category`, `trainer_id`, `start_time`, `end_time`, `capacity`, `current_enrolled`, `status`, `created_at`, `updated_at`) VALUES
@@ -585,7 +624,7 @@ INSERT INTO `schedules` (`id`, `title`, `category`, `trainer_id`, `start_time`, 
 (56, 'Ngực & Tay Sau (Bodybuilding)', 'gym', 1, '2026-04-20 19:00:00', '2026-04-20 20:00:00', 15, 11, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
 (57, 'Chân & Mông (Lower Body)', 'gym', 1, '2026-04-21 15:00:00', '2026-04-21 16:00:00', 15, 1, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
 (58, 'Lưng Xô & Tay Trước', 'gym', 1, '2026-04-21 19:00:00', '2026-04-21 20:00:00', 15, 9, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
-(59, 'Vai & Bụng (Core)', 'gym', 1, '2026-04-22 15:00:00', '2026-04-22 16:00:00', 15, 5, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
+(59, 'Vai & Bụng (Core)', 'gym', 1, '2026-04-22 15:00:00', '2026-04-22 16:00:00', 15, 6, 'upcoming', '2026-04-15 20:42:40', '2026-04-21 16:48:08'),
 (60, 'Ngực & Tay Sau (Bodybuilding)', 'gym', 1, '2026-04-22 19:00:00', '2026-04-22 20:00:00', 15, 14, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
 (61, 'Lưng Xô & Tay Trước', 'gym', 1, '2026-04-23 08:00:00', '2026-04-23 09:00:00', 15, 13, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
 (62, 'Vai & Bụng (Core)', 'gym', 1, '2026-04-23 10:00:00', '2026-04-23 11:00:00', 15, 1, 'upcoming', '2026-04-15 20:42:40', '2026-04-15 20:42:40'),
@@ -719,7 +758,7 @@ INSERT INTO `schedules` (`id`, `title`, `category`, `trainer_id`, `start_time`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `session_reports`
+-- Cấu trúc bảng cho bảng `session_reports`
 --
 
 CREATE TABLE `session_reports` (
@@ -727,9 +766,9 @@ CREATE TABLE `session_reports` (
   `booking_id` bigint UNSIGNED NOT NULL,
   `trainer_id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci COMMENT 'Nhận xét của PT',
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Nhận xét của PT',
   `effort_rating` int DEFAULT NULL COMMENT 'Đánh giá nỗ lực (1-10)',
-  `session_intensity` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Cường độ buổi tập (Low, Medium, High)',
+  `session_intensity` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Cường độ buổi tập (Low, Medium, High)',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -737,7 +776,7 @@ CREATE TABLE `session_reports` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subscriptions`
+-- Cấu trúc bảng cho bảng `subscriptions`
 --
 
 CREATE TABLE `subscriptions` (
@@ -749,8 +788,8 @@ CREATE TABLE `subscriptions` (
   `end_date` date NOT NULL,
   `final_price` decimal(12,2) NOT NULL COMMENT 'Giá thực tế khi đăng ký',
   `pt_sessions_left` int NOT NULL DEFAULT '0' COMMENT 'Số buổi PT còn lại',
-  `status` enum('pending_payment','active','expired','cancelled','frozen') COLLATE utf8mb4_unicode_ci DEFAULT 'pending_payment',
-  `cancel_reason` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending_payment','active','expired','cancelled','frozen') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'pending_payment',
+  `cancel_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `cancelled_at` datetime DEFAULT NULL,
   `frozen_until` date DEFAULT NULL COMMENT 'Ngày kết thúc đóng băng',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -758,7 +797,7 @@ CREATE TABLE `subscriptions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `subscriptions`
+-- Đang đổ dữ liệu cho bảng `subscriptions`
 --
 
 INSERT INTO `subscriptions` (`id`, `user_id`, `membership_id`, `trainer_id`, `start_date`, `end_date`, `final_price`, `pt_sessions_left`, `status`, `cancel_reason`, `cancelled_at`, `frozen_until`, `created_at`, `updated_at`) VALUES
@@ -786,17 +825,17 @@ INSERT INTO `subscriptions` (`id`, `user_id`, `membership_id`, `trainer_id`, `st
 -- --------------------------------------------------------
 
 --
--- Table structure for table `support_tickets`
+-- Cấu trúc bảng cho bảng `support_tickets`
 --
 
 CREATE TABLE `support_tickets` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `subject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reply` text COLLATE utf8mb4_unicode_ci,
+  `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reply` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `assigned_to` bigint UNSIGNED DEFAULT NULL,
-  `status` enum('open','in_progress','closed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
+  `status` enum('open','in_progress','closed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -804,13 +843,13 @@ CREATE TABLE `support_tickets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `trainers`
+-- Cấu trúc bảng cho bảng `trainers`
 --
 
 CREATE TABLE `trainers` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `specialization` enum('gym','yoga','both') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Chuyên môn: thể hình / yoga / cả hai',
+  `specialization` enum('gym','yoga','both') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Chuyên môn: thể hình / yoga / cả hai',
   `price_per_session` decimal(12,2) NOT NULL DEFAULT '500000.00',
   `is_available` tinyint NOT NULL DEFAULT '1' COMMENT 'Đang nhận học viên',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -818,7 +857,7 @@ CREATE TABLE `trainers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `trainers`
+-- Đang đổ dữ liệu cho bảng `trainers`
 --
 
 INSERT INTO `trainers` (`id`, `user_id`, `specialization`, `price_per_session`, `is_available`, `created_at`, `updated_at`) VALUES
@@ -833,33 +872,33 @@ INSERT INTO `trainers` (`id`, `user_id`, `specialization`, `price_per_session`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Cấu trúc bảng cho bảng `users`
 --
 
 CREATE TABLE `users` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `height` double(8,2) DEFAULT NULL COMMENT 'Chiều cao (cm)',
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user' COMMENT 'Vai trò: user, staff, admin, trainer',
-  `avatar_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user' COMMENT 'Vai trò: user, staff, admin, trainer',
+  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyint NOT NULL DEFAULT '1',
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Đang đổ dữ liệu cho bảng `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `height`, `password`, `role`, `avatar_url`, `is_active`, `email_verified_at`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Admin', 'admin@gmail.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'admin', NULL, 1, '2026-04-02 16:29:21', NULL, '2026-04-02 15:34:25', '2026-04-21 02:30:31'),
 (2, 'Client Test', 'client@gmail.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'user', NULL, 1, '2026-04-02 16:29:31', NULL, '2026-04-02 15:34:26', '2026-04-21 02:30:31'),
-(3, 'Đức Anh Nguyễn', 'anp93005@gmail.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'user', '/storage/avatars/UIbibMtXLrwdzJG9FUcXs4XL7FpZdB7YMVGSSwGm.jpg', 1, NULL, NULL, '2026-04-02 15:38:04', '2026-04-21 02:30:31'),
+(3, 'Đức Anh Nguyễn', 'anp93005@gmail.com', NULL, NULL, '$2y$10$h/Q.8WCBlsIRQMNDQkUXquGvs9f0.Rh0.YjRP00y9qlFX62hp3KP.', 'user', '/storage/avatars/UIbibMtXLrwdzJG9FUcXs4XL7FpZdB7YMVGSSwGm.jpg', 1, NULL, NULL, '2026-04-02 15:38:04', '2026-04-21 15:20:25'),
 (5, 'Nguyễn Minh Tuấn', 'tuan.gym@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-10 16:00:39', '2026-04-21 02:30:31'),
 (6, 'Trần Thị Lan', 'lan.yoga@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-10 16:00:40', '2026-04-21 02:30:31'),
 (7, 'Lê Văn Hùng', 'hung.boxing@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-10 16:00:40', '2026-04-21 02:30:31'),
@@ -868,14 +907,15 @@ INSERT INTO `users` (`id`, `name`, `email`, `phone`, `height`, `password`, `role
 (10, 'Phan Đức Tú', 'tubun2@gmail.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'staff', NULL, 1, NULL, NULL, '2026-04-11 00:18:02', '2026-04-21 02:30:31'),
 (11, 'Admin User', 'admin@dummy.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'user', NULL, 1, NULL, NULL, '2026-04-11 01:46:51', '2026-04-21 02:30:31'),
 (12, 'Lê Văn Hùng', 'hung.bodybuilding@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-15 20:42:41', '2026-04-21 02:30:31'),
-(13, 'Phạm Thu Hà', 'ha.yoga@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'https://images.unsplash.com/photo-1609899537878-49e9196c5bcd?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-15 20:42:41', '2026-04-21 02:30:31');
+(13, 'Phạm Thu Hà', 'ha.yoga@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'https://images.unsplash.com/photo-1609899537878-49e9196c5bcd?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-15 20:42:41', '2026-04-21 02:30:31'),
+(15, 'duc anh', 'chau12@gmail.com', NULL, NULL, '$2y$10$hR4UxDITp6yfPCZh/TNJ2uYG12NNQfDZXovN5FKfQVRNgnpE20Pr6', 'staff', NULL, 1, NULL, NULL, '2026-04-21 15:51:23', '2026-04-21 15:51:23');
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `bookings`
+-- Chỉ mục cho bảng `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
@@ -885,7 +925,7 @@ ALTER TABLE `bookings`
   ADD KEY `bookings_trainer_id_foreign` (`trainer_id`);
 
 --
--- Indexes for table `checkins`
+-- Chỉ mục cho bảng `checkins`
 --
 ALTER TABLE `checkins`
   ADD PRIMARY KEY (`id`),
@@ -894,20 +934,20 @@ ALTER TABLE `checkins`
   ADD KEY `checkins_subscription_id_foreign` (`subscription_id`);
 
 --
--- Indexes for table `equipments`
+-- Chỉ mục cho bảng `equipments`
 --
 ALTER TABLE `equipments`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `failed_jobs`
+-- Chỉ mục cho bảng `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indexes for table `health_metrics`
+-- Chỉ mục cho bảng `health_metrics`
 --
 ALTER TABLE `health_metrics`
   ADD PRIMARY KEY (`id`),
@@ -915,33 +955,48 @@ ALTER TABLE `health_metrics`
   ADD KEY `health_metrics_trainer_id_foreign` (`trainer_id`);
 
 --
--- Indexes for table `memberships`
+-- Chỉ mục cho bảng `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Chỉ mục cho bảng `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leave_requests_trainer_id_foreign` (`trainer_id`),
+  ADD KEY `leave_requests_resolved_by_foreign` (`resolved_by`);
+
+--
+-- Chỉ mục cho bảng `memberships`
 --
 ALTER TABLE `memberships`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `migrations`
+-- Chỉ mục cho bảng `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `news`
+-- Chỉ mục cho bảng `news`
 --
 ALTER TABLE `news`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `news_slug_unique` (`slug`);
 
 --
--- Indexes for table `news_categories`
+-- Chỉ mục cho bảng `news_categories`
 --
 ALTER TABLE `news_categories`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `news_categories_slug_unique` (`slug`);
 
 --
--- Indexes for table `news_comments`
+-- Chỉ mục cho bảng `news_comments`
 --
 ALTER TABLE `news_comments`
   ADD PRIMARY KEY (`id`),
@@ -949,33 +1004,33 @@ ALTER TABLE `news_comments`
   ADD KEY `news_comments_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `news_post_tag`
+-- Chỉ mục cho bảng `news_post_tag`
 --
 ALTER TABLE `news_post_tag`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `news_tags`
+-- Chỉ mục cho bảng `news_tags`
 --
 ALTER TABLE `news_tags`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `news_tags_slug_unique` (`slug`);
 
 --
--- Indexes for table `notifications`
+-- Chỉ mục cho bảng `notifications`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `notifications_user_id_foreign` (`user_id`);
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
 
 --
--- Indexes for table `password_reset_tokens`
+-- Chỉ mục cho bảng `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indexes for table `payments`
+-- Chỉ mục cho bảng `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
@@ -983,7 +1038,7 @@ ALTER TABLE `payments`
   ADD KEY `payments_confirmed_by_foreign` (`confirmed_by`);
 
 --
--- Indexes for table `personal_access_tokens`
+-- Chỉ mục cho bảng `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -991,7 +1046,7 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `reschedule_requests`
+-- Chỉ mục cho bảng `reschedule_requests`
 --
 ALTER TABLE `reschedule_requests`
   ADD PRIMARY KEY (`id`),
@@ -999,7 +1054,7 @@ ALTER TABLE `reschedule_requests`
   ADD KEY `reschedule_requests_requested_by_foreign` (`requested_by`);
 
 --
--- Indexes for table `reviews`
+-- Chỉ mục cho bảng `reviews`
 --
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`),
@@ -1008,14 +1063,14 @@ ALTER TABLE `reviews`
   ADD KEY `reviews_booking_id_foreign` (`booking_id`);
 
 --
--- Indexes for table `schedules`
+-- Chỉ mục cho bảng `schedules`
 --
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`id`),
   ADD KEY `schedules_trainer_id_foreign` (`trainer_id`);
 
 --
--- Indexes for table `session_reports`
+-- Chỉ mục cho bảng `session_reports`
 --
 ALTER TABLE `session_reports`
   ADD PRIMARY KEY (`id`),
@@ -1024,7 +1079,7 @@ ALTER TABLE `session_reports`
   ADD KEY `session_reports_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `subscriptions`
+-- Chỉ mục cho bảng `subscriptions`
 --
 ALTER TABLE `subscriptions`
   ADD PRIMARY KEY (`id`),
@@ -1033,7 +1088,7 @@ ALTER TABLE `subscriptions`
   ADD KEY `subscriptions_trainer_id_foreign` (`trainer_id`);
 
 --
--- Indexes for table `support_tickets`
+-- Chỉ mục cho bảng `support_tickets`
 --
 ALTER TABLE `support_tickets`
   ADD PRIMARY KEY (`id`),
@@ -1041,167 +1096,173 @@ ALTER TABLE `support_tickets`
   ADD KEY `support_tickets_assigned_to_foreign` (`assigned_to`);
 
 --
--- Indexes for table `trainers`
+-- Chỉ mục cho bảng `trainers`
 --
 ALTER TABLE `trainers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `trainers_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `users`
+-- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `bookings`
+-- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `checkins`
+-- AUTO_INCREMENT cho bảng `checkins`
 --
 ALTER TABLE `checkins`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `equipments`
+-- AUTO_INCREMENT cho bảng `equipments`
 --
 ALTER TABLE `equipments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT cho bảng `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `health_metrics`
+-- AUTO_INCREMENT cho bảng `health_metrics`
 --
 ALTER TABLE `health_metrics`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `memberships`
+-- AUTO_INCREMENT cho bảng `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `memberships`
 --
 ALTER TABLE `memberships`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT for table `news`
+-- AUTO_INCREMENT cho bảng `news`
 --
 ALTER TABLE `news`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `news_categories`
+-- AUTO_INCREMENT cho bảng `news_categories`
 --
 ALTER TABLE `news_categories`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `news_comments`
+-- AUTO_INCREMENT cho bảng `news_comments`
 --
 ALTER TABLE `news_comments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `news_post_tag`
+-- AUTO_INCREMENT cho bảng `news_post_tag`
 --
 ALTER TABLE `news_post_tag`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `news_tags`
+-- AUTO_INCREMENT cho bảng `news_tags`
 --
 ALTER TABLE `news_tags`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `payments`
+-- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT for table `personal_access_tokens`
+-- AUTO_INCREMENT cho bảng `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reschedule_requests`
+-- AUTO_INCREMENT cho bảng `reschedule_requests`
 --
 ALTER TABLE `reschedule_requests`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reviews`
+-- AUTO_INCREMENT cho bảng `reviews`
 --
 ALTER TABLE `reviews`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `schedules`
+-- AUTO_INCREMENT cho bảng `schedules`
 --
 ALTER TABLE `schedules`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
 
 --
--- AUTO_INCREMENT for table `session_reports`
+-- AUTO_INCREMENT cho bảng `session_reports`
 --
 ALTER TABLE `session_reports`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `subscriptions`
+-- AUTO_INCREMENT cho bảng `subscriptions`
 --
 ALTER TABLE `subscriptions`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `support_tickets`
+-- AUTO_INCREMENT cho bảng `support_tickets`
 --
 ALTER TABLE `support_tickets`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `trainers`
+-- AUTO_INCREMENT cho bảng `trainers`
 --
 ALTER TABLE `trainers`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- Constraints for dumped tables
+-- Các ràng buộc cho các bảng đã đổ
 --
 
 --
--- Constraints for table `bookings`
+-- Các ràng buộc cho bảng `bookings`
 --
 ALTER TABLE `bookings`
   ADD CONSTRAINT `bookings_schedule_id_foreign` FOREIGN KEY (`schedule_id`) REFERENCES `schedules` (`id`),
@@ -1210,48 +1271,49 @@ ALTER TABLE `bookings`
   ADD CONSTRAINT `bookings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `checkins`
+-- Các ràng buộc cho bảng `checkins`
 --
 ALTER TABLE `checkins`
   ADD CONSTRAINT `checkins_subscription_id_foreign` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`),
   ADD CONSTRAINT `checkins_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `health_metrics`
+-- Các ràng buộc cho bảng `health_metrics`
 --
 ALTER TABLE `health_metrics`
   ADD CONSTRAINT `health_metrics_trainer_id_foreign` FOREIGN KEY (`trainer_id`) REFERENCES `trainers` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `health_metrics_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `news_comments`
+-- Các ràng buộc cho bảng `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  ADD CONSTRAINT `leave_requests_resolved_by_foreign` FOREIGN KEY (`resolved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `leave_requests_trainer_id_foreign` FOREIGN KEY (`trainer_id`) REFERENCES `trainers` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `news_comments`
 --
 ALTER TABLE `news_comments`
   ADD CONSTRAINT `news_comments_news_id_foreign` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `news_comments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
---
--- Constraints for table `payments`
+-- Các ràng buộc cho bảng `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_confirmed_by_foreign` FOREIGN KEY (`confirmed_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `payments_subscription_id_foreign` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`);
 
 --
--- Constraints for table `reschedule_requests`
+-- Các ràng buộc cho bảng `reschedule_requests`
 --
 ALTER TABLE `reschedule_requests`
   ADD CONSTRAINT `reschedule_requests_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reschedule_requests_requested_by_foreign` FOREIGN KEY (`requested_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `reviews`
+-- Các ràng buộc cho bảng `reviews`
 --
 ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`),
@@ -1259,13 +1321,13 @@ ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `schedules`
+-- Các ràng buộc cho bảng `schedules`
 --
 ALTER TABLE `schedules`
   ADD CONSTRAINT `schedules_trainer_id_foreign` FOREIGN KEY (`trainer_id`) REFERENCES `trainers` (`id`);
 
 --
--- Constraints for table `session_reports`
+-- Các ràng buộc cho bảng `session_reports`
 --
 ALTER TABLE `session_reports`
   ADD CONSTRAINT `session_reports_booking_id_foreign` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE,
@@ -1273,7 +1335,7 @@ ALTER TABLE `session_reports`
   ADD CONSTRAINT `session_reports_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `subscriptions`
+-- Các ràng buộc cho bảng `subscriptions`
 --
 ALTER TABLE `subscriptions`
   ADD CONSTRAINT `subscriptions_membership_id_foreign` FOREIGN KEY (`membership_id`) REFERENCES `memberships` (`id`),
@@ -1281,14 +1343,14 @@ ALTER TABLE `subscriptions`
   ADD CONSTRAINT `subscriptions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `support_tickets`
+-- Các ràng buộc cho bảng `support_tickets`
 --
 ALTER TABLE `support_tickets`
   ADD CONSTRAINT `support_tickets_assigned_to_foreign` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `support_tickets_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `trainers`
+-- Các ràng buộc cho bảng `trainers`
 --
 ALTER TABLE `trainers`
   ADD CONSTRAINT `trainers_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;

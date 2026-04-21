@@ -55,6 +55,11 @@ class News extends Model
         return $this->hasMany(NewsComment::class);
     }
 
+    public function approvedComments()
+    {
+        return $this->hasMany(NewsComment::class)->where('is_approved', true);
+    }
+
     public function scopePublished($query)
     {
         return $query->where('news_status', 'published');

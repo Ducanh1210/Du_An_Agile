@@ -162,9 +162,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lich-tap-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::post('/pt-bookings', [\App\Http\Controllers\PTBookingController::class, 'store'])->name('pt-bookings.store');
+    // Internal Notification API Routes
+    Route::prefix('api/notifications')->group(function () {
+        Route::get('/recent', [\App\Http\Controllers\NotificationController::class, 'getRecent']);
+        Route::post('/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+        Route::post('/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+    });
+
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
-    Route::post('/reschedule/{id}/respond', [\App\Http\Controllers\HomeController::class, 'respondToReschedule'])->name('reschedule.respond');
-    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'cancel'])->name('bookings.cancel');
 });
 
 // Client Profile, Subscription & Calendar Routes
