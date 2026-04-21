@@ -40,6 +40,10 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended('/trainer/dashboard');
         }
 
+        if ($request->user()->role === 'staff') {
+            return redirect()->intended('/staff/dashboard');
+        }
+
         if (session()->has('package')) {
             $packageId = session()->pull('package');
             return redirect()->route('payment.checkout', ['package' => $packageId]);

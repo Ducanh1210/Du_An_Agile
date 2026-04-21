@@ -28,6 +28,18 @@ class PaymentController extends Controller
         $packageId = $request->query('package');
         $membership = Membership::findOrFail($packageId);
 
+        // Kiểm tra xem User đã có gói nào đang kích hoạt hoặc đang chờ thanh toán chưa
+        $existingSub = Subscription::where('user_id', Auth::id())
+            ->whereIn('status', ['active', 'pending_payment'])
+            ->first();
+
+        if ($existingSub) {
+            $msg = $existingSub->status === 'active' 
+                ? 'Bạn đã có một gói tập đang hoạt động. Vui lòng đợi gói cũ hết hạn trước khi đăng ký mới.'
+                : 'Bạn đang có một giao dịch chờ thanh toán. Vui lòng hoàn tất hoặc hủy giao dịch cũ trước khi đăng ký mới.';
+            return redirect()->route('client.memberships')->with('error', $msg);
+        }
+
         return view('client.checkout', compact('membership'));
     }
 
@@ -42,6 +54,15 @@ class PaymentController extends Controller
 
         $user = Auth::user();
         $membership = Membership::findOrFail($request->membership_id);
+
+        // Guard: Kiểm tra lại một lần nữa ở phía Server
+        $hasActiveSub = Subscription::where('user_id', $user->id)
+            ->whereIn('status', ['active', 'pending_payment'])
+            ->exists();
+
+        if ($hasActiveSub) {
+            return redirect()->route('client.memberships')->with('error', 'Bạn đã có một gói tập đang hoạt động hoặc đang chờ thanh toán.');
+        }
 
         try {
             DB::beginTransaction();

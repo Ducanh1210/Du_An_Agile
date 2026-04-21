@@ -12,6 +12,7 @@ class Trainer extends Model
     protected $fillable = [
         'user_id',
         'specialization',
+        'price_per_session',
         'is_available',
         'price_per_session',
     ];

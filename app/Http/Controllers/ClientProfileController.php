@@ -87,6 +87,18 @@ class ClientProfileController extends Controller
     public function subscriptions()
     {
         $user = Auth::user();
+        
+        // --- 1. Tự động kiểm tra và cập nhật các gói đã hết hạn ---
+        $expiredSubs = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->where('end_date', '<', now()->toDateString())
+            ->get();
+            
+        foreach ($expiredSubs as $sub) {
+            $sub->update(['status' => 'expired']);
+        }
+        // --------------------------------------------------------
+
         $subscriptions = Subscription::with(['membership', 'trainer.user'])
             ->where('user_id', $user->id)
             ->orderByDesc('created_at')

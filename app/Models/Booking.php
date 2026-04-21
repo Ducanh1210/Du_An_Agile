@@ -19,6 +19,8 @@ class Booking extends Model
         'payment_status',
         'start_time',
         'end_time',
+        'price',
+        'payment_status',
         'status',
     ];
 

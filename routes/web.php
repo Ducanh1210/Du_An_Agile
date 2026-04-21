@@ -32,9 +32,16 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     } elseif (auth()->user()->role === 'trainer') {
         return redirect()->route('trainer.dashboard');
+    } elseif (auth()->user()->role === 'staff') {
+        return redirect()->route('staff.dashboard');
     }
     return redirect()->route('home');
 })->middleware(['auth'])->name('dashboard');
+
+// Staff Dashboard
+Route::middleware(['auth', \App\Http\Middleware\StaffRole::class])->prefix('staff')->name('staff.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\StaffController::class, 'dashboard'])->name('dashboard');
+});
 
 // Dashboard & Admin Management
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -145,8 +152,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Personal Schedule & Booking Logic
-    Route::get('/lich-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
-    Route::get('/dat-lich-pt', [\App\Http\Controllers\PTBookingController::class, 'index'])->name('booking.pt');
+    Route::get('/lich-tap-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::post('/pt-bookings', [\App\Http\Controllers\PTBookingController::class, 'store'])->name('pt-bookings.store');
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
