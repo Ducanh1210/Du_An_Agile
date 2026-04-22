@@ -30,7 +30,7 @@
         <nav class="header-nav" id="headerNav">
             <a href="{{ url('/') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Trang chủ</a>
             <a href="{{ url('/lich-lop') }}" class="nav-link {{ request()->is('lich-lop*') ? 'active' : '' }}">Lịch lớp</a>
-            <a href="{{ route('trainers') }}" class="nav-link {{ request()->is('dat-lich-pt*') ? 'active' : '' }}">Đặt lịch PT</a>
+            <a href="{{ route('trainers') }}" class="nav-link {{ request()->is('huan-luyen-vien*') ? 'active' : '' }}">Đặt lịch PT</a>
             <a href="{{ route('client.memberships') }}" class="nav-link {{ request()->is('goi-tap*') ? 'active' : '' }}">Gói tập</a>
             <a href="{{ url('/tin-tuc') }}" class="nav-link {{ request()->is('tin-tuc*') ? 'active' : '' }}">Tin tức</a>
             <a href="{{ url('/lien-he') }}" class="nav-link {{ request()->is('lien-he*') ? 'active' : '' }}">Liên hệ</a>
@@ -118,7 +118,7 @@
     <nav class="drawer-nav">
         <a href="{{ url('/') }}" class="drawer-link {{ request()->is('/') ? 'active' : '' }}"><i class="fas fa-home"></i> Trang chủ</a>
         <a href="{{ url('/lich-lop') }}" class="drawer-link"><i class="fas fa-calendar-alt"></i> Lịch lớp</a>
-        <a href="{{ route('trainers') }}" class="drawer-link"><i class="fas fa-user-check"></i> Đặt lịch PT</a>
+        <a href="{{ route('trainers') }}" class="drawer-link {{ request()->is('huan-luyen-vien*') ? 'active' : '' }}"><i class="fas fa-user-check"></i> Đặt lịch PT</a>
         <a href="{{ route('client.memberships') }}" class="drawer-link"><i class="fas fa-tags"></i> Gói tập</a>
         <a href="{{ url('/tin-tuc') }}" class="drawer-link"><i class="fas fa-newspaper"></i> Tin tức</a>
         <a href="{{ url('/lien-he') }}" class="drawer-link"><i class="fas fa-envelope"></i> Liên hệ</a>

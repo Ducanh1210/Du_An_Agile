@@ -13,20 +13,26 @@ class Booking extends Model
         'user_id',
         'subscription_id',
         'booking_type',
+        'target_area',
         'schedule_id',
         'trainer_id',
         'price',
         'payment_status',
         'start_time',
         'end_time',
-        'price',
-        'payment_status',
         'status',
+        'reschedule_status',
+        'reschedule_reason',
+        'reschedule_at',
+        'report_content',
+        'effort_rating',
+        'session_intensity',
     ];
 
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'reschedule_at' => 'datetime',
     ];
 
     /**
@@ -54,26 +60,10 @@ class Booking extends Model
     }
 
     /**
-     * Relationship with Trainer
+     * Relationship with Trainer (User model with role 'trainer')
      */
     public function trainer()
     {
-        return $this->belongsTo(Trainer::class);
-    }
-
-    /**
-     * Relationship with SessionReport
-     */
-    public function sessionReport()
-    {
-        return $this->hasOne(SessionReport::class);
-    }
-
-    /**
-     * Relationship with RescheduleRequests
-     */
-    public function rescheduleRequests()
-    {
-        return $this->hasMany(RescheduleRequest::class);
+        return $this->belongsTo(User::class, 'trainer_id');
     }
 }

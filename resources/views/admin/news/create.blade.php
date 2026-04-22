@@ -153,16 +153,10 @@
 
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Thẻ (Tags)</label>
-                            <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-3 border border-gray-100 rounded-xl bg-slate-50/50">
-                                @foreach($tags as $tag)
-                                <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-all">
-                                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" 
-                                           class="w-4 h-4 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
-                                           {{ is_array(old('tags')) && in_array($tag->id, old('tags')) ? 'checked' : '' }}>
-                                    <span class="text-xs font-bold text-slate-600">#{{ $tag->name }}</span>
-                                </label>
-                                @endforeach
-                            </div>
+                            <input type="text" name="tags_list" value="{{ old('tags_list') }}"
+                                   placeholder="Ví dụ: sức khỏe, tập gym, giảm cân"
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 text-sm transition-all">
+                            <p class="text-[10px] text-slate-400 mt-2">Nhập các thẻ cách nhau bởi dấu phẩy (,)</p>
                         </div>
                     </div>
                 </div>

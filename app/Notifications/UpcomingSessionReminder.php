@@ -27,9 +27,14 @@ class UpcomingSessionReminder extends Notification implements ShouldQueue
     {
         $startTime = $this->booking->start_time->format('H:i');
         $date = $this->booking->start_time->format('d/m/Y');
-        $sessionName = $this->booking->booking_type === 'class' 
-            ? 'Lớp học: ' . $this->booking->schedule->title 
-            : 'Ca tập giải huấn: 1-on-1 với HLV ' . $this->booking->trainer->user->name;
+        $trainerName = $this->booking->trainer->name ?? 'HLV';
+        
+        if ($this->booking->booking_type === 'pt_session') {
+            $sessionName = "Buổi tập PT {$this->booking->target_area} với HLV {$trainerName}";
+        } else {
+            $className = $this->booking->schedule->title ?? 'Lớp học';
+            $sessionName = "Lớp học {$className} với HLV {$trainerName}";
+        }
 
         return (new MailMessage)
                     ->subject('Nhắc lịch tập: 30 phút nữa bắt đầu! - EXTRA FIT+')
@@ -44,14 +49,18 @@ class UpcomingSessionReminder extends Notification implements ShouldQueue
 
     public function toArray($notifiable): array
     {
-        $sessionName = $this->booking->booking_type === 'class' 
-            ? $this->booking->schedule->title 
-            : 'Ca tập với HLV ' . $this->booking->trainer->user->name;
+        $trainerName = $this->booking->trainer->name ?? 'HLV';
+        if ($this->booking->booking_type === 'pt_session') {
+            $sessionDisplay = "PT {$this->booking->target_area} ({$trainerName})";
+        } else {
+            $className = $this->booking->schedule->title ?? 'Lớp học';
+            $sessionDisplay = "Lớp {$className} ({$trainerName})";
+        }
 
         return [
             'type' => 'session_reminder',
             'title' => 'Sắp tới giờ tập!',
-            'message' => 'Ca tập "' . $sessionName . '" sẽ bắt đầu lúc ' . $this->booking->start_time->format('H:i') . '. Đừng đến muộn nhé!',
+            'message' => 'Ca tập "' . $sessionDisplay . '" sẽ bắt đầu lúc ' . $this->booking->start_time->format('H:i') . '. Đừng đến muộn nhé!',
             'booking_id' => $this->booking->id,
             'start_time' => $this->booking->start_time->toDateTimeString(),
         ];

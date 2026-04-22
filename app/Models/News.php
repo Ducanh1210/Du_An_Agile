@@ -26,6 +26,7 @@ class News extends Model
         'meta_title',
         'meta_description',
         'published_at',
+        'tags_list',
     ];
 
     protected $casts = [
@@ -42,12 +43,6 @@ class News extends Model
     public function category()
     {
         return $this->belongsTo(NewsCategory::class, 'category_id');
-    }
-
-    public function tags()
-    {
-        // Renamed pivot to news_post_tag as per SQL dump
-        return $this->belongsToMany(NewsTag::class, 'news_post_tag');
     }
 
     public function comments()

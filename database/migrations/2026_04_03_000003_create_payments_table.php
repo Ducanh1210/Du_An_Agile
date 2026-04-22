@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('subscription_id')->constrained('subscriptions');
             $table->decimal('amount', 12, 2);
             $table->enum('method', ['cash', 'transfer', 'e_wallet']);
-            $table->enum('status', ['pending', 'completed', 'refunded'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'refunded', 'cancelled'])->default('pending');
             $table->string('invoice_code', 100)->nullable()->comment('Mã hóa đơn tự sinh');
             $table->text('note')->nullable();
             $table->foreignId('confirmed_by')->nullable()->constrained('users')->comment('Nhân viên xác nhận');

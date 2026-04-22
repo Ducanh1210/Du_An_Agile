@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// QR Check-in Public Routes
+Route::get('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'showVerifyForm'])->name('checkin.verify');
+Route::post('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'processVerify'])->name('checkin.process');
+Route::get('/api/checkin/recent', [\App\Http\Controllers\CheckinController::class, 'getRecentCheckins']);
 Route::get('/dang-ky', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register.vn');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
@@ -41,6 +46,7 @@ Route::get('/dashboard', function () {
 // Staff Dashboard
 Route::middleware(['auth', \App\Http\Middleware\StaffRole::class])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\StaffController::class, 'dashboard'])->name('dashboard');
+    Route::get('/checkin/station', [\App\Http\Controllers\CheckinController::class, 'index'])->name('checkin.station');
 });
 
 // Dashboard & Admin Management
@@ -102,10 +108,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'update'])->name('categories.update');
         Route::delete('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'delete'])->name('categories.delete');
 
-        // Tags
-        Route::get('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'index'])->name('tags.index');
-        Route::post('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'store'])->name('tags.store');
-        Route::delete('tags/{id}', [\App\Http\Controllers\Admin\NewsTagController::class, 'delete'])->name('tags.delete');
 
         // Comments
         Route::get('comments', [\App\Http\Controllers\Admin\NewsCommentController::class, 'index'])->name('comments.index');

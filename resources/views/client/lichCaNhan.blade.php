@@ -92,47 +92,52 @@
             {{-- Upcoming Sidebar --}}
             <div class="calendar-sidebar">
                 <div class="upcoming-card">
-                    <h3 class="upcoming-title"><i class="fas fa-bolt"></i> Sắp tới</h3>
+                    <h3 class="upcoming-title" id="sidebarTitle"><i class="fas fa-bolt"></i> Sắp tới</h3>
 
-                    @if($upcomingBookings->count() > 0)
-                    <div class="upcoming-list">
-                        @foreach($upcomingBookings as $booking)
-                        <div class="upcoming-item" data-type="{{ $booking->booking_type }}" id="upcomingItem{{ $booking->id }}">
-                            <div class="upcoming-date">
-                                <span class="upcoming-date-day">{{ $booking->start_time->format('d') }}</span>
-                                <span class="upcoming-date-month">Th{{ $booking->start_time->format('m') }}</span>
-                            </div>
-                            <div class="upcoming-info">
-                                <div class="upcoming-info-title">
-                                    @if($booking->schedule)
-                                        {{ $booking->schedule->title }}
-                                    @else
-                                        Buổi tập PT
+                    <div id="sidebarList">
+                        @if($upcomingBookings->count() > 0)
+                        <div class="upcoming-list">
+                            @foreach($upcomingBookings as $booking)
+                            <div class="upcoming-item" 
+                                 data-type="{{ $booking->booking_type }}" 
+                                 data-date="{{ $booking->start_time->format('Y-m-d') }}"
+                                 id="upcomingItem{{ $booking->id }}">
+                                <div class="upcoming-date">
+                                    <span class="upcoming-date-day">{{ $booking->start_time->format('d') }}</span>
+                                    <span class="upcoming-date-month">Th{{ $booking->start_time->format('m') }}</span>
+                                </div>
+                                <div class="upcoming-info">
+                                    <div class="upcoming-info-title">
+                                        @if($booking->booking_type === 'class')
+                                            {{ $booking->schedule->title }}
+                                        @else
+                                            Tập {{ $booking->target_area ?? 'PT' }}
+                                        @endif
+                                    </div>
+                                    <div class="upcoming-info-time">
+                                        <i class="fas fa-clock"></i>
+                                        {{ $booking->start_time->format('H:i') }} —
+                                        {{ $booking->end_time->format('H:i') }}
+                                    </div>
+                                    <span class="upcoming-info-type {{ $booking->booking_type === 'class' ? 'type-class-badge' : 'type-pt-badge' }}">
+                                        {{ $booking->booking_type === 'class' ? 'Lớp học' : 'PT' }}
+                                    </span>
+                                    @if($booking->trainer)
+                                    <div class="upcoming-info-time" style="margin-top:4px">
+                                        <i class="fas fa-user-tie"></i> {{ $booking->trainer->name }}
+                                    </div>
                                     @endif
                                 </div>
-                                <div class="upcoming-info-time">
-                                    <i class="fas fa-clock"></i>
-                                    {{ $booking->start_time->format('H:i') }} —
-                                    {{ $booking->end_time->format('H:i') }}
-                                </div>
-                                <span class="upcoming-info-type {{ $booking->booking_type === 'class' ? 'type-class-badge' : 'type-pt-badge' }}">
-                                    {{ $booking->booking_type === 'class' ? 'Lớp học' : 'PT' }}
-                                </span>
-                                @if($booking->trainer && $booking->trainer->user)
-                                <div class="upcoming-info-time" style="margin-top:4px">
-                                    <i class="fas fa-user-tie"></i> {{ $booking->trainer->user->name }}
-                                </div>
-                                @endif
                             </div>
+                            @endforeach
                         </div>
-                        @endforeach
+                        @else
+                        <div style="text-align:center;padding:var(--space-3) 0;color:var(--color-text-muted)">
+                            <i class="fas fa-calendar-times" style="font-size:32px;opacity:0.3;display:block;margin-bottom:8px"></i>
+                            <p>Không có lịch tập</p>
+                        </div>
+                        @endif
                     </div>
-                    @else
-                    <div style="text-align:center;padding:var(--space-3) 0;color:var(--color-text-muted)">
-                        <i class="fas fa-calendar-times" style="font-size:32px;opacity:0.3;display:block;margin-bottom:8px"></i>
-                        <p>Chưa có lịch tập sắp tới</p>
-                    </div>
-                    @endif
                 </div>
 
                 {{-- Stats mini card --}}
@@ -173,18 +178,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
     @php
         $formattedBookings = $bookings->map(function($b) {
+            $titleShort = $b->booking_type === 'class' ? $b->schedule?->title : ($b->target_area ? 'Tập ' . $b->target_area : 'PT');
+            
+            // Map area to color class
+            $colorClass = 'label-fullbody';
+            if ($b->booking_type === 'class') {
+                $colorClass = 'label-class';
+                if (stripos($b->schedule->title, 'Yoga') !== false) $colorClass = 'label-yoga';
+                if (stripos($b->schedule->title, 'Zumba') !== false) $colorClass = 'label-zumba';
+            } else {
+                $area = mb_strtolower($b->target_area);
+                if (str_contains($area, 'bụng')) $colorClass = 'label-abs';
+                elseif (str_contains($area, 'chân')) $colorClass = 'label-legs';
+                elseif (str_contains($area, 'tay')) $colorClass = 'label-arms';
+                elseif (str_contains($area, 'ngực')) $colorClass = 'label-chest';
+                elseif (str_contains($area, 'lưng')) $colorClass = 'label-back';
+            }
+
             return [
                 'id' => $b->id,
                 'date' => $b->start_time->format('Y-m-d'),
                 'type' => $b->booking_type,
-                'title' => $b->schedule ? $b->schedule->title : 'Buổi tập PT',
+                'is_virtual' => false,
+                'title' => $b->booking_type === 'class' ? $b->schedule->title : 'Tập ' . ($b->target_area ?? 'PT'),
+                'title_short' => $titleShort,
+                'color_class' => $colorClass,
                 'time' => $b->start_time->format('H:i') . ' — ' . $b->end_time->format('H:i'),
             ];
         });
+
+        // Convert weekly plan to JS-friendly
+        $jsWeeklyPlan = $weeklyPlan;
     @endphp
 
-    // Booking data from server
+    // Weekly Plan and Booking data
     const bookingsData = @json($formattedBookings);
+    const weeklyPlan = @json($jsWeeklyPlan);
+
+    function getPersonalWorkout(dateStr) {
+        const d = new Date(dateStr);
+        let dayOfWeek = d.getDay(); // 0 is Sunday, 1 is Monday...
+        if (dayOfWeek === 0) dayOfWeek = 7;
+        return weeklyPlan[dayOfWeek];
+    }
 
     const today = new Date();
     let currentMonth = today.getMonth();
@@ -220,7 +256,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Current month days
         for (let d = 1; d <= totalDays; d++) {
             const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-            const dayBookings = bookingsData.filter(b => b.date === dateStr);
+            let dayBookings = bookingsData.filter(b => b.date === dateStr);
+            
+            // If no actual bookings, inject virtual workout
+            if (dayBookings.length === 0) {
+                const plan = getPersonalWorkout(dateStr);
+                if (plan && plan.area !== 'rest') {
+                    dayBookings = [{
+                        date: dateStr,
+                        type: 'personal',
+                        is_virtual: true,
+                        title: 'Tự tập: ' + plan.title,
+                        title_short: plan.title,
+                        color_class: 'label-' + plan.area + ' virtual-label',
+                        time: 'Tự do'
+                    }];
+                }
+            }
+
             const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
             const cell = createDayCell(d, false, dayBookings, isToday);
             grid.appendChild(cell);
@@ -247,18 +300,65 @@ document.addEventListener('DOMContentLoaded', function() {
         cell.appendChild(num);
 
         if (bookings && bookings.length > 0) {
+            // Set date for click event
+            const dateStr = bookings[0].date;
+            cell.dataset.date = dateStr;
+            cell.style.cursor = 'pointer';
+            
             const eventsWrap = document.createElement('div');
             eventsWrap.className = 'calendar-day-events';
-            bookings.slice(0, 3).forEach(b => {
-                const dot = document.createElement('span');
-                dot.className = 'cal-event-dot type-' + b.type;
-                dot.title = b.title + ' (' + b.time + ')';
-                eventsWrap.appendChild(dot);
+            bookings.slice(0, 2).forEach(b => {
+                const label = document.createElement('div');
+                label.className = 'cal-event-label ' + b.color_class;
+                if (b.is_virtual) label.classList.add('is-virtual');
+                label.textContent = b.title_short;
+                eventsWrap.appendChild(label);
             });
             cell.appendChild(eventsWrap);
+
+            cell.onclick = () => filterSidebarByDate(dateStr, cell, bookings);
         }
 
         return cell;
+    }
+
+    function filterSidebarByDate(dateStr, cell, dayBookings) {
+        // Update UI
+        document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('active-day'));
+        cell.classList.add('active-day');
+
+        // Update Title
+        const d = new Date(dateStr);
+        document.getElementById('sidebarTitle').innerHTML = `<i class="fas fa-calendar-day"></i> Lịch ngày ${d.getDate()}/${d.getMonth()+1}`;
+
+        // Clear and rebuild sidebar list
+        const sidebarList = document.querySelector('.upcoming-list') || document.getElementById('sidebarList');
+        sidebarList.innerHTML = '';
+
+        if (dayBookings && dayBookings.length > 0) {
+            dayBookings.forEach(b => {
+                const item = document.createElement('div');
+                item.className = 'upcoming-item';
+                if (b.is_virtual) item.classList.add('virtual-item');
+                
+                item.innerHTML = `
+                    <div class="upcoming-date" style="${b.is_virtual ? 'background:#cbd5e1' : ''}">
+                        <span class="upcoming-date-day">${d.getDate()}</span>
+                        <span class="upcoming-date-month">Th${d.getMonth()+1}</span>
+                    </div>
+                    <div class="upcoming-info">
+                        <div class="upcoming-info-title">${b.title}</div>
+                        <div class="upcoming-info-time">
+                            <i class="fas fa-clock"></i> ${b.time}
+                        </div>
+                        <span class="upcoming-info-type ${b.type === 'class' ? 'type-class-badge' : (b.type === 'pt_session' ? 'type-pt-badge' : 'type-personal-badge')}">
+                            ${b.type === 'class' ? 'Lớp học' : (b.type === 'pt_session' ? 'PT' : 'Tự tập')}
+                        </span>
+                    </div>
+                `;
+                sidebarList.appendChild(item);
+            });
+        }
     }
 
     // Navigation

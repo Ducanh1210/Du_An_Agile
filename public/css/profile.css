@@ -538,6 +538,9 @@
     position: relative;
     cursor: default;
     min-height: 80px;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
     transition: background var(--transition-fast);
 }
 .calendar-day:nth-child(7n+1) {
@@ -581,6 +584,53 @@
 }
 .cal-event-dot.type-pt {
     background: var(--color-info);
+}
+
+/* Event Labels for Calendar */
+.calendar-day-events {
+    padding: 0 4px;
+}
+.cal-event-label {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.cal-event-label.is-virtual {
+    background: transparent !important;
+    border: 1px dashed currentColor;
+    color: var(--color-text-muted);
+}
+.virtual-item {
+    opacity: 0.8;
+}
+.type-personal-badge {
+    background: rgba(148, 163, 184, 0.12);
+    color: #64748b;
+}
+
+/* Colors by Area/Type */
+.label-abs { background: #EF4444; } /* Red */
+.label-legs { background: #10B981; } /* Green */
+.label-arms { background: #3B82F6; } /* Blue */
+.label-chest, .label-back { background: #06B6D4; } /* Cyan */
+.label-fullbody { background: #F59E0B; } /* Amber */
+.label-class { background: #FF6B35; } /* Orange (FIT+ Primary) */
+.label-yoga { background: #8B5CF6; } /* Purple */
+.label-zumba { background: #EC4899; } /* Pink */
+
+.calendar-day.active-day {
+    background: rgba(255, 107, 53, 0.12);
+    border: 2px solid var(--color-primary);
+    z-index: 2;
 }
 
 /* Upcoming sidebar */

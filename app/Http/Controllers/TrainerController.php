@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Trainer;
 use App\Models\Booking;
 use App\Models\HealthMetric;
-use App\Models\SessionReport;
-use App\Models\RescheduleRequest;
 use App\Models\User;
 use App\Models\LeaveRequest;
 use App\Notifications\SessionReportNotification;
@@ -22,7 +19,7 @@ class TrainerController extends Controller
      */
     public function dashboard()
     {
-        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        $trainer = Auth::user(); // Lấy trực tiếp từ User model
         
         // Lấy các buổi tập hôm nay
         $todayBookings = Booking::with('user')
@@ -33,9 +30,8 @@ class TrainerController extends Controller
 
         $stats = [
             'today_count' => $todayBookings->count(),
-            'pending_reschedules' => RescheduleRequest::whereHas('booking', function($query) use ($trainer) {
-                $query->where('trainer_id', $trainer->id);
-            })->where('status', 'pending')->count(),
+            'pending_reschedules' => Booking::where('trainer_id', $trainer->id)
+                ->where('reschedule_status', 'pending')->count(),
             'total_students' => User::whereHas('bookings', function($query) use ($trainer) {
                 $query->where('trainer_id', $trainer->id);
             })->distinct()->count(),
@@ -49,7 +45,7 @@ class TrainerController extends Controller
      */
     public function students()
     {
-        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        $trainer = Auth::user();
         
         $students = User::whereHas('bookings', function($query) use ($trainer) {
             $query->where('trainer_id', $trainer->id);
@@ -101,7 +97,7 @@ class TrainerController extends Controller
         ]);
 
         $student = User::findOrFail($id);
-        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        $trainer = Auth::user();
         
         // Tự động tính BMI nếu có chiều cao
         $bmi = 0;
@@ -112,7 +108,7 @@ class TrainerController extends Controller
 
         HealthMetric::create([
             'user_id' => $id,
-            'trainer_id' => $trainer->id,
+            'trainer_id' => $trainer->id, // trainer_id giờ là user_id của HLV
             'weight' => $request->weight,
             'bmi' => round($bmi, 2),
             'fat_percent' => $request->fat_percent,
@@ -123,7 +119,7 @@ class TrainerController extends Controller
     }
 
     /**
-     * Gửi báo cáo buổi tập & Ghi chú
+     * Gửi báo cáo buổi tập & Ghi chú (Gộp trực tiếp vào Booking)
      */
     public function submitReport(Request $request, $id)
     {
@@ -134,21 +130,17 @@ class TrainerController extends Controller
         ]);
 
         $booking = Booking::findOrFail($id);
-        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
-
-        $report = SessionReport::create([
-            'booking_id' => $booking->id,
-            'trainer_id' => $trainer->id,
-            'user_id' => $booking->user_id,
-            'notes' => $request->notes,
+        
+        // Cập nhật thông tin báo cáo trực tiếp vào bảng bookings
+        $booking->update([
+            'report_content' => $request->notes,
             'effort_rating' => $request->effort_rating,
             'session_intensity' => $request->session_intensity,
+            'status' => 'completed'
         ]);
 
-        $booking->update(['status' => 'completed']);
-
         // Gửi thông báo cho học viên
-        $booking->user->notify(new SessionReportNotification($report));
+        $booking->user->notify(new SessionReportNotification($booking));
 
         return redirect()->route('trainer.dashboard')->with('success', 'Báo cáo buổi tập đã được gửi và thông báo tới học viên!');
     }
@@ -158,11 +150,11 @@ class TrainerController extends Controller
      */
     public function schedule()
     {
-        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        $trainer = Auth::user();
         
-        // Lịch PT (Bookings)
-        $bookings = Booking::with('user')
-            ->where('trainer_id', $trainer->id)
+        // Lịch PT (Bookings) sử dụng quan hệ mới
+        $bookings = $trainer->trainerBookings()
+            ->with('user')
             ->where('start_time', '>=', Carbon::today())
             ->orderBy('start_time')
             ->get()->map(function ($item) {
@@ -170,8 +162,8 @@ class TrainerController extends Controller
                 return $item;
             });
 
-        // Lịch Lớp Nhóm (Schedules)
-        $classes = \App\Models\Schedule::where('trainer_id', $trainer->id)
+        // Lịch Lớp Nhóm (Schedules) sử dụng quan hệ mới
+        $classes = $trainer->trainerSchedules()
             ->where('start_time', '>=', Carbon::today())
             ->orderBy('start_time')
             ->get()->map(function ($item) {
@@ -181,7 +173,7 @@ class TrainerController extends Controller
 
         $allSchedules = $bookings->concat($classes)->sortBy('start_time');
 
-        // Lấy danh sách đơn xin nghỉ để kiểm tra trạng thái
+        // Lấy danh sách đơn xin nghỉ
         $leaveRequests = LeaveRequest::where('trainer_id', $trainer->id)->get();
 
         return view('trainer.schedule', compact('allSchedules', 'leaveRequests', 'trainer'));
@@ -198,7 +190,7 @@ class TrainerController extends Controller
             'reason' => 'required|string|min:5',
         ]);
 
-        $trainer = Trainer::where('user_id', Auth::id())->firstOrFail();
+        $trainer = Auth::user();
 
         // Check xem đã xin nghỉ chưa
         $exists = LeaveRequest::where('item_id', $request->item_id)

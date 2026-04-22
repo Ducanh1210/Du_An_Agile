@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('support_tickets');
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::table('bookings', function (Blueprint $col) {
+            $col->string('target_area')->nullable()->after('booking_type')->comment('Vùng tập: Tay, Chân, Bụng, Ngực, Lưng, Toàn thân...');
+        });
     }
 
     /**
@@ -20,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Không khôi phục vì đây là bước dọn dẹp các thành phần không sử dụng
+        Schema::table('bookings', function (Blueprint $col) {
+            $col->dropColumn('target_area');
+        });
     }
 };

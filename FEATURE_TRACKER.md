@@ -69,3 +69,4 @@ Dựa trên khảo sát mã nguồn, đây là những phần bạn nên tập t
 
 > [!TIP]
 > **Lời khuyên:** Bạn nên bắt đầu với phần **Thông báo tự động (CRON Job)** và **Giới hạn số lượng người lớp học** trước, vì đây là các logic nghiệp vụ quan trọng nhất còn thiếu.
+

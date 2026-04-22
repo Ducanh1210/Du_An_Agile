@@ -47,6 +47,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'specialization',
+        'price_per_session',
+        'is_available',
         'phone',
         'height',
         'avatar_url',
@@ -54,6 +57,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'provider_name',
         'provider_id',
     ];
+
+    public function isTrainer()
+    {
+        return $this->role === self::ROLE_TRAINER;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -149,19 +157,25 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(HealthMetric::class);
     }
 
-    public function rescheduleRequests()
-    {
-        return $this->hasMany(RescheduleRequest::class, 'requested_by');
-    }
-
-    public function sessionReports()
-    {
-        return $this->hasMany(SessionReport::class);
-    }
-
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Dành cho HLV: Lấy danh sách lịch dạy lớp nhóm
+     */
+    public function trainerSchedules()
+    {
+        return $this->hasMany(Schedule::class, 'trainer_id');
+    }
+
+    /**
+     * Dành cho HLV: Lấy danh sách buổi tập PT 1-kèm-1
+     */
+    public function trainerBookings()
+    {
+        return $this->hasMany(Booking::class, 'trainer_id');
     }
 
     /**

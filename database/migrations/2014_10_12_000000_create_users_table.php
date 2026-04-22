@@ -16,10 +16,16 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
+            $table->decimal('height', 5, 2)->nullable();
             $table->string('password');
             $table->string('role')->default('user')->comment('Vai trò: user, staff, admin, trainer');
+            $table->enum('specialization', ['gym', 'yoga', 'both'])->nullable();
+            $table->decimal('price_per_session', 12, 2)->default(500000.00);
+            $table->boolean('is_available')->default(true);
             $table->string('avatar_url')->nullable();
             $table->tinyInteger('is_active')->default(1);
+            $table->string('provider_name')->nullable();
+            $table->string('provider_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

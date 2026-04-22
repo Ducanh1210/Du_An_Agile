@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Trainer;
 use App\Models\Schedule;
 use App\Models\User;
 use App\Models\Membership;
@@ -54,7 +53,7 @@ class AdminController extends Controller
         $endOfMonth = $startOfMonth->copy()->endOfMonth();
 
         // Lấy tất cả schedule trong tháng đang xem
-        $schedules = Schedule::with('trainer.user')
+        $schedules = Schedule::with('trainer')
             ->whereBetween('start_time', [$startOfMonth, $endOfMonth])
             ->orderBy('start_time', 'asc')
             ->get();
@@ -95,7 +94,7 @@ class AdminController extends Controller
 
     public function createSchedule()
     {
-        $trainers = Trainer::with('user')->get();
+        $trainers = User::where('role', 'trainer')->get();
         return view('admin.schedules.create', compact('trainers'));
     }
 
@@ -116,7 +115,7 @@ class AdminController extends Controller
     public function editSchedule($id)
     {
         $schedule = Schedule::findOrFail($id);
-        $trainers = Trainer::with('user')->get();
+        $trainers = User::where('role', 'trainer')->get();
         return view('admin.schedules.edit', compact('schedule', 'trainers'));
     }
 

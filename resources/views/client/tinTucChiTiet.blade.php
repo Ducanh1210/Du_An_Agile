@@ -112,6 +112,19 @@
                     {!! $news->content !!}
                 </div>
 
+                {{-- Tags list --}}
+                @if($news->tags_list)
+                <div class="mt-12 flex flex-wrap gap-2 pt-8 border-t border-slate-100">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2 flex items-center">Tags:</span>
+                    @foreach(array_map('trim', explode(',', $news->tags_list)) as $tag)
+                    <a href="{{ route('news', ['tag' => $tag]) }}" 
+                       class="px-4 py-1.5 bg-slate-50 hover:bg-primary/10 border border-slate-100 hover:border-primary/30 rounded-full text-xs font-bold text-slate-600 hover:text-primary transition-all">
+                        #{{ $tag }}
+                    </a>
+                    @endforeach
+                </div>
+                @endif
+
                 {{-- Comments Section --}}
                 <div class="mt-16">
                     <h3 class="section-title-premium">Bình luận ({{ $news->comments_count ?? 0 }})</h3>

@@ -112,7 +112,6 @@
                     <div x-show="open" x-cloak class="mt-1 ml-4 pl-4 border-l border-slate-700 space-y-1">
                         <a href="{{ route('admin.news.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.index') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bài viết</a>
                         <a href="{{ route('admin.news.categories.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.categories.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Danh mục</a>
-                        <a href="{{ route('admin.news.tags.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.tags.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Hashtags</a>
                         <a href="{{ route('admin.news.comments.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.comments.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bình luận</a>
                     </div>
                 </div>
@@ -170,10 +169,7 @@
                         <input type="text" placeholder="Tìm nhanh..." class="bg-gray-100 border-none rounded-full px-5 py-1.5 text-sm w-48 focus:ring-2 focus:ring-orange-500/30 transition-all">
                         <i class="fa-solid fa-magnifying-glass absolute right-4 top-2.5 text-slate-400 text-xs"></i>
                     </div>
-                    <button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-gray-100 transition relative">
-                        <i class="fa-regular fa-bell text-lg"></i>
-                        <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
+                    @include('layouts.partials._notifications')
 
                     <div class="h-8 w-[1px] bg-gray-200 mx-1"></div>
 

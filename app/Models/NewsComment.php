@@ -5,6 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $news_id
+ * @property int $user_id
+ * @property string $content
+ * @property bool $is_approved
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @mixin \Eloquent
+ */
 class NewsComment extends Model
 {
     use HasFactory;

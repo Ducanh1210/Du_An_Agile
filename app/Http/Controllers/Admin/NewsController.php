@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\NewsCategory;
-use App\Models\NewsTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -27,8 +26,7 @@ class NewsController extends Controller
     public function create()
     {
         $categories = NewsCategory::all();
-        $tags = NewsTag::all();
-        return view('admin.news.create', compact('categories', 'tags'));
+        return view('admin.news.create', compact('categories'));
     }
 
     /**
@@ -48,8 +46,7 @@ class NewsController extends Controller
             'title_font_size'   => 'nullable|string|max:255',
             'meta_title'        => 'nullable|string|max:255',
             'meta_description'  => 'nullable|string|max:500',
-            'tags'              => 'nullable|array',
-            'tags.*'            => 'exists:news_tags,id',
+            'tags_list'         => 'nullable|string|max:255',
         ]);
 
         $validated['slug']      = Str::slug($validated['title']) . '-' . time();
@@ -61,11 +58,7 @@ class NewsController extends Controller
             $validated['image'] = $request->file('image')->store('news', 'public');
         }
 
-        $news = News::create($validated);
-
-        if ($request->has('tags')) {
-            $news->tags()->sync($request->tags);
-        }
+        News::create($validated);
 
         return redirect()->route('admin.news.index')
             ->with('success', 'Tạo tin tức thành công!');
@@ -76,10 +69,9 @@ class NewsController extends Controller
      */
     public function edit($id)
     {
-        $news = News::with('tags')->findOrFail($id);
+        $news = News::findOrFail($id);
         $categories = NewsCategory::all();
-        $tags = NewsTag::all();
-        return view('admin.news.edit', compact('news', 'categories', 'tags'));
+        return view('admin.news.edit', compact('news', 'categories'));
     }
 
     /**
@@ -101,8 +93,7 @@ class NewsController extends Controller
             'title_font_size'   => 'nullable|string|max:255',
             'meta_title'        => 'nullable|string|max:255',
             'meta_description'  => 'nullable|string|max:500',
-            'tags'              => 'nullable|array',
-            'tags.*'            => 'exists:news_tags,id',
+            'tags_list'         => 'nullable|string|max:255',
         ]);
 
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -116,12 +107,6 @@ class NewsController extends Controller
 
         $news->update($validated);
 
-        if ($request->has('tags')) {
-            $news->tags()->sync($request->tags);
-        } else {
-            $news->tags()->detach();
-        }
-
         return redirect()->route('admin.news.index')
             ->with('success', 'Cập nhật tin tức thành công!');
     }
@@ -132,7 +117,6 @@ class NewsController extends Controller
     public function delete($id)
     {
         $news = News::findOrFail($id);
-        $news->tags()->detach();
         $news->delete();
         return back()->with('success', 'Đã xóa tin tức thành công!');
     }
