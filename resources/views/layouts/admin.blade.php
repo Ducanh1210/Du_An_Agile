@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Admin - {{ config('app.name', 'Gym Fit') }}</title>
+    <title>{{ Auth::user()->role === 'admin' ? 'Admin' : 'Nhân viên' }} - {{ config('app.name', 'Gym Fit') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -32,7 +31,6 @@
             }
         }
     </script>
-    
     <style>
         [x-cloak] { display: none !important; }
         body { font-family: 'Outfit', sans-serif; }
@@ -44,15 +42,24 @@
         .sidebar-link:hover:not(.active) {
             background-color: #334155;
         }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-900 overflow-hidden">
     <div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: true }">
-        
         <!-- Sidebar -->
         <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0"
                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
-            
             <!-- Branding -->
             <div class="flex items-center justify-between px-6 py-5 border-b border-slate-800">
                 <div class="flex items-center gap-3">
@@ -67,14 +74,13 @@
             </div>
 
             <!-- Menu -->
-            <nav class="mt-6 px-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-160px)]">
+            <nav class="mt-6 px-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-160px)] no-scrollbar">
                 <a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-line w-5"></i>
                     <span class="font-medium text-[15px]">Dashboard</span>
                 </a>
 
                 <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Hệ thống Dịch vụ</div>
-                
                 <a href="{{ route('admin.memberships.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.memberships.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-id-card w-5"></i>
                     <span class="font-medium text-[15px]">Quản lý Gói tập</span>
@@ -106,10 +112,28 @@
                     <div x-show="open" x-cloak class="mt-1 ml-4 pl-4 border-l border-slate-700 space-y-1">
                         <a href="{{ route('admin.news.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.index') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bài viết</a>
                         <a href="{{ route('admin.news.categories.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.categories.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Danh mục</a>
-                        <a href="{{ route('admin.news.tags.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.tags.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Hashtags</a>
                         <a href="{{ route('admin.news.comments.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.comments.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bình luận</a>
                     </div>
                 </div>
+
+                <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Tài chính & Thống kê</div>
+
+                <a href="{{ route('admin.revenue.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.revenue.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span class="font-medium text-[15px]">Thống kê Doanh thu</span>
+                </a>
+
+                <a href="{{ route('admin.payments.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-file-invoice-dollar w-5"></i>
+                    <span class="font-medium text-[15px]">Quản lý Thanh toán</span>
+                </a>
+
+                <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Quản lý Nhân sự</div>
+
+                <a href="{{ route('admin.leave_requests.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.leave_requests.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-hand w-5"></i>
+                    <span class="font-medium text-[15px]">Yêu Cầu Nghỉ Dạy</span>
+                </a>
             </nav>
 
             <!-- Bottom Profile -->
@@ -118,7 +142,7 @@
                     @csrf
                     <button type="submit" class="flex items-center gap-3 px-4 py-2 w-full rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors uppercase tracking-widest leading-relaxed">
                         <i class="fa-solid fa-power-off w-5"></i>
-                        <span class="text-sm font-semibold uppercase tracking-widest leading-relaxed">Đăng xuất Admin</span>
+                        <span class="text-sm font-semibold uppercase tracking-widest leading-relaxed">Đăng xuất</span>
                     </button>
                 </form>
             </div>
@@ -126,7 +150,6 @@
 
         <!-- Main Wrapper -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-            
             <!-- Navbar / Header -->
             <header class="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-40">
                 <div class="flex items-center gap-4">
@@ -146,18 +169,14 @@
                         <input type="text" placeholder="Tìm nhanh..." class="bg-gray-100 border-none rounded-full px-5 py-1.5 text-sm w-48 focus:ring-2 focus:ring-orange-500/30 transition-all">
                         <i class="fa-solid fa-magnifying-glass absolute right-4 top-2.5 text-slate-400 text-xs"></i>
                     </div>
-                    
-                    <button class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-gray-100 transition relative">
-                        <i class="fa-regular fa-bell text-lg"></i>
-                        <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
+                    @include('layouts.partials._notifications')
 
                     <div class="h-8 w-[1px] bg-gray-200 mx-1"></div>
 
                     <div class="flex items-center gap-3 cursor-pointer group">
                         <div class="text-right hidden lg:block">
                             <div class="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">{{ Auth::user()->name }}</div>
-                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quản trị viên</div>
+                             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ Auth::user()->role === 'admin' ? 'Quản trị viên' : 'Nhân viên' }}</div>
                         </div>
                         <div class="relative">
                             <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=ea580c&color=fff&bold=true" 

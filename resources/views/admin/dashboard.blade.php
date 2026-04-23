@@ -142,17 +142,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('profile.edit') }}" class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl group hover:bg-slate-900 transition-all duration-300">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-white text-slate-600 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-gears"></i>
-                        </div>
-                        <div>
-                            <div class="text-sm font-bold text-slate-900 group-hover:text-white">Cài đặt cá nhân</div>
-                            <div class="text-[10px] text-slate-400 group-hover:text-slate-300">Thay đổi thông tin Admin</div>
-                        </div>
-                    </div>
-                </a>
+
             </div>
         </div>
     </div>

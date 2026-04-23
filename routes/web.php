@@ -15,12 +15,17 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// QR Check-in Public Routes
+Route::get('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'showVerifyForm'])->name('checkin.verify');
+Route::post('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'processVerify'])->name('checkin.process');
+Route::get('/api/checkin/recent', [\App\Http\Controllers\CheckinController::class, 'getRecentCheckins']);
 Route::get('/dang-ky', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register.vn');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
 Route::get('/tin-tuc/{slug}', [HomeController::class, 'newsDetail'])->name('news.detail');
 Route::post('/tin-tuc/{id}/comment', [HomeController::class, 'storeComment'])->name('news.comment.store');
-Route::get('/huan-luyen-vien', [HomeController::class, 'trainers'])->name('trainers');
+Route::get('/huan-luyen-vien', [\App\Http\Controllers\PTBookingController::class, 'index'])->name('trainers');
 Route::get('/huan-luyen-vien/{id}', [HomeController::class, 'trainerDetail'])->name('trainer.detail');
 Route::get('/lich-lop', [HomeController::class, 'schedule'])->name('schedule');
 
@@ -32,9 +37,17 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     } elseif (auth()->user()->role === 'trainer') {
         return redirect()->route('trainer.dashboard');
+    } elseif (auth()->user()->role === 'staff') {
+        return redirect()->route('staff.dashboard');
     }
     return redirect()->route('home');
 })->middleware(['auth'])->name('dashboard');
+
+// Staff Dashboard
+Route::middleware(['auth', \App\Http\Middleware\StaffRole::class])->prefix('staff')->name('staff.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\StaffController::class, 'dashboard'])->name('dashboard');
+    Route::get('/checkin/station', [\App\Http\Controllers\CheckinController::class, 'index'])->name('checkin.station');
+});
 
 // Dashboard & Admin Management
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -95,10 +108,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'update'])->name('categories.update');
         Route::delete('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'delete'])->name('categories.delete');
 
-        // Tags
-        Route::get('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'index'])->name('tags.index');
-        Route::post('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'store'])->name('tags.store');
-        Route::delete('tags/{id}', [\App\Http\Controllers\Admin\NewsTagController::class, 'delete'])->name('tags.delete');
 
         // Comments
         Route::get('comments', [\App\Http\Controllers\Admin\NewsCommentController::class, 'index'])->name('comments.index');
@@ -113,6 +122,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('update/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [\App\Http\Controllers\Admin\NewsController::class, 'delete'])->name('delete');
     });
+
+    // Quản lý Doanh thu & Thanh toán
+    Route::prefix('revenue')->name('revenue.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('index');
+    });
+
+    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PaymentManagementController::class, 'index'])->name('index');
+        Route::patch('/{id}/status', [\App\Http\Controllers\Admin\PaymentManagementController::class, 'updateStatus'])->name('updateStatus');
+    });
+
+    // Quản lý Xin nghỉ dạy (dùng chung Admin & Staff)
+    Route::prefix('leave-requests')->name('leave_requests.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\LeaveRequestController::class, 'index'])->name('index');
+        Route::patch('/{id}/resolve', [\App\Http\Controllers\Admin\LeaveRequestController::class, 'resolve'])->name('resolve');
+    });
 });
 
 // Trainer Portal Routes
@@ -120,6 +145,7 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::get('/dashboard', [\App\Http\Controllers\TrainerController::class, 'dashboard'])->name('dashboard');
     Route::get('/students', [\App\Http\Controllers\TrainerController::class, 'students'])->name('students');
     Route::get('/students/{id}', [\App\Http\Controllers\TrainerController::class, 'studentDetail'])->name('student.detail');
+    Route::get('/schedule', [\App\Http\Controllers\TrainerController::class, 'schedule'])->name('schedule');
     
     // Profile & Schedule
     Route::get('/profile', [\App\Http\Controllers\TrainerController::class, 'profile'])->name('profile');
@@ -132,6 +158,7 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::post('/bookings/{id}/report', [\App\Http\Controllers\TrainerController::class, 'submitReport'])->name('booking.report');
     Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'requestReschedule'])->name('booking.reschedule');
     Route::post('/students/{id}/training-plans', [\App\Http\Controllers\TrainerController::class, 'storeTrainingPlan'])->name('student.training_plan.store');
+    Route::post('/leave-requests', [\App\Http\Controllers\TrainerController::class, 'submitLeaveRequest'])->name('leave.submit');
 });
 
 // User Profile Routes (Breeze default)
@@ -141,12 +168,17 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Personal Schedule & Booking Logic
-    Route::get('/lich-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
+    Route::get('/lich-tap-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::post('/pt-bookings', [\App\Http\Controllers\PTBookingController::class, 'store'])->name('pt-bookings.store');
+    // Internal Notification API Routes
+    Route::prefix('api/notifications')->group(function () {
+        Route::get('/recent', [\App\Http\Controllers\NotificationController::class, 'getRecent']);
+        Route::post('/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+        Route::post('/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+    });
+
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
-    Route::post('/reschedule/{id}/respond', [\App\Http\Controllers\HomeController::class, 'respondToReschedule'])->name('reschedule.respond');
-    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'cancel'])->name('bookings.cancel');
 });
 
 // Client Profile, Subscription & Calendar Routes

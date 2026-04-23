@@ -1,6 +1,6 @@
 @extends('layouts.client')
 
-@section('title', $trainer->user->name . ' — Elite Coach')
+@section('title', $trainer->name . ' — Elite Coach')
 
 @section('styles')
 <style>
@@ -135,10 +135,10 @@
             
             <!-- Sidebar: Avatar & Info -->
             <div class="lg:w-1/3 animate-right">
-                <img src="{{ $trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($trainer->user->name).'&background=FF6B35&color=fff&size=800' }}" 
-                     class="trainer-profile-img mb-10" alt="{{ $trainer->user->name }}">
+                <img src="{{ $trainer->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($trainer->name).'&background=FF6B35&color=fff&size=800' }}" 
+                     class="trainer-profile-img mb-10" alt="{{ $trainer->name }}">
                 
-                <h1 class="text-5xl font-black mb-4 uppercase tracking-tighter">{{ $trainer->user->name }}</h1>
+                <h1 class="text-5xl font-black mb-4 uppercase tracking-tighter">{{ $trainer->name }}</h1>
                 <div class="flex items-center gap-4 mb-8">
                     <span class="px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-[10px] font-black uppercase tracking-widest">
                         Certified Coach
@@ -147,8 +147,8 @@
                 </div>
 
                 <div class="space-y-6 text-slate-400 leading-relaxed">
-                    <p>Với hơn 5 năm kinh nghiệm thực chiến trong việc thay đổi hình thể, Coach {{ $trainer->user->name }} nổi tiếng với phương pháp huấn luyện khoa học, kết hợp giữa dinh dưỡng và cường độ tập luyện khắt khe.</p>
-                    <p>Mục tiêu của {{ $trainer->user->name }} không chỉ là giúp bạn đẹp hơn, mà là xây dựng một lối sống kỉ luật và bền bỉ.</p>
+                    <p>Với hơn 5 năm kinh nghiệm thực chiến trong việc thay đổi hình thể, Coach {{ $trainer->name }} nổi tiếng với phương pháp huấn luyện khoa học, kết hợp giữa dinh dưỡng và cường độ tập luyện khắt khe.</p>
+                    <p>Mục tiêu của {{ $trainer->name }} không chỉ là giúp bạn đẹp hơn, mà là xây dựng một lối sống kỉ luật và bền bỉ.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mt-12">
@@ -169,12 +169,16 @@
                     <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Đặt lịch tập 1-Kèm-1</h2>
                     <p class="text-slate-500 text-sm mb-8 font-medium">Chọn thời gian phù hợp để bắt đầu hành trình của bạn.</p>
 
-                    @php
-                        $subscription = auth()->user()->subscriptions()
-                            ->where('status', 'active')
-                            ->where('pt_sessions_left', '>', 0)
-                            ->first();
-                    @endphp
+                    @auth
+                        @php
+                            $subscription = auth()->user()->subscriptions()
+                                ->where('status', 'active')
+                                ->where('pt_sessions_left', '>', 0)
+                                ->first();
+                        @endphp
+                    @else
+                        @php $subscription = null; @endphp
+                    @endauth
 
                     @if($subscription)
                         <div class="flex items-center gap-3 p-4 bg-primary/10 rounded-2xl border border-primary/20 mb-10">
@@ -199,10 +203,19 @@
                                     <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3">2. Chọn khung giờ (1 giờ/buổi)</label>
                                     <div class="time-slot-grid">
                                         <template x-for="slot in slots">
-                                            <div class="time-slot" 
-                                                 :class="{ 'active': selectedSlot === slot }"
-                                                 @click="selectedSlot = slot"
-                                                 x-text="slot"></div>
+                                            <button type="button" 
+                                                 :disabled="isBooked(slot)"
+                                                 class="time-slot w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-600" 
+                                                 :class="{ 
+                                                     'active': selectedSlot === slot,
+                                                     'border-primary/50 bg-primary/10': isBooked(slot)
+                                                 }"
+                                                 @click="selectedSlot = slot">
+                                                <span x-text="slot"></span>
+                                                <template x-if="isBooked(slot)">
+                                                    <div class="text-[7px] uppercase mt-1">Đã bận</div>
+                                                </template>
+                                            </button>
                                         </template>
                                     </div>
                                 </div>
@@ -250,10 +263,14 @@
         return {
             selectedDate: '{{ date('Y-m-d') }}',
             selectedSlot: '',
+            bookedSlots: @json($bookedSlots),
             slots: [
                 '08:00', '09:00', '10:00', '11:00',
                 '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
-            ]
+            ],
+            isBooked(slot) {
+                return this.bookedSlots.some(b => b.date === this.selectedDate && b.time === slot);
+            }
         }
     }
 </script>

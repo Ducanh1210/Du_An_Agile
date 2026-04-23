@@ -27,10 +27,10 @@ class HealthMetric extends Model
     }
 
     /**
-     * Relationship with Trainer
+     * Relationship with Trainer (User model)
      */
     public function trainer()
     {
-        return $this->belongsTo(Trainer::class);
+        return $this->belongsTo(User::class, 'trainer_id');
     }
 }

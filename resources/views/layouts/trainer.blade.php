@@ -7,12 +7,13 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
         :root {
@@ -177,9 +178,12 @@
 
     <header class="header">
         <div class="header-title">PRO TRAINER</div>
-        <a href="{{ route('trainer.profile') }}">
-            <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff' }}" alt="Avatar" class="user-avatar">
-        </a>
+        <div class="flex items-center gap-3">
+            @include('layouts.partials._notifications')
+            <a href="{{ route('trainer.profile') }}">
+                <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=FF6B35&color=fff' }}" alt="Avatar" class="user-avatar">
+            </a>
+        </div>
     </header>
 
     <main class="container">
@@ -207,6 +211,7 @@
             <i class="fa-regular fa-user"></i>
             <span>Hồ sơ</span>
         </a>
+
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
         <a href="#" class="nav-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>

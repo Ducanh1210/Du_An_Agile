@@ -307,12 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(updateTesti, 100);
 
-    /* ============================================================
-       NOTIFICATION BUTTON (demo)
-       ============================================================ */
-    document.getElementById('notificationBtn')?.addEventListener('click', () => {
-        showToast('info', 'Thông báo', 'Bạn có 3 thông báo chưa đọc!');
-    });
+
 
 }); // end DOMContentLoaded
 

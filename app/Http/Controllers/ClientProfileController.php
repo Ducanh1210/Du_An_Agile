@@ -87,7 +87,19 @@ class ClientProfileController extends Controller
     public function subscriptions()
     {
         $user = Auth::user();
-        $subscriptions = Subscription::with(['membership', 'trainer.user'])
+        
+        // --- 1. Tự động kiểm tra và cập nhật các gói đã hết hạn ---
+        $expiredSubs = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->where('end_date', '<', now()->toDateString())
+            ->get();
+            
+        foreach ($expiredSubs as $sub) {
+            $sub->update(['status' => 'expired']);
+        }
+        // --------------------------------------------------------
+
+        $subscriptions = Subscription::with(['membership', 'trainer'])
             ->where('user_id', $user->id)
             ->orderByDesc('created_at')
             ->get();
@@ -151,22 +163,32 @@ class ClientProfileController extends Controller
     public function calendar()
     {
         $user = Auth::user();
-        $bookings = Booking::with(['schedule.trainer.user', 'trainer.user', 'subscription.membership'])
+        
+        $bookings = Booking::with(['schedule.trainer', 'trainer', 'subscription.membership'])
             ->where('user_id', $user->id)
-            ->where('start_time', '>=', now()->startOfMonth())
-            ->where('start_time', '<=', now()->endOfMonth()->addMonth())
+            ->whereIn('status', ['confirmed', 'completed'])
             ->orderBy('start_time')
             ->get();
 
-        $upcomingBookings = Booking::with(['schedule.trainer.user', 'trainer.user', 'subscription.membership'])
+        $upcomingBookings = Booking::with(['schedule.trainer', 'trainer', 'subscription.membership'])
             ->where('user_id', $user->id)
-            ->where('start_time', '>=', now())
+            ->where('start_time', '>=', now()->startOfDay())
             ->where('status', 'confirmed')
             ->orderBy('start_time')
-            ->limit(10)
             ->get();
 
-        return view('client.lichCaNhan', compact('bookings', 'upcomingBookings'));
+        // Định nghĩa lịch tập cá nhân theo thứ (1 = Thứ 2, ..., 7 = Chủ Nhật)
+        $weeklyPlan = [
+            1 => ['title' => 'Ngực & Bụng', 'area' => 'abs'],
+            2 => ['title' => 'Lưng & Xô', 'area' => 'back'],
+            3 => ['title' => 'Chân & Mông', 'area' => 'legs'],
+            4 => ['title' => 'Vai & Tay sau', 'area' => 'chest'],
+            5 => ['title' => 'Tay trước & Cẳng tay', 'area' => 'arms'],
+            6 => ['title' => 'Cardio & Yoga', 'area' => 'fullbody'],
+            7 => ['title' => 'Nghỉ ngơi', 'area' => 'rest'],
+        ];
+
+        return view('client.lichCaNhan', compact('bookings', 'upcomingBookings', 'weeklyPlan'));
     }
 
     /**

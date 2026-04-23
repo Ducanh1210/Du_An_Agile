@@ -34,8 +34,40 @@ class UserSeeder extends Seeder
         User::create([
             'name'=> 'Hoàn Vũ Lê',
             'email'=> 'hoanvule73@gmail.com',
-            'password'=> Hash::make('123456'), // Bạn có thể đổi sau
+            'password'=> Hash::make('123456'), 
             'role'=> 'admin',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name'=> 'Đức Anh Nguyễn',
+            'email'=> 'anp93005@gmail.com',
+            'password'=> Hash::make('123456'),
+            'role'=> 'user',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name'=> 'Phan Đức Tú',
+            'email'=> 'tubun2@gmail.com',
+            'password'=> Hash::make('123456'),
+            'role'=> 'staff',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name'=> 'Lê Văn Hùng',
+            'email'=> 'hung.bodybuilding@extrafit.vn',
+            'password'=> Hash::make('123456'),
+            'role'=> 'trainer',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name'=> 'Phạm Thu Hà',
+            'email'=> 'ha.yoga@extrafit.vn',
+            'password'=> Hash::make('123456'),
+            'role'=> 'trainer',
             'email_verified_at' => now(),
         ]);
     }

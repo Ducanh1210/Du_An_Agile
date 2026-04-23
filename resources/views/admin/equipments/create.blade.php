@@ -1,10 +1,10 @@
-@extends('layouts.admin')
+@extends(auth()->user()->role === 'staff' ? 'layouts.staff' : 'layouts.admin')
 
 @section('title', 'Thêm Dụng cụ Mới')
 
 @section('content')
 <div class="mb-6 flex items-center gap-4 z-10 relative">
-    <a href="{{ route('equipments.index') }}" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-gray-50 transition-colors shadow-sm">
+    <a href="{{ route('admin.equipments.index') }}" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-gray-50 transition-colors shadow-sm">
         <i class="fa-solid fa-arrow-left"></i>
     </a>
     <div>
@@ -15,7 +15,7 @@
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative z-10 max-w-2xl">
     <div class="p-6">
-        <form action="{{ route('equipments.store') }}" method="POST">
+        <form action="{{ route('admin.equipments.store') }}" method="POST">
             @csrf
             
             <div class="space-y-6">
@@ -64,7 +64,7 @@
                 <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl font-medium transition-all shadow-lg shadow-orange-600/30 text-sm uppercase tracking-widest hover:-translate-y-0.5">
                     Lưu Dụng cụ
                 </button>
-                <a href="{{ route('equipments.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-6 py-3 rounded-xl font-medium transition-colors text-sm uppercase tracking-widest">
+                <a href="{{ route('admin.equipments.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-6 py-3 rounded-xl font-medium transition-colors text-sm uppercase tracking-widest">
                     Hủy bỏ
                 </a>
             </div>
@@ -72,3 +72,4 @@
     </div>
 </div>
 @endsection
+

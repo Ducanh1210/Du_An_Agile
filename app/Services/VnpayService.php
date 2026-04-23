@@ -14,6 +14,10 @@ class VnpayService
         $vnp_TmnCode = config('services.vnpay.tmn_code');
         $vnp_HashSecret = config('services.vnpay.hash_secret');
 
+        if (!$vnp_TmnCode || !$vnp_HashSecret || !$vnp_Url) {
+            throw new \RuntimeException('VNPay chưa được cấu hình. Vui lòng kiểm tra VNP_TMN_CODE, VNP_HASH_SECRET, VNP_URL trong file .env');
+        }
+
         $vnp_TxnRef = $data['order_id']; // Mã đơn hàng.
         $vnp_OrderInfo = $data['order_desc'];
         $vnp_OrderType = 'billpayment';
@@ -70,8 +74,14 @@ class VnpayService
     public function verifyReturn(array $inputData)
     {
         $vnp_HashSecret = config('services.vnpay.hash_secret');
+
+        if (!isset($inputData['vnp_SecureHash'])) {
+            return false;
+        }
+
         $vnp_SecureHash = $inputData['vnp_SecureHash'];
         unset($inputData['vnp_SecureHash']);
+        unset($inputData['vnp_SecureHashType']);
         
         // Sắp xếp dữ liệu theo thứ tự alphabet
         ksort($inputData);

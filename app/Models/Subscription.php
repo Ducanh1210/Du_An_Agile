@@ -49,11 +49,11 @@ class Subscription extends Model
     }
 
     /**
-     * Relationship with Trainer
+     * Relationship with Trainer (now integrated into User)
      */
     public function trainer()
     {
-        return $this->belongsTo(Trainer::class);
+        return $this->belongsTo(User::class, 'trainer_id')->where('role', 'trainer');
     }
 
     public function bookings()

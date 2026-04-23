@@ -101,7 +101,7 @@
     <div class="container mx-auto px-6 flex items-center gap-3">
         <a href="{{ url('/') }}" class="text-slate-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Trang chủ</a>
         <i class="fas fa-chevron-right text-slate-700 text-[8px]"></i>
-        <span class="text-white font-black text-xs uppercase tracking-[0.2em]">Lịch lớp & Đặt PT</span>
+        <span class="text-white font-black text-xs uppercase tracking-[0.2em]">Lịch lớp học nhóm</span>
     </div>
 </div>
 @endsection
@@ -110,6 +110,7 @@
 <div class="premium-schedule" x-data="{ 
     activeWeek: 0,
     activeDay: '{{ $dates[0]['full'] }}',
+    activeCategory: 'all',
     loadingPT: false,
     selectedTrainer: '',
     selectedPTDate: '{{ date('Y-m-d') }}',
@@ -119,8 +120,8 @@
     <div class="container mx-auto px-6 py-12">
         <div class="flex flex-col lg:flex-row gap-12">
             
-            <!-- Left: Weekly Timetable (75%) -->
-            <div class="lg:w-3/4">
+            <!-- Left: Weekly Timetable (Full Width) -->
+            <div class="lg:w-full">
                 <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
                     <div>
                         <h1 class="text-5xl font-black text-slate-900 uppercase tracking-tighter mb-2 italic">Lịch biểu <span class="text-primary italic">trong tuần</span></h1>
@@ -135,7 +136,7 @@
                 </div>
 
                 <!-- Horizontal Date Selector (Apple Style) -->
-                <div class="flex gap-4 mb-12 overflow-x-auto no-scrollbar pb-4">
+                <div class="flex gap-4 mb-10 overflow-x-auto no-scrollbar pb-4">
                     @foreach($dates as $date)
                     <button 
                         x-show="({{ $date['index'] }} >= activeWeek * 7) && ({{ $date['index'] }} < (activeWeek + 1) * 7)"
@@ -149,6 +150,25 @@
                     @endforeach
                 </div>
 
+                <!-- Category Switcher (Premium Tabs) -->
+                <div class="flex flex-wrap items-center gap-3 mb-10">
+                    <button @click="activeCategory = 'all'" 
+                        :class="activeCategory === 'all' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-500 border-slate-100'"
+                        class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2">
+                        <i class="fas fa-th-large"></i> Tất cả
+                    </button>
+                    <button @click="activeCategory = 'gym'" 
+                        :class="activeCategory === 'gym' ? 'bg-primary text-white shadow-lg shadow-primary/30 border-transparent' : 'bg-white text-slate-500 border-slate-100'"
+                        class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2">
+                        <i class="fas fa-dumbbell"></i> Gym & Fitness
+                    </button>
+                    <button @click="activeCategory = 'yoga'" 
+                        :class="activeCategory === 'yoga' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 border-transparent' : 'bg-white text-slate-500 border-slate-100'"
+                        class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2">
+                        <i class="fas fa-om"></i> Yoga & Thiền
+                    </button>
+                </div>
+
                 <!-- Timetable Content -->
                 <div class="space-y-6">
                     @foreach($dates as $date)
@@ -159,31 +179,35 @@
                             @endphp
 
                             @forelse($daySchedules as $item)
-                                <div class="class-card bg-cl-{{ $item->category }} p-8 text-white relative overflow-hidden group">
+                                <div x-show="activeCategory === 'all' || activeCategory === '{{ $item->category }}'"
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     class="class-card bg-cl-{{ $item->category }} p-8 text-white relative overflow-hidden group">
                                     <div class="relative z-10">
                                         <div class="flex justify-between items-start mb-8">
                                             <div class="flex flex-col">
                                                 <span class="text-4xl font-black tracking-tighter italic mb-1">{{ $item->start_time->format('H:i') }}</span>
-                                                <span class="text-[9px] font-black uppercase tracking-[0.3em] opacity-60">60 Minutes</span>
+                                                <span class="text-[9px] font-black uppercase tracking-[0.3em] opacity-60">60 Phút</span>
                                             </div>
                                             <span class="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10">
-                                                {{ $item->category }}
+                                                {{ $item->category === 'gym' ? 'Gym & Fitness' : 'Yoga & Thiền' }}
                                             </span>
                                         </div>
 
                                         <h3 class="text-3xl font-black uppercase tracking-tighter mb-6 leading-none group-hover:text-primary transition-colors cursor-default">{{ $item->title }}</h3>
 
                                         <div class="flex items-center gap-4 mb-8">
-                                            <img src="{{ $item->trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($item->trainer->user->name) }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/20">
+                                            <img src="{{ $item->trainer->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($item->trainer->name) }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/20">
                                             <div>
-                                                <div class="text-[8px] font-black uppercase tracking-widest opacity-50">Master Trainer</div>
-                                                <div class="text-sm font-bold">{{ $item->trainer->user->name }}</div>
+                                                <div class="text-[8px] font-black uppercase tracking-widest opacity-50">HLV Chuyên nghiệp</div>
+                                                <div class="text-sm font-bold">{{ $item->trainer->name }}</div>
                                             </div>
                                         </div>
 
                                         <div class="flex items-center justify-between gap-4">
                                             <div class="text-[10px] font-bold opacity-70 italic">
-                                                <i class="fas fa-users mr-1"></i> {{ $item->current_enrolled }} / {{ $item->capacity }} slots
+                                                <i class="fas fa-users mr-1"></i> {{ $item->current_enrolled }} / {{ $item->capacity }} chỗ trống
                                             </div>
                                             
                                             @auth
@@ -214,71 +238,18 @@
                                     <p class="text-slate-300 text-xs font-bold uppercase mt-2 tracking-widest">Vui lòng chọn ngày khác hoặc đặt PT riêng</p>
                                 </div>
                             @endforelse
+
+                            <!-- Empty Category State -->
+                            <div x-show="activeCategory !== 'all' && $el.closest('.grid').querySelectorAll('.class-card[style*=\'display: block\']').length === 0" 
+                                 class="col-span-1 md:col-span-2 py-20 bg-white/50 rounded-[40px] border border-slate-100 flex flex-col items-center justify-center text-center">
+                                <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">Không có lớp <span x-text="activeCategory === 'gym' ? 'Gym & Fitness' : 'Yoga & Thiền'"></span> trong ngày này</p>
+                            </div>
                         </div>
                     </template>
                     @endforeach
                 </div>
             </div>
 
-            <!-- Right: Quick PT Booking Sticky Sidebar (25%) -->
-            <div class="lg:w-1/4">
-                <div class="sticky-sidebar">
-                    <div class="bg-white rounded-[40px] shadow-2xl shadow-slate-200/50 border border-slate-50 overflow-hidden relative">
-                        <div class="p-10">
-                            <div class="flex items-center gap-4 mb-8">
-                                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-2xl rotate-6">
-                                    <i class="fas fa-user-ninja"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-black text-slate-900 uppercase tracking-tighter mb-1">Đặt lịch PT</h3>
-                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Huấn luyện viên cá nhân</p>
-                                </div>
-                            </div>
-
-                            <div class="bg-slate-50 rounded-3xl p-6 mb-8 border border-slate-100">
-                                <p class="text-xs font-bold text-slate-500 leading-relaxed italic">"Không tìm thấy khung giờ phù hợp? Hãy đặt lịch tập 1-kèm-1 để đạt hiệu quả tối ưu nhất."</p>
-                            </div>
-
-                            <form action="{{ route('pt-bookings.store') }}" method="POST" @submit="loadingPT = true" class="space-y-6">
-                                @csrf
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Chọn Huấn luyện viên</label>
-                                    <select name="trainer_id" required x-model="selectedTrainer" 
-                                            class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
-                                        <option value="">-- Danh sách HLV --</option>
-                                        @foreach($trainers as $trainer)
-                                            <option value="{{ $trainer->id }}">{{ $trainer->user->name }} ({{ $trainer->specialization }})</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Ngày tập dự kiến</label>
-                                    <input type="date" name="date" required x-model="selectedPTDate" min="{{ date('Y-m-d') }}"
-                                           class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
-                                </div>
-
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-2">Khung giờ (1 Tiếng)</label>
-                                    <input type="time" name="time_slot" required x-model="selectedStartTime"
-                                           class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
-                                </div>
-
-                                <button type="submit" :disabled="loadingPT || !selectedTrainer"
-                                        class="w-full py-5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl shadow-slate-900/10 disabled:opacity-50 disabled:cursor-not-allowed group">
-                                    <span x-show="!loadingPT">ĐẶT LỊCH NGAY <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i></span>
-                                    <span x-show="loadingPT"><i class="fas fa-spinner fa-spin text-lg"></i></span>
-                                </button>
-                            </form>
-                        </div>
-                        
-                        <!-- Premium Footer -->
-                        <div class="bg-slate-50/50 p-6 text-center border-t border-slate-50">
-                            <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Extra Fit+ Fitness & Yoga Center</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

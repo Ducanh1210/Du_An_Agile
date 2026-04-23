@@ -133,6 +133,20 @@
             <p class="section-desc">Từ người mới bắt đầu đến vận động viên chuyên nghiệp, chúng tôi đều có kế hoạch hoàn hảo dành cho bạn.</p>
         </div>
 
+        @if(session('error'))
+            <div style="background: #FFF1F0; border: 1px solid #FFA39E; padding: 16px 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; color: #CF1322; font-weight: 600;">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div style="background: #F6FFED; border: 1px solid #B7EB8F; padding: 16px 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; color: #389E0D; font-weight: 600;">
+                <i class="fas fa-check-circle"></i>
+                {{ session('success') }}
+            </div>
+        @endif
+
         <div class="pricing-grid">
             @forelse($memberships as $membership)
             <div class="pricing-card animate-on-scroll {{ $membership->category == 'VIP' ? 'popular' : '' }}">

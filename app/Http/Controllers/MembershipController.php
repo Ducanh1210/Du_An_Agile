@@ -43,7 +43,7 @@ class MembershipController extends Controller
         $objMem = new Membership();
         $res = $objMem->insertDataMembership($data);
         if ($res) {
-            return redirect()->route('memberships.index')->with('success', 'Thêm mới gói tập thành công!');
+            return redirect()->route('admin.memberships.index')->with('success', 'Thêm mới gói tập thành công!');
         } else {
             return redirect()->back()->with('error', 'Thêm mới gói tập không thành công!');
         }
@@ -57,7 +57,7 @@ class MembershipController extends Controller
         $objMem = new Membership();
         $this->view['memDetail'] = $objMem->loadDataMembershipById($id);
         if (empty($this->view['memDetail'])) {
-            return redirect()->route('memberships.index')->with('error', 'Gói tập không tồn tại!');
+            return redirect()->route('admin.memberships.index')->with('error', 'Gói tập không tồn tại!');
         }
         return view('admin.membership.edit', $this->view);
     }
@@ -71,7 +71,7 @@ class MembershipController extends Controller
         $objMem = new Membership();
         $res = $objMem->updateDataMembership($id, $data);
         if ($res) {
-            return redirect()->route('memberships.index')->with('success', 'Cập nhật gói tập thành công!');
+            return redirect()->route('admin.memberships.index')->with('success', 'Cập nhật gói tập thành công!');
         } else {
             return redirect()->back()->with('error', 'Cập nhật gói tập không thành công!');
         }
@@ -85,9 +85,9 @@ class MembershipController extends Controller
         $objMem = new Membership();
         $res = $objMem->deleteDataMembership($id);
         if ($res) {
-            return redirect()->route('memberships.index')->with('success', 'Xóa gói tập thành công!');
+            return redirect()->route('admin.memberships.index')->with('success', 'Xóa gói tập thành công!');
         } else {
-            return redirect()->route('memberships.index')->with('error', 'Xóa gói tập không thành công!');
+            return redirect()->route('admin.memberships.index')->with('error', 'Xóa gói tập không thành công!');
         }
     }
 }

@@ -12,7 +12,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Nhắc gói tập sắp hết hạn vào 8 giờ sáng hàng ngày
+        $schedule->command('app:check-subscriptions')->dailyAt('08:00');
+
+        // Nhắc lịch tập sắp diễn ra mỗi 10 phút
+        $schedule->command('app:remind-sessions')->everyTenMinutes();
+
+        // Thông báo tổng hợp lịch tập hôm nay vào 7:00 sáng
+        $schedule->command('app:notify-daily-schedule')->dailyAt('07:00');
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Trainer;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -50,16 +49,12 @@ class TrainerScheduleSeeder extends Seeder
                     'role' => 'trainer',
                     'avatar_url' => $data['avatar'],
                     'is_active' => 1,
-                ]
-            );
-
-            $trainer = Trainer::updateOrCreate(
-                ['user_id' => $user->id],
-                [
                     'specialization' => $data['specialization'],
                     'is_available' => 1,
                 ]
             );
+
+            $trainer = $user;
 
             // 2. Tạo Lịch lớp mẫu thực tế cho 14 ngày tới
             $titles = [

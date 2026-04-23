@@ -15,6 +15,13 @@ class AdminUserController extends Controller
 
     public function __construct()
     {
+        $this->middleware(function ($request, $next) {
+            if (auth()->check() && auth()->user()->role !== 'admin') {
+                abort(403, 'Trang này chỉ dành cho Quản trị viên (Admin).');
+            }
+            return $next($request);
+        });
+        
         $this->view = [];
     }
 
@@ -66,7 +73,7 @@ class AdminUserController extends Controller
         $res = $objUser->insertDataUser($data);
         
         if ($res) {
-            return redirect()->route('users.index')->with('success', 'Thêm mới người dùng thành công!');
+            return redirect()->route('admin.users.index')->with('success', 'Thêm mới người dùng thành công!');
         } else {
             return redirect()->back()->with('error', 'Thêm mới người dùng không thành công!');
         }
@@ -81,7 +88,7 @@ class AdminUserController extends Controller
         $this->view['userDetail'] = $objUser->loadDataUserById($id);
         
         if (empty($this->view['userDetail'])) {
-            return redirect()->route('users.index')->with('error', 'Người dùng không tồn tại!');
+            return redirect()->route('admin.users.index')->with('error', 'Người dùng không tồn tại!');
         }
         
         return view('admin.user.edit', $this->view);
@@ -118,7 +125,7 @@ class AdminUserController extends Controller
         $res = $objUser->updateDataUser($id, $data);
         
         if ($res) {
-            return redirect()->route('users.index')->with('success', 'Cập nhật người dùng thành công!');
+            return redirect()->route('admin.users.index')->with('success', 'Cập nhật người dùng thành công!');
         } else {
             return redirect()->back()->with('error', 'Cập nhật người dùng không thành công!');
         }

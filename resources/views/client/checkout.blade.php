@@ -527,6 +527,13 @@
             <p class="checkout-subtitle">Kiểm tra thông tin gói tập trước khi tiến hành thanh toán an toàn qua VNPay.</p>
         </div>
 
+        @if(session('error'))
+            <div style="background: #FFF1F0; border: 1px solid #FFA39E; padding: 16px 20px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; color: #CF1322; font-weight: 600;" class="fade-up">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="checkout-grid">
             {{-- Left Column --}}
             <div class="checkout-main">
