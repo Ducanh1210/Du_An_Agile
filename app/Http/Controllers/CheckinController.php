@@ -15,36 +15,52 @@ class CheckinController extends Controller
      */
     public function index()
     {
-        // 1. Mặc định lấy IP Wifi nội bộ
+        // 1. Tự động lấy địa chỉ IP thực của máy tính trong mạng WiFi/LAN
+        $localIp = '127.0.0.1';
         $hostname = gethostname();
         $ips = gethostbynamel($hostname);
-        $localIp = '127.0.0.1';
+        $localIps = [];
+
         if ($ips) {
             foreach ($ips as $ip) {
-                if (str_starts_with($ip, '192.168.1.')) {
-                    $localIp = $ip;
-                    break;
+                if (preg_match('/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $ip)) {
+                    $localIps[] = $ip;
                 }
             }
         }
+        
+        $localIp = !empty($localIps) ? $localIps[0] : '127.0.0.1';
 
+        // 2. Tạo đường dẫn quét QR dựa trên IP nội bộ
         $checkinUrl = route('checkin.verify', [], true);
+        
+        // Lấy port hiện tại nếu có (ví dụ :8000)
+        $currentPort = parse_url(url()->current(), PHP_URL_PORT);
+        $portSuffix = $currentPort ? ':' . $currentPort : '';
 
-        // 2. Tự động kiểm tra xem có Đường hầm công khai (Localtunnel) không
+        // Thay thế localhost/127.0.0.1 bằng IP thực + Port
+        $checkinUrl = str_replace(['localhost', '127.0.0.1', '::1'], $localIp, $checkinUrl);
+        
+        // Đảm bảo URL có port nếu đang chạy qua artisan serve
+        if ($currentPort && !str_contains($checkinUrl, ':' . $currentPort)) {
+            $checkinUrl = str_replace($localIp, $localIp . ':' . $currentPort, $checkinUrl);
+        }
+
+        // 3. Kiểm tra Tunnel (nếu có) - Ưu tiên Tunnel nếu muốn dùng qua 4G
         $tunnelFile = base_path('tunnel_url.txt');
         if (file_exists($tunnelFile)) {
             $content = file_get_contents($tunnelFile);
-            // Tìm URL dạng https://...loca.lt
             if (preg_match('/https:\/\/[^\s]+/', $content, $matches)) {
-                $checkinUrl = rtrim($matches[0], '/');
-                $checkinUrl .= '/checkin/verify';
+                $checkinUrl = rtrim($matches[0], '/') . '/checkin/verify';
                 $localIp = "Internet Tunnel (Public)";
-            } else {
-                $checkinUrl = str_replace(['localhost', '127.0.0.1', '192.168.137.1'], $localIp, $checkinUrl);
             }
-        } else {
-            $checkinUrl = str_replace(['localhost', '127.0.0.1', '192.168.137.1'], $localIp, $checkinUrl);
         }
+
+        \Illuminate\Support\Facades\Log::info("QR Checkin URL Generated", [
+            'ip' => $localIp,
+            'url' => $checkinUrl,
+            'port' => $currentPort
+        ]);
 
         return view('staff.checkin_station', compact('checkinUrl', 'localIp'));
     }

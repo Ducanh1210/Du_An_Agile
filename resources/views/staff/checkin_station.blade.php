@@ -166,15 +166,28 @@
                 </div>
 
                 <div class="qr-wrapper animate__animated animate__zoomIn">
-                    <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ urlencode($checkinUrl) }}" 
-                         alt="QR" style="width: 280px; filter: contrast(110%);">
+                    <div id="qrcode"></div>
                 </div>
 
                 <div class="mt-5 p-4 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
-                    <div class="d-flex align-items-center justify-content-center gap-3">
-                        <i class="fas fa-signal-stream text-primary animate__animated animate__pulse animate__infinite"></i>
-                        <span class="small opacity-50">Hệ thống đang sẵn sàng trên: </span>
-                        <span class="badge bg-dark border border-secondary">{{ $localIp }}</span>
+                    <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fas fa-signal-stream text-primary animate__animated animate__pulse animate__infinite"></i>
+                            <span class="small opacity-50">Hệ thống đang sẵn sàng trên: </span>
+                            <span class="badge bg-dark border border-secondary" id="displayIp">{{ $localIp }}</span>
+                        </div>
+                        <div class="small text-secondary opacity-50 mt-1" id="displayUrl" style="word-break: break-all; font-size: 0.7rem;">
+                            URL: {{ $checkinUrl }}
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-secondary opacity-50" onclick="editIp()">
+                                <i class="fas fa-edit me-1"></i> Đổi IP thủ công
+                            </button>
+                        </div>
+                        <div class="small text-warning opacity-75 mt-2">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            Hãy đảm bảo đã chạy: <code>php artisan serve --host=0.0.0.0</code>
+                        </div>
                     </div>
                 </div>
 
@@ -210,8 +223,44 @@
     <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU9vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19vT19u" type="audio/wav">
 </audio>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
     let lastCheckinTime = null;
+
+    let currentCheckinUrl = "{{ $checkinUrl }}";
+
+    // Khởi tạo QR Code nội bộ
+    let qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: currentCheckinUrl,
+        width: 280,
+        height: 280,
+        colorDark : "#0f172a",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    function editIp() {
+        const newIp = prompt("Nhập địa chỉ IP WiFi của máy tính (Ví dụ: 192.168.1.15):", "{{ $localIp }}");
+        if (newIp && newIp !== "{{ $localIp }}") {
+            const newUrl = currentCheckinUrl.replace("{{ $localIp }}", newIp);
+            currentCheckinUrl = newUrl;
+            
+            // Cập nhật giao diện
+            document.getElementById('displayIp').innerText = newIp;
+            document.getElementById('displayUrl').innerText = "URL: " + newUrl;
+            
+            // Cập nhật QR
+            document.getElementById("qrcode").innerHTML = "";
+            qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: newUrl,
+                width: 280,
+                height: 280,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+    }
 
     function updateClock() {
         const now = new Date();

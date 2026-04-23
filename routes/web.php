@@ -5,21 +5,24 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\ClientProfileController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\CheckinController;
+use App\Http\Controllers\PTBookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
 */
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // QR Check-in Public Routes
-Route::get('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'showVerifyForm'])->name('checkin.verify');
-Route::post('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'processVerify'])->name('checkin.process');
-Route::get('/api/checkin/recent', [\App\Http\Controllers\CheckinController::class, 'getRecentCheckins']);
+Route::get('/checkin/verify', [CheckinController::class, 'showVerifyForm'])->name('checkin.verify');
+Route::post('/checkin/verify', [CheckinController::class, 'processVerify'])->name('checkin.process');
+Route::get('/api/checkin/recent', [CheckinController::class, 'getRecentCheckins']);
 Route::get('/dang-ky', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register.vn');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
@@ -46,7 +49,7 @@ Route::get('/dashboard', function () {
 // Staff Dashboard
 Route::middleware(['auth', \App\Http\Middleware\StaffRole::class])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\StaffController::class, 'dashboard'])->name('dashboard');
-    Route::get('/checkin/station', [\App\Http\Controllers\CheckinController::class, 'index'])->name('checkin.station');
+    Route::get('/checkin/station', [CheckinController::class, 'index'])->name('checkin.station');
 });
 
 // Dashboard & Admin Management
