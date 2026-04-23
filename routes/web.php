@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// QR Check-in Public Routes
+Route::get('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'showVerifyForm'])->name('checkin.verify');
+Route::post('/checkin/verify', [\App\Http\Controllers\CheckinController::class, 'processVerify'])->name('checkin.process');
+Route::get('/api/checkin/recent', [\App\Http\Controllers\CheckinController::class, 'getRecentCheckins']);
 Route::get('/dang-ky', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register.vn');
 Route::get('/lien-he', [HomeController::class, 'contact'])->name('contact');
 Route::get('/tin-tuc', [HomeController::class, 'news'])->name('news');  
@@ -41,6 +46,7 @@ Route::get('/dashboard', function () {
 // Staff Dashboard
 Route::middleware(['auth', \App\Http\Middleware\StaffRole::class])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\StaffController::class, 'dashboard'])->name('dashboard');
+    Route::get('/checkin/station', [\App\Http\Controllers\CheckinController::class, 'index'])->name('checkin.station');
 });
 
 // Dashboard & Admin Management
@@ -102,10 +108,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'update'])->name('categories.update');
         Route::delete('categories/{id}', [\App\Http\Controllers\Admin\NewsCategoryController::class, 'delete'])->name('categories.delete');
 
-        // Tags
-        Route::get('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'index'])->name('tags.index');
-        Route::post('tags', [\App\Http\Controllers\Admin\NewsTagController::class, 'store'])->name('tags.store');
-        Route::delete('tags/{id}', [\App\Http\Controllers\Admin\NewsTagController::class, 'delete'])->name('tags.delete');
 
         // Comments
         Route::get('comments', [\App\Http\Controllers\Admin\NewsCommentController::class, 'index'])->name('comments.index');
@@ -150,6 +152,11 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::post('/students/{id}/metrics', [\App\Http\Controllers\TrainerController::class, 'updateMetrics'])->name('student.metrics');
     Route::post('/bookings/{id}/report', [\App\Http\Controllers\TrainerController::class, 'submitReport'])->name('booking.report');
     Route::post('/leave-requests', [\App\Http\Controllers\TrainerController::class, 'submitLeaveRequest'])->name('leave.submit');
+    
+    // Profile
+    Route::get('/profile', [\App\Http\Controllers\TrainerController::class, 'profile'])->name('profile');
+    Route::post('/profile', [\App\Http\Controllers\TrainerController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'reschedule'])->name('booking.reschedule');
 });
 
 // User Profile Routes (Breeze default)
@@ -162,9 +169,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lich-tap-ca-nhan', [\App\Http\Controllers\HomeController::class, 'personalSchedule'])->name('personal.schedule');
     Route::post('/bookings', [\App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
     Route::post('/pt-bookings', [\App\Http\Controllers\PTBookingController::class, 'store'])->name('pt-bookings.store');
+    // Internal Notification API Routes
+    Route::prefix('api/notifications')->group(function () {
+        Route::get('/recent', [\App\Http\Controllers\NotificationController::class, 'getRecent']);
+        Route::post('/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+        Route::post('/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+    });
+
     Route::get('/thong-bao', [\App\Http\Controllers\HomeController::class, 'notifications'])->name('notifications.index');
-    Route::post('/reschedule/{id}/respond', [\App\Http\Controllers\HomeController::class, 'respondToReschedule'])->name('reschedule.respond');
-    Route::delete('/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'cancel'])->name('bookings.cancel');
 });
 
 // Client Profile, Subscription & Calendar Routes
@@ -209,5 +221,8 @@ Route::controller(PasswordResetController::class)->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Fix Logout 419 error by adding a GET route
+Route::get('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])->name('logout.get');
 
 ?>

@@ -120,6 +120,19 @@
                     </div>
                 </div>
 
+                {{-- Tags Widget --}}
+                <div class="widget">
+                    <h4 class="widget-title">Tags phổ biến</h4>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($tags as $tag)
+                        <a href="{{ route('news', ['tag' => $tag]) }}" 
+                           class="px-3 py-1.5 bg-white border border-gray-100 rounded-lg text-[11px] font-bold text-slate-500 hover:border-primary hover:text-primary transition-all shadow-sm">
+                            #{{ $tag }}
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
                 {{-- Recommended Section/Placeholder --}}
                 <div class="widget">
                     <div class="bg-primary/5 p-8 rounded-3xl border border-primary/10">

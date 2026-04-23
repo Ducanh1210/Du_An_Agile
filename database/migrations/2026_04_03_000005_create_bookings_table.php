@@ -15,7 +15,7 @@ return new class extends Migration
             $table->enum('booking_type', ['class', 'pt_session']);
             $table->string('target_area')->nullable()->comment('Vùng tập: Tay, Chân, Bụng, Ngực, Lưng, Toàn thân...');
             $table->foreignId('schedule_id')->nullable()->constrained('schedules');
-            $table->foreignId('trainer_id')->nullable()->constrained('users');
+            $table->foreignId('trainer_id')->nullable()->constrained('users')->onDelete('set null');
             $table->datetime('start_time');
             $table->datetime('end_time');
             $table->decimal('price', 12, 2)->default(0.00);

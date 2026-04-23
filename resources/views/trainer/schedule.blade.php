@@ -2,281 +2,137 @@
 
 @section('styles')
 <style>
-    .page-header {
-        margin-bottom: 20px;
-    }
-    .page-header h1 {
-        font-size: 22px;
-        font-weight: 800;
-        color: var(--text-main);
-    }
-    .page-header p {
-        color: var(--text-muted);
-        font-size: 14px;
-        margin-top: 4px;
-    }
-
-    /* Day Group */
-    .day-group { margin-bottom: 28px; }
-    .day-label {
-        font-size: 13px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-muted);
-        margin-bottom: 10px;
+    .day-group { margin-bottom: 40px; }
+    .day-header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 16px;
+        margin-bottom: 24px;
     }
-    .day-label::after {
-        content: '';
+    .day-date {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        color: var(--text-main);
+    }
+    .day-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--primary);
+        background: var(--primary-light);
+        padding: 4px 12px;
+        border-radius: 8px;
+        text-transform: uppercase;
+    }
+    .day-line {
         flex: 1;
         height: 1px;
         background: var(--border);
     }
-    .day-label.today-label { color: var(--primary); }
 
-    /* Session Card */
+    .sessions-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
     .session-card {
+        display: grid;
+        grid-template-columns: 100px 1fr auto;
+        align-items: center;
+        gap: 24px;
+        padding: 24px;
         background: var(--card-bg);
-        border-radius: 16px;
-        padding: 16px;
-        margin-bottom: 12px;
+        border-radius: 20px;
         border: 1px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        position: relative;
-        overflow: hidden;
+        transition: all 0.2s;
     }
-    .session-card.has-leave {
-        opacity: 0.7;
-        border-style: dashed;
+    .session-card:hover {
+        transform: translateX(8px);
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
     }
-    .session-card::before {
-        content: '';
-        position: absolute;
-        left: 0; top: 0; bottom: 0;
-        width: 4px;
-        border-radius: 4px 0 0 4px;
-    }
-    .session-card.type-pt::before { background: var(--primary); }
-    .session-card.type-class::before { background: var(--secondary); }
-    .session-card.status-cancelled::before { background: #94A3B8; }
 
     .session-time {
-        min-width: 58px;
         text-align: center;
+        padding-right: 24px;
+        border-right: 2px solid var(--bg);
     }
-    .session-time .time-val {
-        font-size: 18px;
-        font-weight: 800;
-        color: var(--text-main);
-        line-height: 1.1;
-    }
-    .session-time .time-suffix {
-        font-size: 11px;
-        color: var(--text-muted);
-        font-weight: 500;
-    }
+    .time-val { font-size: 22px; font-weight: 900; color: var(--text-main); line-height: 1; }
+    .time-suffix { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
 
-    .session-info { flex: 1; min-width: 0; }
-    .session-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--text-main);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .session-sub {
-        font-size: 13px;
-        color: var(--text-muted);
-        margin-top: 3px;
-    }
-    .session-badges {
-        display: flex;
-        gap: 6px;
-        margin-top: 8px;
-        flex-wrap: wrap;
-    }
-    .session-badge {
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 700;
-    }
-    .badge-pt { background: #fff1eb; color: var(--primary); }
-    .badge-class { background: #eff6ff; color: var(--secondary); }
-    .badge-pending-leave { background: #fef3c7; color: #d97706; }
-    .badge-cancelled { background: #f1f5f9; color: #94a3b8; }
+    .session-main { display: flex; align-items: center; gap: 20px; }
+    .student-img { width: 56px; height: 56px; border-radius: 16px; object-fit: cover; }
+    .session-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+    .session-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
-    .session-action { align-self: center; }
-    .btn-leave {
-        background: transparent;
-        border: 1.5px solid #ef4444;
-        color: #ef4444;
-        padding: 7px 14px;
+    .badge {
+        padding: 6px 12px;
         border-radius: 10px;
-        font-size: 12px;
-        font-weight: 700;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .badge-pt { background: #FFF1EB; color: var(--primary); }
+    .badge-class { background: #EFF6FF; color: var(--secondary); }
+    .badge-pending { background: #FEF3C7; color: #D97706; }
+    .badge-cancelled { background: #F1F5F9; color: #64748B; }
+
+    .btn-leave {
+        background: #FEF2F2;
+        color: #EF4444;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 13px;
         cursor: pointer;
-        white-space: nowrap;
         transition: all 0.2s;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
     }
-    .btn-leave:hover { background: #fee2e2; }
-    .btn-leave:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        border-color: #94a3b8;
-        color: #94a3b8;
-    }
+    .btn-leave:hover { background: #EF4444; color: white; transform: translateY(-2px); }
 
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--text-muted);
-    }
-    .empty-state i { font-size: 48px; opacity: 0.3; margin-bottom: 16px; }
-    .empty-state p { font-size: 15px; line-height: 1.7; }
-
-    /* Modal */
+    /* Modal Redesign */
     .modal-overlay {
         position: fixed; inset: 0;
-        background: rgba(0,0,0,0.55);
-        z-index: 3000;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.25s;
-    }
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal-sheet {
-        background: var(--card-bg);
-        border-radius: 24px 24px 0 0;
-        padding: 20px 20px 32px;
-        width: 100%;
-        max-width: 600px;
-        transform: translateY(100%);
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .modal-overlay.open .modal-sheet { transform: translateY(0); }
-    .modal-handle {
-        width: 40px; height: 4px;
-        background: var(--border);
-        border-radius: 2px;
-        margin: 0 auto 20px;
-    }
-    .modal-title {
-        font-size: 18px; font-weight: 800;
-        color: var(--text-main);
-        margin-bottom: 6px;
-    }
-    .modal-sub {
-        font-size: 13px;
-        color: var(--text-muted);
-        margin-bottom: 18px;
-    }
-    .form-label {
-        font-size: 13px; font-weight: 700;
-        color: var(--text-main);
-        margin-bottom: 6px;
-        display: block;
-    }
-    .form-textarea {
-        width: 100%;
-        border: 1.5px solid var(--border);
-        border-radius: 12px;
-        padding: 12px;
-        font-size: 14px;
-        font-family: inherit;
-        resize: none;
-        outline: none;
-        transition: border-color 0.2s;
-        min-height: 100px;
-        color: var(--text-main);
-    }
-    .form-textarea:focus { border-color: #ef4444; }
-    .modal-warn {
-        background: #fef2f2; border-radius: 10px;
-        padding: 10px 14px;
-        font-size: 12px; color: #b91c1c;
-        margin-top: 12px; margin-bottom: 18px;
-        display: flex; align-items: flex-start; gap: 8px;
-    }
-    .modal-warn i { margin-top: 1px; flex-shrink: 0; }
-    .btn-submit-leave {
-        width: 100%;
-        background: #ef4444;
-        color: white;
-        border: none;
-        padding: 14px;
-        border-radius: 14px;
-        font-size: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background 0.2s;
-        font-family: inherit;
-        display: flex;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(8px);
+        z-index: 2000;
+        display: none;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        padding: 40px;
     }
-    .btn-submit-leave:hover { background: #dc2626; }
-    .btn-cancel-modal {
+    .modal-card {
         width: 100%;
-        background: transparent;
-        color: var(--text-muted);
-        border: none;
-        padding: 12px;
-        font-size: 14px;
-        cursor: pointer;
-        font-family: inherit;
-        margin-top: 8px;
+        max-width: 500px;
+        background: white;
+        border-radius: 24px;
+        padding: 32px;
+        animation: modalFadeUp 0.3s ease-out;
     }
-
-    /* Alert */
-    .alert-error {
-        background: #fee2e2;
-        border: 1px solid #fecaca;
-        border-radius: 12px;
-        padding: 12px 16px;
-        color: #b91c1c;
-        font-size: 14px;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    @keyframes modalFadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection
 
 @section('content')
-<div class="page-header">
-    <h1><i class="fa-solid fa-calendar-days" style="color: var(--primary);"></i> Lịch Dạy Của Tôi</h1>
-    <p>Tất cả các ca dạy sắp tới của bạn</p>
+<div style="margin-bottom: 40px;">
+    <h1 style="font-size: 32px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 8px;">Lịch trình giảng dạy</h1>
+    <p style="color: var(--text-muted); font-weight: 500;">Quản lý và theo dõi tất cả các buổi tập của bạn.</p>
 </div>
-
-@if(session('error'))
-    <div class="alert-error">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        {{ session('error') }}
-    </div>
-@endif
 
 @php
     $grouped = $allSchedules->groupBy(function($item) {
         return \Carbon\Carbon::parse($item->start_time)->format('Y-m-d');
     });
-
-    // Build a lookup: item_type + item_id => leave status
     $leaveLookup = [];
     foreach ($leaveRequests as $lr) {
         $leaveLookup[$lr->item_type . '-' . $lr->item_id] = $lr->status;
@@ -284,116 +140,104 @@
 @endphp
 
 @if($grouped->isEmpty())
-    <div class="empty-state">
-        <i class="fa-regular fa-calendar-xmark"></i>
-        <p>Không có ca dạy nào sắp tới.<br>Hãy nghỉ ngơi và nạp năng lượng!</p>
+    <div class="card" style="text-align: center; padding: 100px 40px; border-style: dashed; border-width: 2px;">
+        <img src="https://illustrations.popsy.co/gray/calendar.svg" style="width: 200px; margin-bottom: 24px;">
+        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Không có ca dạy nào sắp tới</h3>
+        <p style="color: var(--text-muted); font-weight: 500;">Khi có lịch mới, chúng sẽ xuất hiện tại đây.</p>
     </div>
 @else
     @foreach($grouped as $date => $sessions)
         @php
             $carbon = \Carbon\Carbon::parse($date);
             $isToday = $carbon->isToday();
-            $dayStr = $isToday ? 'Hôm nay' : ucfirst($carbon->locale('vi')->isoFormat('dddd'));
-            $dateStr = $carbon->format('d/m/Y');
         @endphp
-
         <div class="day-group">
-            <div class="day-label {{ $isToday ? 'today-label' : '' }}">
-                {{ $dayStr }}, {{ $dateStr }}
+            <div class="day-header">
+                <span class="day-date">{{ $carbon->format('d') }} Th{{ $carbon->format('m') }}, {{ $carbon->format('Y') }}</span>
+                <span class="day-name">{{ $isToday ? 'Hôm nay' : $carbon->locale('vi')->isoFormat('dddd') }}</span>
+                <div class="day-line"></div>
             </div>
 
-            @foreach($sessions as $session)
-                @php
-                    $isPT = $session->is_pt ?? false;
-                    $itemType = $isPT ? 'App\Models\Booking' : 'App\Models\Schedule';
-                    $leaveKey = $itemType . '-' . $session->id;
-                    $leaveStatus = $leaveLookup[$leaveKey] ?? null;
-                    $isCancelled = $session->status === 'cancelled';
-                    $hasPendingLeave = $leaveStatus === 'pending';
-                    $hasApprovedLeave = $leaveStatus === 'approved';
+            <div class="sessions-list">
+                @foreach($sessions as $session)
+                    @php
+                        $isPT = $session->is_pt ?? false;
+                        $itemType = $isPT ? 'App\Models\Booking' : 'App\Models\Schedule';
+                        $leaveKey = $itemType . '-' . $session->id;
+                        $leaveStatus = $leaveLookup[$leaveKey] ?? null;
+                        $isCancelled = $session->status === 'cancelled';
+                        
+                        $title = $isPT ? ($session->user->name ?? 'Học viên') : ($session->class_name ?? 'Lớp Nhóm');
+                        $avatar = $isPT ? ($session->user->avatar_url ?? null) : null;
+                    @endphp
 
-                    $title = $isPT
-                        ? ($session->user->name ?? 'Học viên')
-                        : ($session->class_name ?? 'Lớp Nhóm');
-                    $sub = $isPT
-                        ? 'PT Session 1-kèm-1'
-                        : ($session->description ?? 'Lớp tập nhóm');
-                    $duration = $isPT ? '60 phút' : ($session->duration ?? '60' . ' phút');
-                @endphp
+                    <div class="session-card {{ $isCancelled ? 'status-cancelled' : '' }}">
+                        <div class="session-time">
+                            <div class="time-val">{{ \Carbon\Carbon::parse($session->start_time)->format('H:i') }}</div>
+                            <div class="time-suffix">{{ \Carbon\Carbon::parse($session->start_time)->format('A') }}</div>
+                        </div>
 
-                <div class="session-card type-{{ $isPT ? 'pt' : 'class' }} {{ $isCancelled || $hasApprovedLeave ? 'status-cancelled' : '' }} {{ $hasPendingLeave ? 'has-leave' : '' }}">
-                    <div class="session-time">
-                        <div class="time-val">{{ \Carbon\Carbon::parse($session->start_time)->format('H:i') }}</div>
-                        <div class="time-suffix">{{ \Carbon\Carbon::parse($session->start_time)->format('A') }}</div>
-                    </div>
-                    <div class="session-info">
-                        <div class="session-title">{{ $title }}</div>
-                        <div class="session-sub">{{ $sub }}</div>
-                        <div class="session-badges">
-                            <span class="session-badge {{ $isPT ? 'badge-pt' : 'badge-class' }}">
-                                <i class="fa-solid {{ $isPT ? 'fa-person-running' : 'fa-users' }}" style="font-size:10px;"></i>
-                                {{ $isPT ? 'PT Session' : 'Lớp nhóm' }}
-                            </span>
-                            @if($hasPendingLeave)
-                                <span class="session-badge badge-pending-leave">
-                                    <i class="fa-solid fa-clock" style="font-size:10px;"></i> Đang chờ duyệt nghỉ
-                                </span>
-                            @elseif($hasApprovedLeave || $isCancelled)
-                                <span class="session-badge badge-cancelled">
-                                    <i class="fa-solid fa-ban" style="font-size:10px;"></i> Đã hủy
-                                </span>
+                        <div class="session-main">
+                            <img src="{{ $avatar ?? 'https://ui-avatars.com/api/?name='.urlencode($title).'&background='.($isPT ? 'FF6B35' : '2563EB').'&color=fff' }}" class="student-img">
+                            <div>
+                                <h3 class="session-title">{{ $title }}</h3>
+                                <div class="session-meta">
+                                    <span class="badge {{ $isPT ? 'badge-pt' : 'badge-class' }}">
+                                        <i class="fa-solid {{ $isPT ? 'fa-person-running' : 'fa-users' }}"></i>
+                                        {{ $isPT ? 'PT 1-kèm-1' : 'Lớp nhóm' }}
+                                    </span>
+                                    @if($leaveStatus == 'pending')
+                                        <span class="badge badge-pending">Đang chờ duyệt nghỉ</span>
+                                    @elseif($isCancelled)
+                                        <span class="badge badge-cancelled">Đã hủy</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="session-actions">
+                            @if($isPT && !$isCancelled && !$leaveStatus)
+                                <button class="btn-leave" onclick="openLeaveModal('{{ $session->id }}', '{{ addslashes($title) }}', '{{ \Carbon\Carbon::parse($session->start_time)->format('H:i d/m') }}')">
+                                    <i class="fa-solid fa-hand"></i> Xin nghỉ
+                                </button>
                             @endif
                         </div>
                     </div>
-                    @if($isPT && !$isCancelled && !$leaveStatus)
-                        <div class="session-action">
-                            <button class="btn-leave"
-                                onclick="openLeaveModal('{{ $session->id }}', '{{ addslashes($title) }}', '{{ \Carbon\Carbon::parse($session->start_time)->format('H:i d/m') }}')"
-                            >
-                                <i class="fa-solid fa-hand"></i>
-                                Xin nghỉ
-                            </button>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     @endforeach
 @endif
 
-{{-- Modal Xin nghỉ --}}
+<!-- Leave Modal -->
 <div class="modal-overlay" id="leaveModal">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-title"><i class="fa-solid fa-hand" style="color:#ef4444;"></i> Đơn Xin Nghỉ Dạy</div>
-        <div class="modal-sub" id="modalSubText">Ca dạy: --</div>
+    <div class="modal-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="font-size: 22px; font-weight: 900; letter-spacing: -0.5px;">Đơn xin nghỉ dạy</h2>
+            <button onclick="closeLeaveModal()" style="background:none; border:none; font-size:20px; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <p id="modalSubText" style="background: #F8FAFC; padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 24px;"></p>
 
-        <form method="POST" action="{{ route('trainer.leave.submit') }}" id="leaveForm">
+        <form method="POST" action="{{ route('trainer.leave.submit') }}">
             @csrf
             <input type="hidden" name="item_id" id="leaveItemId">
             <input type="hidden" name="item_type" value="App\Models\Booking">
 
-            <label class="form-label">Lý do xin nghỉ <span style="color:#ef4444;">*</span></label>
-            <textarea
-                name="reason"
-                class="form-textarea"
-                required
-                minlength="5"
-                placeholder="Vui lòng ghi rõ lý do xin nghỉ (ốm, việc cá nhân khẩn cấp, v.v.)&#10;&#10;Lưu ý: Không có lý do hợp lệ sẽ bị trừ lương!"
-            ></textarea>
-
-            <div class="modal-warn">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Sau khi được duyệt, ca dạy sẽ bị HỦY. Học viên sẽ nhận thông báo. Không có buổi học bù.</span>
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Lý do xin nghỉ <span style="color:#ef4444;">*</span></label>
+                <textarea name="reason" rows="4" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; outline: none; font-family: inherit; font-size: 14px; background: #F8FAFC;" required placeholder="Ghi rõ lý do khẩn cấp..."></textarea>
             </div>
 
-            <button type="submit" class="btn-submit-leave">
-                <i class="fa-solid fa-paper-plane"></i>
-                Nộp Đơn Xin Nghỉ
-            </button>
-            <button type="button" class="btn-cancel-modal" onclick="closeLeaveModal()">
-                Hủy bỏ
-            </button>
+            <div style="background: #FEF2F2; padding: 16px; border-radius: 14px; display: flex; gap: 12px; margin-bottom: 24px;">
+                <i class="fa-solid fa-circle-exclamation" style="color: #EF4444; margin-top: 3px;"></i>
+                <p style="font-size: 12px; color: #B91C1C; font-weight: 600; line-height: 1.5;">Lưu ý: Việc xin nghỉ sẽ cần Admin duyệt. Sau khi duyệt, ca tập sẽ bị hủy và học viên sẽ nhận được thông báo.</p>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button type="button" onclick="closeLeaveModal()" class="btn btn-outline" style="flex: 1;">Hủy bỏ</button>
+                <button type="submit" class="btn btn-primary" style="flex: 2; background: #EF4444;">Gửi đơn xin nghỉ</button>
+            </div>
         </form>
     </div>
 </div>
@@ -401,22 +245,16 @@
 
 @section('scripts')
 <script>
-function openLeaveModal(itemId, title, timeStr) {
-    document.getElementById('leaveItemId').value = itemId;
-    document.getElementById('modalSubText').textContent = 'Ca dạy: ' + title + ' — ' + timeStr;
-    document.querySelector('#leaveForm textarea').value = '';
-    document.getElementById('leaveModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
+    function openLeaveModal(itemId, title, timeStr) {
+        document.getElementById('leaveItemId').value = itemId;
+        document.getElementById('modalSubText').textContent = 'Ca dạy: ' + title + ' (' + timeStr + ')';
+        document.getElementById('leaveModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 
-function closeLeaveModal() {
-    document.getElementById('leaveModal').classList.remove('open');
-    document.body.style.overflow = '';
-}
-
-// Close on backdrop click
-document.getElementById('leaveModal').addEventListener('click', function(e) {
-    if (e.target === this) closeLeaveModal();
-});
+    function closeLeaveModal() {
+        document.getElementById('leaveModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 </script>
 @endsection

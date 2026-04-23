@@ -192,11 +192,11 @@
                             </h3>
                             
                             <div class="flex items-center gap-4">
-                                <img src="{{ $booking->trainer?->user?->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($booking->trainer?->user?->name ?? 'T').'&background=FF6B35&color=fff' }}" 
+                                <img src="{{ $booking->trainer?->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($booking->trainer?->name ?? 'T').'&background=FF6B35&color=fff' }}" 
                                      class="trainer-avatar-sm" alt="Coach">
                                 <div>
                                     <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Coach</div>
-                                    <div class="text-sm font-bold text-white">{{ $booking->trainer?->user?->name ?? 'N/A' }}</div>
+                                    <div class="text-sm font-bold text-white">{{ $booking->trainer?->name ?? 'N/A' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +225,7 @@
                     </div>
 
                     <!-- Reschedule Request & Report areas (Collapsed/Conditional) -->
-                    @if($booking->rescheduleRequests->where('status', 'pending')->isNotEmpty())
+                    @if($booking->reschedule_status === 'pending')
                         <div class="bg-primary/5 border-t border-primary/10 p-6 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
@@ -233,10 +233,34 @@
                                 </div>
                                 <div>
                                     <div class="text-xs font-black text-primary uppercase tracking-widest">Yêu cầu đổi lịch</div>
-                                    <div class="text-sm text-slate-400">Coach đề xuất khung giờ mới</div>
+                                    <div class="text-sm text-slate-400">Coach đề xuất đổi sang: <span class="text-white font-bold">{{ \Carbon\Carbon::parse($booking->reschedule_at)->format('H:i d/m') }}</span></div>
                                 </div>
                             </div>
                             <a href="{{ route('notifications.index') }}" class="px-6 py-2 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-full">Phản hồi</a>
+                        </div>
+                    @endif
+
+                    @if($booking->report_content)
+                        <div class="bg-slate-800/50 border-t border-white/5 p-6">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <div class="text-xs font-black text-emerald-500 uppercase tracking-widest">Báo cáo buổi tập</div>
+                                        <div class="flex gap-1 text-[10px]">
+                                            @for($i=1; $i<=10; $i++)
+                                                <i class="fas fa-bolt {{ $i <= $booking->effort_rating ? 'text-primary' : 'text-slate-700' }}"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-slate-400 italic">"{{ $booking->report_content }}"</p>
+                                    <div class="mt-2 flex gap-4">
+                                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Cường độ: <span class="text-slate-300">{{ $booking->session_intensity }}</span></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>

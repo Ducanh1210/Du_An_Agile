@@ -198,10 +198,10 @@
                                         <h3 class="text-3xl font-black uppercase tracking-tighter mb-6 leading-none group-hover:text-primary transition-colors cursor-default">{{ $item->title }}</h3>
 
                                         <div class="flex items-center gap-4 mb-8">
-                                            <img src="{{ $item->trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($item->trainer->user->name) }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/20">
+                                            <img src="{{ $item->trainer->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($item->trainer->name) }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/20">
                                             <div>
                                                 <div class="text-[8px] font-black uppercase tracking-widest opacity-50">HLV Chuyên nghiệp</div>
-                                                <div class="text-sm font-bold">{{ $item->trainer->user->name }}</div>
+                                                <div class="text-sm font-bold">{{ $item->trainer->name }}</div>
                                             </div>
                                         </div>
 

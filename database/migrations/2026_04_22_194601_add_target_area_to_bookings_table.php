@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->float('height')->nullable()->after('phone')->comment('Chiều cao (cm)');
+        Schema::table('bookings', function (Blueprint $col) {
+            $col->string('target_area')->nullable()->after('booking_type')->comment('Vùng tập: Tay, Chân, Bụng, Ngực, Lưng, Toàn thân...');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('height');
+        Schema::table('bookings', function (Blueprint $col) {
+            $col->dropColumn('target_area');
         });
     }
 };

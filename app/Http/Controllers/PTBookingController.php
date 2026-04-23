@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Trainer;
+use App\Models\User;
 use App\Models\Booking;
 use App\Models\Schedule;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\BookingConfirmedNotification;
 use Carbon\Carbon;
 
 class PTBookingController extends Controller
@@ -19,7 +20,7 @@ class PTBookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'trainer_id' => 'required|exists:trainers,id',
+            'trainer_id' => 'required|exists:users,id',
             'date' => 'required|date|after_or_equal:today',
             'time_slot' => 'required|string', // Định dạng HH:mm
         ]);
@@ -35,7 +36,7 @@ class PTBookingController extends Controller
             ->where('pt_sessions_left', '>', 0)
             ->first();
 
-        $trainer = Trainer::findOrFail($request->trainer_id);
+        $trainer = User::where('id', $request->trainer_id)->where('role', 'trainer')->firstOrFail();
 
         return DB::transaction(function () use ($user, $subscription, $trainer, $request, $startTime, $endTime) {
             
@@ -92,7 +93,7 @@ class PTBookingController extends Controller
             }
 
             // 6. Tạo Booking
-            Booking::create([
+            $booking = Booking::create([
                 'user_id' => $user->id,
                 'subscription_id' => $subscription?->id,
                 'trainer_id' => $request->trainer_id,
@@ -102,7 +103,11 @@ class PTBookingController extends Controller
                 'end_time' => $endTime,
                 'status' => $paymentStatus === 'free' ? 'confirmed' : 'pending',
                 'booking_type' => 'pt_session',
+                'target_area' => $request->target_area,
             ]);
+
+            // Gửi thông báo
+            $user->notify(new BookingConfirmedNotification($booking));
 
             return back()->with('success', $msg);
         });
@@ -115,11 +120,10 @@ class PTBookingController extends Controller
     {
         $selectedTrainerId = $request->query('trainer_id');
         
-        $trainers = Trainer::with(['user', 'schedules' => function($q) {
+        $trainers = User::where('role', 'trainer')->with(['trainerSchedules' => function($q) {
             $q->where('start_time', '>=', now()->startOfDay());
         }])->get()->map(function($trainer) {
             // "LÀM GIÀU" DỮ LIỆU
-            $trainer->name = $trainer->user->name;
             $trainer->price = $trainer->price_per_session; 
             $trainer->rating = 4.5 + (rand(0, 5) / 10);
             $trainer->experience = rand(2, 8);
@@ -146,8 +150,8 @@ class PTBookingController extends Controller
         foreach ($trainers as $trainer) {
             $busySlots = [];
             
-            // 1. Thêm lịch dạy lớp nhóm (YELLOW - MÀU VÀNG)
-            foreach ($trainer->schedules as $sch) {
+            // 1. Thêm lịch dạy lớp nhóm (YELLOW - MÀU VÀNG) bằng quan hệ mới
+            foreach ($trainer->trainerSchedules as $sch) {
                 $busySlots[] = [
                     'date' => $sch->start_time->format('Y-m-d'),
                     'time' => $sch->start_time->format('H:i'),
@@ -185,6 +189,6 @@ class PTBookingController extends Controller
             ];
         }
 
-        return view('client.pt-booking-hub', compact('trainers', 'trainerAvailability', 'selectedTrainerId', 'dates', 'userSubscription'));
+        return view('client.huanLuyenVien', compact('trainers', 'trainerAvailability', 'selectedTrainerId', 'dates', 'userSubscription'));
     }
 }

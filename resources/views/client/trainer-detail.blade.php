@@ -1,6 +1,6 @@
 @extends('layouts.client')
 
-@section('title', $trainer->user->name . ' — Elite Coach')
+@section('title', $trainer->name . ' — Elite Coach')
 
 @section('styles')
 <style>
@@ -135,10 +135,10 @@
             
             <!-- Sidebar: Avatar & Info -->
             <div class="lg:w-1/3 animate-right">
-                <img src="{{ $trainer->user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($trainer->user->name).'&background=FF6B35&color=fff&size=800' }}" 
-                     class="trainer-profile-img mb-10" alt="{{ $trainer->user->name }}">
+                <img src="{{ $trainer->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($trainer->name).'&background=FF6B35&color=fff&size=800' }}" 
+                     class="trainer-profile-img mb-10" alt="{{ $trainer->name }}">
                 
-                <h1 class="text-5xl font-black mb-4 uppercase tracking-tighter">{{ $trainer->user->name }}</h1>
+                <h1 class="text-5xl font-black mb-4 uppercase tracking-tighter">{{ $trainer->name }}</h1>
                 <div class="flex items-center gap-4 mb-8">
                     <span class="px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-[10px] font-black uppercase tracking-widest">
                         Certified Coach
@@ -147,8 +147,8 @@
                 </div>
 
                 <div class="space-y-6 text-slate-400 leading-relaxed">
-                    <p>Với hơn 5 năm kinh nghiệm thực chiến trong việc thay đổi hình thể, Coach {{ $trainer->user->name }} nổi tiếng với phương pháp huấn luyện khoa học, kết hợp giữa dinh dưỡng và cường độ tập luyện khắt khe.</p>
-                    <p>Mục tiêu của {{ $trainer->user->name }} không chỉ là giúp bạn đẹp hơn, mà là xây dựng một lối sống kỉ luật và bền bỉ.</p>
+                    <p>Với hơn 5 năm kinh nghiệm thực chiến trong việc thay đổi hình thể, Coach {{ $trainer->name }} nổi tiếng với phương pháp huấn luyện khoa học, kết hợp giữa dinh dưỡng và cường độ tập luyện khắt khe.</p>
+                    <p>Mục tiêu của {{ $trainer->name }} không chỉ là giúp bạn đẹp hơn, mà là xây dựng một lối sống kỉ luật và bền bỉ.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mt-12">

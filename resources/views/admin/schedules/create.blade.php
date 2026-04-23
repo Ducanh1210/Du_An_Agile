@@ -46,7 +46,7 @@
                             <option value="">-- Chọn Huấn luyện viên --</option>
                             @foreach($trainers as $trainer)
                                 <option value="{{ $trainer->id }}" {{ old('trainer_id') == $trainer->id ? 'selected' : '' }}>
-                                    {{ $trainer->user->name }} ({{ $trainer->specialization }})
+                                    {{ $trainer->name }} ({{ $trainer->specialization }})
                                 </option>
                             @endforeach
                         </select>

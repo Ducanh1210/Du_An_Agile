@@ -26,11 +26,11 @@ class Schedule extends Model
     ];
 
     /**
-     * Relationship with Trainer
+     * Relationship with Trainer (User model with role 'trainer')
      */
     public function trainer()
     {
-        return $this->belongsTo(Trainer::class);
+        return $this->belongsTo(User::class, 'trainer_id');
     }
 
     /**

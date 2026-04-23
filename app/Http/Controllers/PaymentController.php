@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\PaymentSuccessfulNotification;
 
 class PaymentController extends Controller
 {
@@ -127,6 +128,9 @@ class PaymentController extends Controller
                 if ($payment->status !== 'completed') {
                     $payment->update(['status' => 'completed']);
                     $payment->subscription->update(['status' => 'active']);
+
+                    // Gửi thông báo
+                    $payment->subscription->user->notify(new PaymentSuccessfulNotification($payment));
                 }
                 
                 // Đảm bảo người dùng được đăng nhập (nếu chẳng may bị mất session khi redirect từ VNPay)

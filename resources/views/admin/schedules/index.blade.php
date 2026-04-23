@@ -165,7 +165,7 @@
                                 @endphp
                                 <a href="{{ route('admin.schedules.edit', $schedule->id) }}"
                                    class="block px-2 py-1 h-[22px] rounded-lg border text-[10px] font-bold leading-tight truncate transition-all hover:shadow-md hover:scale-[1.02] cursor-pointer {{ $itemClass }}"
-                                   title="{{ $schedule->title }} — {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}-{{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }} | HLV: {{ $schedule->trainer?->user?->name ?? 'N/A' }}">
+                                   title="{{ $schedule->title }} — {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }}-{{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }} | HLV: {{ $schedule->trainer?->name ?? 'N/A' }}">
                                     <div class="flex items-center gap-1">
                                         <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ $dotClass }}"></span>
                                         <span class="truncate">{{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} {{ $schedule->title }}</span>
@@ -314,7 +314,7 @@
                 'id' => $s->id,
                 'title' => $s->title,
                 'time' => \Carbon\Carbon::parse($s->start_time)->format('H:i') . ' - ' . \Carbon\Carbon::parse($s->end_time)->format('H:i'),
-                'trainer' => $s->trainer?->user?->name ?? 'N/A',
+                'trainer' => $s->trainer?->name ?? 'N/A',
                 'status' => $sStatus,
                 'isYoga' => str_contains(strtolower($s->title), 'yoga'),
                 'editUrl' => route('admin.schedules.edit', $s->id),

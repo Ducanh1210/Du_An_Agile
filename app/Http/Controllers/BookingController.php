@@ -6,6 +6,7 @@ use App\Models\Schedule;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\BookingConfirmedNotification;
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -65,7 +66,7 @@ class BookingController extends Controller
             }
 
             // 6. Thực hiện Đặt chỗ
-            Booking::create([
+            $booking = Booking::create([
                 'user_id' => $user->id,
                 'subscription_id' => $subscription->id,
                 'schedule_id' => $schedule->id,
@@ -77,6 +78,9 @@ class BookingController extends Controller
             ]);
 
             $schedule->increment('current_enrolled');
+
+            // Gửi thông báo
+            $user->notify(new BookingConfirmedNotification($booking));
 
             return back()->with('success', 'Đặt chỗ thành công! Hẹn gặp bạn tại phòng tập.');
         });
