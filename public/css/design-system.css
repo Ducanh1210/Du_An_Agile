@@ -540,6 +540,11 @@ textarea.form-control { height: auto; padding: 12px 14px; resize: vertical; min-
 .mb-1          { margin-bottom: var(--space-1); }
 .mb-2          { margin-bottom: var(--space-2); }
 .mb-3          { margin-bottom: var(--space-3); }
+.bg-surface    { background-color: var(--color-surface) !important; }
+.bg-main       { background-color: var(--color-bg) !important; }
+.border-main   { border-color: var(--color-border) !important; }
+.text-main     { color: var(--color-text) !important; }
+.text-muted    { color: var(--color-text-muted) !important; }
 
 /* ============================================================
    ANIMATIONS (Scroll-triggered)

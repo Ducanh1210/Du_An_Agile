@@ -248,6 +248,24 @@ class UserSeeder extends Seeder
                 'remember_token' => null,
                 'created_at' => '2026-04-21 15:51:23',
                 'updated_at' => '2026-04-21 15:51:23',
+            ],
+            [
+                'id' => 16,
+                'name' => 'User Test 16',
+                'email' => 'user16@gmail.com',
+                'phone' => null,
+                'height' => null,
+                'password' => \Illuminate\Support\Facades\Hash::make('123456'),
+                'role' => 'user',
+                'specialization' => null,
+                'price_per_session' => 500000.00,
+                'is_available' => 1,
+                'avatar_url' => null,
+                'is_active' => 1,
+                'email_verified_at' => null,
+                'remember_token' => null,
+                'created_at' => '2026-04-23 00:00:00',
+                'updated_at' => '2026-04-23 00:00:00',
             ]
         ]);
     }

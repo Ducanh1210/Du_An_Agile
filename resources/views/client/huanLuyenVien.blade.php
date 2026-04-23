@@ -17,18 +17,27 @@
         --color-pt-text-muted: #64748B;
         --color-pt-border: #E2E8F0;
         
-        /* Status Colors (Pastel for Light Mode) */
-        --status-available: #22C55E;
-        --status-busy-class: #F59E0B;
-        --status-busy-pt: #EF4444;
-        
         --shadow-elite: 0 10px 40px -10px rgba(0,0,0,0.08);
         --shadow-elite-hover: 0 20px 50px -12px rgba(0,0,0,0.12);
+        --transition-pt: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    [data-theme="dark"] {
+        --color-pt-bg:      #0F0F1A;
+        --color-pt-surface: #1E1E2E;
+        --color-pt-card:    #1E1E2E;
+        --color-pt-text:    #F0F0F0;
+        --color-pt-text-muted: #94A3B8;
+        --color-pt-border:  #2E2E3E;
+        --color-pt-glow:    rgba(255, 107, 53, 0.1);
+        --shadow-elite:     0 10px 40px -10px rgba(0,0,0,0.3);
+        --shadow-elite-hover: 0 20px 50px -12px rgba(0,0,0,0.5);
     }
 
     body {
         background-color: var(--color-pt-bg);
         color: var(--color-pt-text);
+        transition: background-color var(--transition-slow), color var(--transition-slow);
     }
 
     .booking-hub-wrapper {
@@ -48,7 +57,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #fff;
+        background: var(--color-pt-surface);
         border: 1px solid var(--color-pt-border);
         color: var(--color-pt-primary);
         padding: 8px 20px;
@@ -84,7 +93,8 @@
         top: 72px;
         z-index: 100;
         padding: 16px 0;
-        background: rgba(248, 249, 250, 0.8);
+        background: var(--color-pt-bg);
+        opacity: 0.95;
         backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--color-pt-border);
         margin-bottom: 60px;
@@ -96,7 +106,7 @@
         flex-wrap: wrap;
     }
     .filter-pill {
-        background: #fff;
+        background: var(--color-pt-surface);
         border: 1px solid var(--color-pt-border);
         color: var(--color-pt-text-muted);
         padding: 12px 28px;
@@ -115,8 +125,8 @@
     .filter-pill.active {
         background: var(--color-pt-text);
         border-color: var(--color-pt-text);
-        color: #fff;
-        box-shadow: 0 10px 20px rgba(26, 26, 46, 0.2);
+        color: var(--color-pt-bg);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
     /* ---- Trainer Grid ---- */
@@ -157,13 +167,13 @@
     .card-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, #fff 0%, transparent 50%);
+        background: linear-gradient(to top, var(--color-pt-card) 0%, transparent 50%);
     }
 
     .card-content {
         padding: 32px;
         position: relative;
-        background: #fff;
+        background: var(--color-pt-card);
     }
 
     .trainer-meta {
@@ -215,7 +225,7 @@
     .btn-open-booking {
         width: 100%;
         background: var(--color-pt-text);
-        color: #fff;
+        color: var(--color-pt-bg);
         padding: 18px;
         border-radius: 20px;
         font-weight: 800;
@@ -250,7 +260,7 @@
     .pt-modal-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(26, 26, 46, 0.6);
+        background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(10px);
     }
     .pt-modal-container {
@@ -271,7 +281,7 @@
     /* Left col: Profile */
     .pt-modal-coach {
         width: 360px;
-        background: #F9FAFB;
+        background: var(--color-pt-bg);
         padding: 48px;
         display: flex;
         flex-direction: column;
@@ -308,7 +318,7 @@
     }
     .coach-stat-box {
         padding: 20px 12px;
-        background: #fff;
+        background: var(--color-pt-surface);
         border: 1px solid var(--color-pt-border);
         border-radius: 20px;
         text-align: center;
@@ -336,7 +346,7 @@
         display: flex;
         flex-direction: column;
         overflow-y: auto;
-        background: #fff;
+        background: var(--color-pt-surface);
     }
     .booking-section-title {
         font-size: 16px;
@@ -373,7 +383,7 @@
         flex-shrink: 0;
         width: 76px;
         height: 96px;
-        background: #fff;
+        background: var(--color-pt-surface);
         border: 1.5px solid var(--color-pt-border);
         border-radius: 24px;
         display: flex;
@@ -387,7 +397,7 @@
     .date-item.active {
         background: var(--color-pt-text);
         border-color: var(--color-pt-text);
-        color: #fff;
+        color: var(--color-pt-bg);
         box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     }
     .date-num { font-size: 26px; font-weight: 950; line-height: 1; }
@@ -402,7 +412,7 @@
         margin-bottom: 48px;
     }
     .time-slot {
-        background: #fff;
+        background: var(--color-pt-surface);
         border: 1.5px solid var(--color-pt-border);
         border-radius: 16px;
         padding: 16px;
@@ -421,17 +431,18 @@
         box-shadow: 0 8px 20px var(--color-pt-glow);
     }
     .time-slot.busy {
-        background: #F1F5F9;
-        border-color: #E2E8F0;
-        color: #94A3B8;
+        background: var(--color-pt-bg);
+        border-color: var(--color-pt-border);
+        color: var(--color-pt-text-muted);
         cursor: not-allowed;
+        opacity: 0.5;
     }
 
     /* Footer / Summary */
     .modal-booking-footer {
         margin-top: auto;
         padding: 32px;
-        background: #F9FAFB;
+        background: var(--color-pt-bg);
         border-radius: 28px;
         display: flex;
         align-items: center;
@@ -604,7 +615,7 @@
                 @foreach(['Toàn thân', 'Cơ ngực', 'Cơ lưng', 'Cơ tay', 'Cơ chân', 'Cơ bụng'] as $area)
                 <label class="cursor-pointer group">
                     <input type="radio" name="target_area_radio" value="{{ $area }}" class="hidden peer" onchange="selectTargetArea(this)">
-                    <div class="px-5 py-3 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-600 font-bold text-sm transition-all peer-checked:bg-orange-500 peer-checked:border-orange-500 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-orange-500/20 group-hover:border-orange-200">
+                    <div class="px-5 py-3 rounded-2xl border-2 border-main bg-main text-muted font-bold text-sm transition-all peer-checked:bg-orange-500 peer-checked:border-orange-500 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-orange-500/20 group-hover:border-orange-500/30">
                         {{ $area }}
                     </div>
                 </label>

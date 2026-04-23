@@ -13,7 +13,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('subscription_id')->constrained('subscriptions');
             $table->enum('booking_type', ['class', 'pt_session']);
-            $table->string('target_area')->nullable()->comment('Vùng tập: Tay, Chân, Bụng, Ngực, Lưng, Toàn thân...');
             $table->foreignId('schedule_id')->nullable()->constrained('schedules');
             $table->foreignId('trainer_id')->nullable()->constrained('users')->onDelete('set null');
             $table->datetime('start_time');
