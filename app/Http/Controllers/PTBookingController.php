@@ -27,6 +27,11 @@ class PTBookingController extends Controller
 
         $user = Auth::user();
         $startTime = Carbon::parse($request->date . ' ' . $request->time_slot);
+        
+        if ($startTime->isPast()) {
+            return back()->with('error', 'Không thể đặt lịch cho thời gian đã qua. Vui lòng chọn khung giờ khác.');
+        }
+
         $endTime = $startTime->copy()->addHour(); // Mỗi buổi mặc định 1h
 
         // 1. Kiểm tra Gói tập & Buổi PT còn lại

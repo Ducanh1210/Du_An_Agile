@@ -378,6 +378,8 @@
         margin-bottom: 48px;
         overflow-x: auto;
         padding-bottom: 12px;
+        min-height: 120px;
+        flex-shrink: 0;
     }
     .date-item {
         flex-shrink: 0;
@@ -410,6 +412,7 @@
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 12px;
         margin-bottom: 48px;
+        flex-shrink: 0;
     }
     .time-slot {
         background: var(--color-pt-surface);
@@ -472,6 +475,74 @@
         .pt-modal-coach { width: 100%; padding: 32px; border-right: none; height: auto; }
         .pt-modal-booking { padding: 32px; height: auto; }
         .modal-booking-footer { flex-direction: column; gap: 24px; text-align: center; }
+    }
+    /* ---- Target Area Action Tiles ---- */
+    .target-area-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 48px;
+        flex-shrink: 0;
+    }
+    .target-area-tile {
+        position: relative;
+        background: var(--color-pt-surface);
+        border: 2px solid var(--color-pt-border);
+        border-radius: 20px;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        text-align: center;
+    }
+    .target-area-tile:hover {
+        transform: translateY(-8px);
+        border-color: var(--color-pt-primary);
+        box-shadow: 0 15px 30px rgba(255, 107, 53, 0.1);
+    }
+    .target-area-tile .icon-box {
+        width: 54px;
+        height: 54px;
+        background: var(--color-pt-bg);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: var(--color-pt-primary);
+        transition: all 0.4s ease;
+    }
+    .target-area-tile .area-label {
+        font-size: 14px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-pt-text);
+        transition: all 0.4s ease;
+    }
+    .target-area-tile input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .target-area-tile.selected {
+        background: var(--color-pt-primary);
+        border-color: var(--color-pt-primary);
+        box-shadow: 0 20px 40px var(--color-pt-glow);
+    }
+    .target-area-tile.selected .icon-box {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+    .target-area-tile.selected .area-label {
+        color: #fff;
+    }
+
+    @media (max-width: 500px) {
+        .target-area-grid { grid-template-columns: 1fr 1fr; }
     }
 </style>
 @endsection
@@ -611,13 +682,24 @@
             </div>
 
             <h3 class="booking-section-title"><span>3</span> Bạn muốn tập gì hôm nay?</h3>
-            <div class="flex flex-wrap gap-3 mb-10" id="targetAreaContainer">
-                @foreach(['Toàn thân', 'Cơ ngực', 'Cơ lưng', 'Cơ tay', 'Cơ chân', 'Cơ bụng'] as $area)
-                <label class="cursor-pointer group">
-                    <input type="radio" name="target_area_radio" value="{{ $area }}" class="hidden peer" onchange="selectTargetArea(this)">
-                    <div class="px-5 py-3 rounded-2xl border-2 border-main bg-main text-muted font-bold text-sm transition-all peer-checked:bg-orange-500 peer-checked:border-orange-500 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-orange-500/20 group-hover:border-orange-500/30">
-                        {{ $area }}
+            <div class="target-area-grid" id="targetAreaContainer">
+                @php
+                    $areas = [
+                        ['label' => 'Toàn thân', 'icon' => 'fa-user-check'],
+                        ['label' => 'Cơ ngực', 'icon' => 'fa-dumbbell'],
+                        ['label' => 'Cơ lưng', 'icon' => 'fa-child'],
+                        ['label' => 'Cơ tay', 'icon' => 'fa-hand-rock'],
+                        ['label' => 'Cơ chân', 'icon' => 'fa-running'],
+                        ['label' => 'Cơ bụng', 'icon' => 'fa-heartbeat'],
+                    ];
+                @endphp
+                @foreach($areas as $area)
+                <label class="target-area-tile">
+                    <input type="radio" name="target_area_radio" value="{{ $area['label'] }}" onchange="selectTargetArea(this)">
+                    <div class="icon-box">
+                        <i class="fas {{ $area['icon'] }}"></i>
                     </div>
+                    <span class="area-label">{{ $area['label'] }}</span>
                 </label>
                 @endforeach
             </div>
@@ -692,6 +774,7 @@
         selectedTime = null;
         selectedTargetArea = null;
         document.querySelectorAll('input[name="target_area_radio"]').forEach(r => r.checked = false);
+        document.querySelectorAll('.target-area-tile').forEach(t => t.classList.remove('selected'));
         updateSubmitButton();
     }
 
@@ -712,14 +795,32 @@
         const busySlots = (trainerAvailability[currentTrainer.id] || [])
             .filter(slot => slot.date === selectedDate);
 
+        // Lấy thời gian hiện tại để so sánh nếu là "Hôm nay"
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const isToday = selectedDate === todayStr;
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
         timeSlotsMaster.forEach(slot => {
+            const [slotHour, slotMinute] = slot.split(':').map(Number);
             const busy = busySlots.find(b => b.time === slot);
+            
+            // Một slot được coi là "quá khứ" nếu:
+            // 1. Ngày được chọn là hôm nay
+            // 2. Giờ của slot nhỏ hơn giờ hiện tại
+            // 3. Hoặc giờ của slot bằng giờ hiện tại (vì buổi tập kéo dài 1h, nên không cho đặt slot đang diễn ra)
+            const isPast = isToday && (slotHour <= currentHour);
+
             const slotEl = document.createElement('div');
             slotEl.className = 'time-slot';
             slotEl.textContent = slot;
 
-            if (busy) {
+            if (busy || isPast) {
                 slotEl.classList.add('busy');
+                if (isPast && !busy) {
+                    slotEl.title = 'Thời gian này đã qua';
+                }
             } else {
                 slotEl.onclick = () => selectTime(slotEl, slot);
                 if (selectedTime === slot) slotEl.classList.add('active');
@@ -737,6 +838,9 @@
     }
 
     function selectTargetArea(el) {
+        document.querySelectorAll('.target-area-tile').forEach(t => t.classList.remove('selected'));
+        el.closest('.target-area-tile').classList.add('selected');
+        
         selectedTargetArea = el.value;
         document.getElementById('formTargetArea').value = selectedTargetArea;
         updateSubmitButton();
