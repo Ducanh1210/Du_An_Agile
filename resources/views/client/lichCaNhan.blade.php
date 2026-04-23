@@ -209,11 +209,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Convert weekly plan to JS-friendly
         $jsWeeklyPlan = $weeklyPlan;
+
+        $formattedGymSchedules = $gymSchedules->map(function($s) {
+            return [
+                'date' => $s->start_time->format('Y-m-d'),
+                'title' => $s->title,
+                'time' => $s->start_time->format('H:i'),
+                'trainer' => $s->trainer ? $s->trainer->name : 'HLV Chuyên nghiệp',
+                'category' => $s->category,
+                'id' => $s->id
+            ];
+        });
     @endphp
 
     // Weekly Plan and Booking data
     const bookingsData = @json($formattedBookings);
     const weeklyPlan = @json($jsWeeklyPlan);
+    const gymSchedules = @json($formattedGymSchedules);
 
     function getPersonalWorkout(dateStr) {
         const d = new Date(dateStr);
@@ -299,12 +311,16 @@ document.addEventListener('DOMContentLoaded', function() {
         num.textContent = dayNum;
         cell.appendChild(num);
 
+        // Calculate date string for all cells
+        const monthForCell = isOther ? (dayNum > 20 ? currentMonth - 1 : currentMonth + 1) : currentMonth;
+        const yearForCell = currentYear;
+        const dateObj = new Date(yearForCell, monthForCell, dayNum);
+        const dateStr = dateObj.toISOString().split('T')[0];
+        
+        cell.dataset.date = dateStr;
+        cell.style.cursor = 'pointer';
+
         if (bookings && bookings.length > 0) {
-            // Set date for click event
-            const dateStr = bookings[0].date;
-            cell.dataset.date = dateStr;
-            cell.style.cursor = 'pointer';
-            
             const eventsWrap = document.createElement('div');
             eventsWrap.className = 'calendar-day-events';
             bookings.slice(0, 2).forEach(b => {
@@ -315,9 +331,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 eventsWrap.appendChild(label);
             });
             cell.appendChild(eventsWrap);
-
-            cell.onclick = () => filterSidebarByDate(dateStr, cell, bookings);
         }
+
+        cell.onclick = () => filterSidebarByDate(dateStr, cell, bookings || []);
 
         return cell;
     }
@@ -329,11 +345,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update Title
         const d = new Date(dateStr);
+        const isPast = d.setHours(0,0,0,0) < new Date().setHours(0,0,0,0);
+        
         document.getElementById('sidebarTitle').innerHTML = `<i class="fas fa-calendar-day"></i> Lịch ngày ${d.getDate()}/${d.getMonth()+1}`;
 
         // Clear and rebuild sidebar list
-        const sidebarList = document.querySelector('.upcoming-list') || document.getElementById('sidebarList');
-        sidebarList.innerHTML = '';
+        const sidebarWrapper = document.getElementById('sidebarList');
+        sidebarWrapper.innerHTML = '';
+        
+        const listDiv = document.createElement('div');
+        listDiv.className = 'upcoming-list';
+        sidebarWrapper.appendChild(listDiv);
 
         if (dayBookings && dayBookings.length > 0) {
             dayBookings.forEach(b => {
@@ -356,7 +378,74 @@ document.addEventListener('DOMContentLoaded', function() {
                         </span>
                     </div>
                 `;
-                sidebarList.appendChild(item);
+                listDiv.appendChild(item);
+            });
+
+            // Check if we should also show booking buttons (if all bookings are virtual)
+            const hasRealBooking = dayBookings.some(b => !b.is_virtual);
+            if (!hasRealBooking && !isPast) {
+                const prompt = document.createElement('div');
+                prompt.style.cssText = 'margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--color-border);';
+                prompt.innerHTML = `
+                    <p style="color:var(--color-text-muted); font-size:12px; margin-bottom:15px; text-align:center;">Bạn muốn đổi sang tập cùng chuyên gia?</p>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <a href="{{ route('trainers') }}" class="btn btn-primary btn-md w-full" style="border-radius: 14px;">
+                            <i class="fas fa-user-tie"></i> Đặt lịch PT ngay
+                        </a>
+                        <a href="{{ route('schedule') }}" class="btn btn-outline-primary btn-md w-full" style="border-radius: 14px; border-color: var(--color-info); color: var(--color-info);">
+                            <i class="fas fa-users"></i> Đăng ký lớp học
+                        </a>
+                    </div>
+                `;
+                listDiv.appendChild(prompt);
+            }
+        } else {
+            // No bookings - show booking prompt if date is future or today
+            const emptyState = document.createElement('div');
+            emptyState.style.cssText = 'text-align:center; padding: 32px 0;';
+            emptyState.innerHTML = `
+                <div style="margin-bottom: 20px; position: relative; display: inline-block;">
+                    <i class="fas fa-calendar-plus" style="font-size:48px; opacity:0.1; color:var(--color-primary)"></i>
+                    <i class="fas fa-plus" style="position: absolute; bottom: 0; right: -5px; font-size: 14px; color: var(--color-primary); background: var(--color-surface); border-radius: 50%; padding: 2px;"></i>
+                </div>
+                <p style="color:var(--color-text-muted); font-size:14px; font-weight: 600; margin-bottom: 24px;">Ngày này hiện đang trống lịch</p>
+                ${!isPast ? `
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <a href="{{ route('trainers') }}" class="btn btn-primary btn-md w-full" style="border-radius: 14px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;">
+                            <i class="fas fa-user-tie"></i> Đặt lịch PT
+                        </a>
+                        <a href="{{ route('schedule') }}" class="btn btn-outline-primary btn-md w-full" style="border-radius: 14px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; border-color: var(--color-info); color: var(--color-info);">
+                            <i class="fas fa-users"></i> Đăng ký lớp
+                        </a>
+                    </div>
+                ` : '<p style="font-size: 11px; color: var(--color-text-muted); font-style: italic;">Không thể đặt lịch cho ngày đã qua</p>'}
+            `;
+            listDiv.appendChild(emptyState);
+        }
+
+        // --- NEW: SHOW GYM CLASS SUGGESTIONS ---
+        const dayGymSchedules = gymSchedules.filter(s => s.date === dateStr);
+        if (dayGymSchedules.length > 0 && !isPast) {
+            const gymTitle = document.createElement('p');
+            gymTitle.style.cssText = 'color:var(--color-primary); font-size:11px; font-weight:800; text-transform:uppercase; margin-top:24px; margin-bottom:12px; letter-spacing:1px; border-top: 1px solid var(--color-border); padding-top: 20px;';
+            gymTitle.innerHTML = '<i class="fas fa-dumbbell mr-1"></i> Các lớp học tại CLB ngày này';
+            listDiv.appendChild(gymTitle);
+
+            dayGymSchedules.forEach(s => {
+                const sItem = document.createElement('div');
+                sItem.className = 'upcoming-item';
+                sItem.style.background = 'var(--color-surface)';
+                sItem.style.border = '1px solid var(--color-border)';
+                sItem.innerHTML = `
+                    <div class="upcoming-info">
+                        <div class="upcoming-info-title" style="font-size:13px; color: var(--color-text);">${s.title}</div>
+                        <div class="upcoming-info-time" style="font-size:11px;">
+                            <i class="fas fa-clock"></i> ${s.time} • HLV: ${s.trainer}
+                        </div>
+                    </div>
+                    <a href="{{ route('schedule') }}" class="btn btn-sm btn-primary" style="height:32px; font-size:10px; padding:0 12px; border-radius: 10px;">Đăng ký</a>
+                `;
+                listDiv.appendChild(sItem);
             });
         }
     }
