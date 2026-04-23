@@ -152,6 +152,11 @@ Route::middleware(['auth', 'trainer'])->prefix('trainer')->name('trainer.')->gro
     Route::post('/students/{id}/metrics', [\App\Http\Controllers\TrainerController::class, 'updateMetrics'])->name('student.metrics');
     Route::post('/bookings/{id}/report', [\App\Http\Controllers\TrainerController::class, 'submitReport'])->name('booking.report');
     Route::post('/leave-requests', [\App\Http\Controllers\TrainerController::class, 'submitLeaveRequest'])->name('leave.submit');
+    
+    // Profile
+    Route::get('/profile', [\App\Http\Controllers\TrainerController::class, 'profile'])->name('profile');
+    Route::post('/profile', [\App\Http\Controllers\TrainerController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/bookings/{id}/reschedule', [\App\Http\Controllers\TrainerController::class, 'reschedule'])->name('booking.reschedule');
 });
 
 // User Profile Routes (Breeze default)
@@ -216,5 +221,8 @@ Route::controller(PasswordResetController::class)->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Fix Logout 419 error by adding a GET route
+Route::get('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])->name('logout.get');
 
 ?>

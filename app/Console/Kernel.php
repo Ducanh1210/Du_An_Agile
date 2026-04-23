@@ -18,8 +18,8 @@ class Kernel extends ConsoleKernel
         // Nhắc lịch tập sắp diễn ra mỗi 10 phút
         $schedule->command('app:remind-sessions')->everyTenMinutes();
 
-        // Thông báo tổng hợp lịch tập hôm nay vào 7:00 sáng
-        $schedule->command('app:notify-daily-schedule')->dailyAt('07:00');
+        // Thông báo tổng hợp lịch tập hôm nay mỗi phút (Tạm thời để test)
+        $schedule->command('app:notify-daily-schedule')->everyMinute();
     }
 
     /**

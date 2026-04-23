@@ -1,12 +1,10 @@
-<div class="relative inline-block" x-data="{ 
+<div class="notif-wrapper" x-data="{ 
     notifOpen: false, 
     unreadCount: 0, 
     notifications: [],
-    loading: false,
     
     init() {
         this.fetchNotifications();
-        // Cập nhật ngầm mỗi 2 phút
         setInterval(() => this.fetchNotifications(), 120000);
     },
 
@@ -44,70 +42,162 @@
         });
     }
 }">
-    <!-- Bell Icon -->
-    <button @click="notifOpen = !notifOpen" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-gray-100 transition relative">
-        <i class="fa-regular fa-bell text-lg"></i>
-        <span x-show="unreadCount > 0" x-text="unreadCount" 
-              class="absolute top-1 right-1 px-1.5 py-0.5 min-w-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-white flex items-center justify-center">
-        </span>
+    <!-- Bell Icon Modern -->
+    <button @click="notifOpen = !notifOpen" class="notif-btn" :class="unreadCount > 0 ? 'has-unread' : ''">
+        <i class="fa-regular fa-bell"></i>
+        <span x-show="unreadCount > 0" class="notif-badge" x-text="unreadCount"></span>
     </button>
 
-    <!-- Dropdown -->
+    <!-- Dropdown Modern -->
     <div x-show="notifOpen" 
          @click.away="notifOpen = false"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95 translate-y-2"
-         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-         class="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl shadow-slate-200 border border-slate-100 z-50 overflow-hidden"
+         x-transition:enter="notif-enter"
+         class="notif-dropdown"
          style="display: none;">
         
-        <div class="p-4 border-b border-slate-50 flex items-center justify-between">
-            <h3 class="font-bold text-slate-900">Thông báo</h3>
-            <button @click="markAllRead()" class="text-[11px] font-bold text-primary hover:underline uppercase tracking-wider">Đọc tất cả</button>
+        <div class="notif-header">
+            <h3>Thông báo</h3>
+            <button @click="markAllRead()" class="mark-all-btn">Đọc tất cả</button>
         </div>
 
-        <div class="max-h-96 overflow-y-auto no-scrollbar">
+        <div class="notif-body no-scrollbar">
             <template x-if="notifications.length === 0">
-                <div class="p-8 text-center">
-                    <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="fa-regular fa-bell-slash text-slate-300"></i>
+                <div class="notif-empty">
+                    <div class="empty-icon">
+                        <i class="fa-regular fa-bell-slash"></i>
                     </div>
-                    <p class="text-sm text-slate-400">Bạn chưa có thông báo nào</p>
+                    <p>Hiện không có thông báo nào</p>
                 </div>
             </template>
 
             <template x-for="n in notifications" :key="n.id">
                 <button @click="markAsRead(n.id, n.link)" 
-                        class="w-full text-left p-4 hover:bg-slate-50 transition-colors border-b border-slate-50 flex gap-4 group"
-                        :class="!n.read_at ? 'bg-orange-50/30' : ''">
-                    <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
-                         :class="{
-                            'bg-orange-100 text-orange-600': n.type === 'booking_confirmed' || n.type === 'booking_cancelled',
-                            'bg-green-100 text-green-600': n.type === 'payment_success',
-                            'bg-blue-100 text-blue-600': n.type === 'session_report',
-                            'bg-slate-100 text-slate-600': !['booking_confirmed', 'booking_cancelled', 'payment_success', 'session_report'].includes(n.type)
-                         }">
+                        class="notif-item"
+                        :class="!n.read_at ? 'unread' : ''">
+                    <div class="notif-icon"
+                         :style="
+                            n.type === 'booking_confirmed' ? 'background: #ECFDF5; color: #10B981;' :
+                            n.type === 'booking_cancelled' ? 'background: #FEF2F2; color: #EF4444;' :
+                            n.type === 'payment_success' ? 'background: #EFF6FF; color: #2563EB;' :
+                            'background: #F1F5F9; color: #64748B;'
+                         ">
                         <i :class="{
                             'fa-solid fa-calendar-check': n.type === 'booking_confirmed',
                             'fa-solid fa-calendar-xmark': n.type === 'booking_cancelled',
                             'fa-solid fa-file-invoice-dollar': n.type === 'payment_success',
-                            'fa-solid fa-clipboard-check': n.type === 'session_report',
-                            'fa-solid fa-info-circle': !['booking_confirmed', 'booking_cancelled', 'payment_success', 'session_report'].includes(n.type)
+                            'fa-solid fa-circle-info': !['booking_confirmed', 'booking_cancelled', 'payment_success'].includes(n.type)
                         }"></i>
                     </div>
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center justify-between gap-2 mb-1">
-                            <span class="text-sm font-bold text-slate-900 truncate" x-text="n.title"></span>
-                            <span class="text-[10px] text-slate-400 whitespace-nowrap" x-text="n.created_at"></span>
+                    <div class="notif-content">
+                        <div class="notif-title-row">
+                            <span class="notif-title" x-text="n.title"></span>
+                            <span class="notif-time" x-text="n.created_at"></span>
                         </div>
-                        <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed" x-text="n.message"></p>
+                        <p class="notif-msg" x-text="n.message"></p>
                     </div>
                 </button>
             </template>
         </div>
 
-        <a href="{{ route('notifications.index') }}" class="block p-3 text-center text-xs font-bold text-slate-500 hover:text-primary transition-colors bg-slate-50/50">
-            Xem tất cả thông báo
+        <a href="{{ route('notifications.index') }}" class="notif-footer">
+            XEM TẤT CẢ
         </a>
     </div>
 </div>
+
+<style>
+    .notif-wrapper { position: relative; display: inline-block; }
+    
+    .notif-btn {
+        width: 44px; height: 44px;
+        border-radius: 14px;
+        background: white;
+        border: 2px solid #F1F5F9;
+        color: var(--text-muted);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; position: relative;
+        transition: all 0.2s;
+    }
+    
+    .notif-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .notif-btn i { font-size: 20px; }
+    
+    .has-unread i {
+        animation: bell-shake 2s infinite ease-in-out;
+    }
+
+    @keyframes bell-shake {
+        0%, 100% { transform: rotate(0); }
+        5%, 15%, 25% { transform: rotate(10deg); }
+        10%, 20%, 30% { transform: rotate(-10deg); }
+        35% { transform: rotate(0); }
+    }
+
+    .notif-badge {
+        position: absolute; top: -5px; right: -5px;
+        background: var(--danger);
+        color: white; font-size: 10px; font-weight: 800;
+        padding: 2px 6px; border-radius: 10px;
+        border: 3px solid white;
+        min-width: 20px; text-align: center;
+    }
+
+    .notif-dropdown {
+        position: absolute; top: 100%; right: 0;
+        margin-top: 12px; width: 320px;
+        background: white; border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        border: 1px solid white; z-index: 1000;
+        overflow: hidden;
+    }
+
+    .notif-header {
+        padding: 16px 20px; border-bottom: 1px solid #F1F5F9;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .notif-header h3 { font-size: 16px; font-weight: 800; color: var(--text-main); }
+    .mark-all-btn { 
+        background: none; border: none; 
+        color: var(--primary); font-size: 11px; font-weight: 700;
+        cursor: pointer; text-transform: uppercase;
+    }
+
+    .notif-body { max-height: 380px; overflow-y: auto; }
+    .notif-item {
+        width: 100%; padding: 16px 20px;
+        border: none; background: white;
+        display: flex; gap: 14px; text-align: left;
+        border-bottom: 1px solid #F8FAFC;
+        cursor: pointer; transition: background 0.2s;
+    }
+    .notif-item:hover { background: #F8FAFC; }
+    .notif-item.unread { background: #FFF9F7; }
+
+    .notif-icon {
+        width: 40px; height: 40px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; font-size: 16px;
+    }
+
+    .notif-content { flex: 1; min-width: 0; }
+    .notif-title-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .notif-title { font-size: 14px; font-weight: 700; color: var(--text-main); }
+    .notif-time { font-size: 10px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+    .notif-msg { font-size: 12px; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .notif-footer {
+        display: block; padding: 14px; text-align: center;
+        background: #F8FAFC; color: var(--text-muted);
+        font-size: 11px; font-weight: 800; text-decoration: none;
+        letter-spacing: 0.5px;
+    }
+
+    .notif-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); }
+    .empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
+
+    .notif-enter { animation: notif-slide 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes notif-slide {
+        from { opacity: 0; transform: translateY(10px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+</style>

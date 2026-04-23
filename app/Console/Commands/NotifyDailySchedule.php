@@ -34,9 +34,9 @@ class NotifyDailySchedule extends Command
 
         $this->info("Bắt đầu quét lịch tập ngày " . $todayStart->format('d/m/Y'));
 
-        // Lấy tất cả user có ít nhất 1 booking confirmed trong ngày hôm nay
+        // Lấy tất cả user có ít nhất 1 booking confirmed hoặc pending trong ngày hôm nay
         $users = User::whereHas('bookings', function($q) use ($todayStart, $todayEnd) {
-            $q->where('status', 'confirmed')
+            $q->whereIn('status', ['confirmed', 'pending'])
               ->whereBetween('start_time', [$todayStart, $todayEnd]);
         })->get();
 
@@ -49,7 +49,7 @@ class NotifyDailySchedule extends Command
         foreach ($users as $user) {
             // Lấy danh sách booking trong ngày của user này
             $bookings = Booking::where('user_id', $user->id)
-                ->where('status', 'confirmed')
+                ->whereIn('status', ['confirmed', 'pending'])
                 ->whereBetween('start_time', [$todayStart, $todayEnd])
                 ->with(['trainer', 'schedule'])
                 ->orderBy('start_time')

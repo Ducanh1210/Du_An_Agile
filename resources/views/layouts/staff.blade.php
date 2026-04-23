@@ -141,13 +141,10 @@
 
             <!-- Bottom Profile -->
             <div class="absolute bottom-0 w-full p-4 border-t border-slate-800 bg-slate-900/50 backdrop-blur-sm">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="flex items-center gap-3 px-4 py-2 w-full rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors uppercase tracking-widest leading-relaxed">
-                        <i class="fa-solid fa-power-off w-5"></i>
-                        <span class="text-sm font-semibold uppercase tracking-widest leading-relaxed">Đăng xuất</span>
-                    </button>
-                </form>
+                <a href="{{ route('logout.get') }}" class="flex items-center gap-3 px-4 py-2 w-full rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors uppercase tracking-widest leading-relaxed">
+                    <i class="fa-solid fa-power-off w-5"></i>
+                    <span class="text-sm font-semibold uppercase tracking-widest leading-relaxed">Đăng xuất</span>
+                </a>
             </div>
         </aside>
 

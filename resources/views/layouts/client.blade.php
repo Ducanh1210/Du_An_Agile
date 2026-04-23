@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="EXTRA FIT+ GYM & FITNESS - Trung tâm thể hình hàng đầu. Huấn luyện viên chuyên nghiệp, lá»›p há»c đa dạng, cơ sá»Ÿ váº­t cháº¥t hiện đại.">
+    <meta name="description" content="EXTRA FIT+ GYM & FITNESS - Trung tâm thể hình hàng đầu. Huấn luyện viên chuyên nghiệp, lớp học đa dạng, cơ sở vật chất hiện đại.">
     <title>@yield('title', 'EXTRA FIT+ GYM & FITNESS')</title>
     <!-- Google Fonts: Be Vietnam Pro -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,14 +68,14 @@
             <button class="header-icon-btn dark-toggle" id="darkModeToggle" title="Đổi giao diện" aria-label="Chế độ tối">
                 <i class="fas fa-moon" id="darkIcon"></i>
             </button>
-            {{-- Login/Register (hiá»‡n khi chưa đăng nhập) --}}
+            {{-- Hiện khi chưa đăng nhập --}}
             @guest
             <div class="auth-buttons">
                 <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
                 <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
             </div>
             @endguest
-            {{-- User Dropdown (hiá»‡n khi đÃ£ đăng nhập) --}}
+            {{-- Hiện khi đã đăng nhập --}}
             @auth
             <div class="user-dropdown" id="userDropdown">
                 <button class="user-trigger" id="userTrigger">
@@ -285,7 +285,7 @@
             </div>
             {{-- Col 2: Quick Nav --}}
             <div class="footer-col">
-                <h4 class="footer-title">Điá»u hướng</h4>
+                <h4 class="footer-title">Điều hướng</h4>
                 <ul class="footer-links">
                     <li><a href="{{ url('/') }}">Trang chủ</a></li>
                     <li><a href="{{ url('/lich-lop') }}">Lịch lớp</a></li>
@@ -299,9 +299,9 @@
             <div class="footer-col">
                 <h4 class="footer-title">Hỗ trợ</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Câu há»i thưá»ng gáº·p</a></li>
+                    <li><a href="#">Câu hỏi thường gặp</a></li>
                     <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Điá»u khoản sử dụng</a></li>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
                     <li><a href="#">Hướng dẫn đặt lịch</a></li>
                 </ul>
             </div>
@@ -309,16 +309,16 @@
             <div class="footer-col">
                 <h4 class="footer-title">Liên hệ</h4>
                 <ul class="footer-contact">
-                    <li><i class="fas fa-map-marker-alt"></i><span>123 Đưá»ng Thá»ƒ Thao, Quận 1, TP.HCM</span></li>
+                    <li><i class="fas fa-map-marker-alt"></i><span>123 Đường Thể Thao, Quận 1, TP.HCM</span></li>
                     <li><i class="fas fa-phone"></i><span>0909 123 456</span></li>
                     <li><i class="fas fa-envelope"></i><span>info@extrafit.vn</span></li>
-                    <li><i class="fas fa-clock"></i><span>5:00 â€“ 22:00 (Hàng ngày)</span></li>
+                    <li><i class="fas fa-clock"></i><span>5:00 – 22:00 (Hàng ngày)</span></li>
                 </ul>
             </div>
         </div>
         <div class="footer-divider"></div>
         <div class="footer-bottom">
-            <p>Â© 2025 <strong>EXTRA FIT+</strong>. All rights reserved.</p>
+            <p>© 2025 <strong>EXTRA FIT+</strong>. All rights reserved.</p>
         </div>
     </div>
 </footer>

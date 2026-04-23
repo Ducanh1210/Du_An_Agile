@@ -14,8 +14,12 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request)
     {
+        if ($request->user()->isTrainer()) {
+            return redirect()->route('trainer.profile');
+        }
+
         return view('profile.edit', [
             'user' => $request->user(),
         ]);

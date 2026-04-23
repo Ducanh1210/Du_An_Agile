@@ -215,4 +215,50 @@ class TrainerController extends Controller
 
         return back()->with('success', 'Đã nộp đơn xin nghỉ dạy thành công. Vui lòng chờ duyệt!');
     }
+
+    public function profile()
+    {
+        $trainer = Auth::user();
+        return view('trainer.profile', compact('trainer'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $trainer = Auth::user();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'specialization' => 'nullable|string|max:255',
+            'price_per_session' => 'nullable|numeric|min:0',
+        ]);
+
+        $trainer->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'specialization' => $request->specialization,
+            'price_per_session' => $request->price_per_session,
+            'is_available' => $request->has('is_available'),
+        ]);
+
+        return back()->with('success', 'Hồ sơ cá nhân đã được cập nhật thành công!');
+    }
+
+    public function reschedule(Request $request, $id)
+    {
+        $request->validate([
+            'new_start_time' => 'required|date|after:now',
+            'reason' => 'required|string|min:5',
+        ]);
+
+        $booking = Booking::findOrFail($id);
+        
+        $booking->update([
+            'reschedule_time' => $request->new_start_time,
+            'reschedule_reason' => $request->reason,
+            'reschedule_status' => 'pending'
+        ]);
+
+        return back()->with('success', 'Yêu cầu dời lịch đã được gửi tới học viên!');
+    }
 }
