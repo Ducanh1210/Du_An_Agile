@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="EXTRA FIT+ GYM & FITNESS - Trung tÃ¢m thá»ƒ hÃ¬nh hÃ ng Ä‘áº§u. Huáº¥n luyá»‡n viÃªn chuyÃªn nghiá»‡p, lá»›p há»c Ä‘a dáº¡ng, cÆ¡ sá»Ÿ váº­t cháº¥t hiá»‡n Ä‘áº¡i.">
+    <meta name="description" content="EXTRA FIT+ GYM & FITNESS - Trung tâm thể hình hàng đầu. Huấn luyện viên chuyên nghiệp, lớp học đa dạng, cơ sở vật chất hiện đại.">
     <title>@yield('title', 'EXTRA FIT+ GYM & FITNESS')</title>
 
     <!-- Google Fonts: Be Vietnam Pro -->
@@ -33,37 +33,37 @@
 
         {{-- Nav Desktop --}}
         <nav class="header-nav" id="headerNav">
-            <a href="{{ url('/') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Trang chá»§</a>
-            <a href="{{ url('/lich-lop') }}" class="nav-link {{ request()->is('lich-lop*') ? 'active' : '' }}">Lá»‹ch lá»›p</a>
-            <a href="{{ route('trainers') }}" class="nav-link {{ request()->is('dat-lich-pt*') ? 'active' : '' }}">Äáº·t lá»‹ch PT</a>
-            <a href="{{ route('client.memberships') }}" class="nav-link {{ request()->is('goi-tap*') ? 'active' : '' }}">GÃ³i táº­p</a>
-            <a href="{{ url('/tin-tuc') }}" class="nav-link {{ request()->is('tin-tuc*') ? 'active' : '' }}">Tin tá»©c</a>
-            <a href="{{ url('/lien-he') }}" class="nav-link {{ request()->is('lien-he*') ? 'active' : '' }}">LiÃªn há»‡</a>
+            <a href="{{ url('/') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Trang chủ</a>
+            <a href="{{ url('/lich-lop') }}" class="nav-link {{ request()->is('lich-lop*') ? 'active' : '' }}">Lịch lớp</a>
+            <a href="{{ route('trainers') }}" class="nav-link {{ request()->is('dat-lich-pt*') ? 'active' : '' }}">Đội ngũ PT</a>
+            <a href="{{ route('client.memberships') }}" class="nav-link {{ request()->is('goi-tap*') ? 'active' : '' }}">Gói tập</a>
+            <a href="{{ url('/tin-tuc') }}" class="nav-link {{ request()->is('tin-tuc*') ? 'active' : '' }}">Tin tức</a>
+            <a href="{{ url('/lien-he') }}" class="nav-link {{ request()->is('lien-he*') ? 'active' : '' }}">Liên hệ</a>
         </nav>
 
         {{-- Header Actions --}}
         <div class="header-actions">
 
             {{-- Notification Bell --}}
-            <button class="header-icon-btn" id="notificationBtn" title="ThÃ´ng bÃ¡o" aria-label="ThÃ´ng bÃ¡o">
+            <button class="header-icon-btn" id="notificationBtn" title="Thông báo" aria-label="Thông báo">
                 <i class="fas fa-bell"></i>
                 <span class="badge-count" id="notifCount">3</span>
             </button>
 
             {{-- Dark Mode Toggle --}}
-            <button class="header-icon-btn dark-toggle" id="darkModeToggle" title="Äá»•i giao diá»‡n" aria-label="Cháº¿ Ä‘á»™ tá»‘i">
+            <button class="header-icon-btn dark-toggle" id="darkModeToggle" title="Đổi giao diện" aria-label="Chế độ tối">
                 <i class="fas fa-moon" id="darkIcon"></i>
             </button>
 
-            {{-- Login/Register (hiá»‡n khi chÆ°a Ä‘Äƒng nháº­p) --}}
+            {{-- Login/Register (hiện khi chưa đăng nhập) --}}
             @guest
             <div class="auth-buttons">
-                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">ÄÄƒng nháº­p</a>
-                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">ÄÄƒng kÃ½</a>
+                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
             </div>
             @endguest
 
-            {{-- User Dropdown (hiá»‡n khi Ä‘Ã£ Ä‘Äƒng nháº­p) --}}
+            {{-- User Dropdown (hiện khi đã đăng nhập) --}}
             @auth
             <div class="user-dropdown" id="userDropdown">
                 <button class="user-trigger" id="userTrigger">
@@ -72,15 +72,15 @@
                     <i class="fas fa-chevron-down user-chevron"></i>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="{{ url('/ho-so') }}" class="dropdown-item"><i class="fas fa-user"></i> Há»“ sÆ¡</a>
-                    <a href="{{ url('/goi-dang-ky') }}" class="dropdown-item"><i class="fas fa-star"></i> GÃ³i Ä‘Ã£ Ä‘Äƒng kÃ½</a>
-                    <a href="{{ url('/lich-ca-nhan') }}" class="dropdown-item"><i class="fas fa-calendar"></i> Lá»‹ch cÃ¡ nhÃ¢n</a>
-                    <a href="{{ route('client.payment_history') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lá»‹ch sá»­ thanh toÃ¡n</a>
+                    <a href="{{ url('/ho-so') }}" class="dropdown-item"><i class="fas fa-user"></i> Hồ sơ</a>
+                    <a href="{{ url('/goi-dang-ky') }}" class="dropdown-item"><i class="fas fa-star"></i> Gói đã đăng ký</a>
+                    <a href="{{ url('/lich-ca-nhan') }}" class="dropdown-item"><i class="fas fa-calendar"></i> Lịch cá nhân</a>
+                    <a href="{{ route('client.payment_history') }}" class="dropdown-item"><i class="fas fa-receipt"></i> Lịch sử thanh toán</a>
                     <a href="{{ url('/check-in') }}" class="dropdown-item"><i class="fas fa-qrcode"></i> Check-in QR</a>
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                         @csrf
-                        <button type="submit" class="dropdown-item dropdown-logout" style="border: none; background: none; width: 100%; text-align: left;"><i class="fas fa-sign-out-alt"></i> ÄÄƒng xuáº¥t</button>
+                        <button type="submit" class="dropdown-item dropdown-logout" style="border: none; background: none; width: 100%; text-align: left;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
                     </form>
                 </div>
             </div>
@@ -101,17 +101,17 @@
 <aside class="mobile-drawer" id="mobileDrawer">
     <div class="drawer-header">
         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="drawer-logo">
-        <button class="drawer-close" id="drawerClose" aria-label="ÄÃ³ng menu">
+        <button class="drawer-close" id="drawerClose" aria-label="Đóng menu">
             <i class="fas fa-times"></i>
         </button>
     </div>
     <nav class="drawer-nav">
-        <a href="{{ url('/') }}" class="drawer-link {{ request()->is('/') ? 'active' : '' }}"><i class="fas fa-home"></i> Trang chá»§</a>
-        <a href="{{ url('/lich-lop') }}" class="drawer-link"><i class="fas fa-calendar-alt"></i> Lá»‹ch lá»›p</a>
-        <a href="{{ route('trainers') }}" class="drawer-link"><i class="fas fa-user-check"></i> Äáº·t lá»‹ch PT</a>
-        <a href="{{ route('client.memberships') }}" class="drawer-link"><i class="fas fa-tags"></i> GÃ³i táº­p</a>
-        <a href="{{ url('/tin-tuc') }}" class="drawer-link"><i class="fas fa-newspaper"></i> Tin tá»©c</a>
-        <a href="{{ url('/lien-he') }}" class="drawer-link"><i class="fas fa-envelope"></i> LiÃªn há»‡</a>
+        <a href="{{ url('/') }}" class="drawer-link {{ request()->is('/') ? 'active' : '' }}"><i class="fas fa-home"></i> Trang chủ</a>
+        <a href="{{ url('/lich-lop') }}" class="drawer-link"><i class="fas fa-calendar-alt"></i> Lịch lớp</a>
+        <a href="{{ route('trainers') }}" class="drawer-link"><i class="fas fa-user-check"></i> Đội ngũ PT</a>
+        <a href="{{ route('client.memberships') }}" class="drawer-link"><i class="fas fa-tags"></i> Gói tập</a>
+        <a href="{{ url('/tin-tuc') }}" class="drawer-link"><i class="fas fa-newspaper"></i> Tin tức</a>
+        <a href="{{ url('/lien-he') }}" class="drawer-link"><i class="fas fa-envelope"></i> Liên hệ</a>
     </nav>
     <div class="drawer-footer">
         @auth
@@ -124,7 +124,7 @@
         </div>
         @endauth
         <button class="btn btn-outline-primary w-full" id="drawerDarkToggle">
-            <i class="fas fa-moon" id="drawerDarkIcon"></i> Cháº¿ Ä‘á»™ tá»‘i
+            <i class="fas fa-moon" id="drawerDarkIcon"></i> Chế độ tối
         </button>
     </div>
 </aside>
@@ -157,7 +157,7 @@
                     $fallbackLogo = asset('images/logo.png');
                 @endphp
                 <img src="{{ asset('images/logo-white.png') }}" alt="EXTRA FIT+" class="footer-logo" onerror="this.onerror=null; this.src='{{ $fallbackLogo }}'; this.style.filter='brightness(0) invert(1)';">
-                <p class="footer-desc">NÆ¡i báº¡n báº¯t Ä‘áº§u hÃ nh trÃ¬nh thay Ä‘á»•i báº£n thÃ¢n. Huáº¥n luyá»‡n chuyÃªn nghiá»‡p, cÆ¡ sá»Ÿ hiá»‡n Ä‘áº¡i, cá»™ng Ä‘á»“ng nÄƒng Ä‘á»™ng.</p>
+                <p class="footer-desc">Nơi bạn bắt đầu hành trình thay đổi bản thân. Huấn luyện chuyên nghiệp, cơ sở hiện đại, cộng đồng năng động.</p>
                 <div class="social-links">
                     <a href="#" class="social-link" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-link" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -168,36 +168,36 @@
 
             {{-- Col 2: Quick Nav --}}
             <div class="footer-col">
-                <h4 class="footer-title">Äiá»u hÆ°á»›ng</h4>
+                <h4 class="footer-title">Điều hướng</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ url('/') }}">Trang chá»§</a></li>
-                    <li><a href="{{ url('/lich-lop') }}">Lá»‹ch lá»›p</a></li>
-                    <li><a href="{{ route('trainers') }}">Äáº·t lá»‹ch PT</a></li>
-                    <li><a href="{{ url('/goi-tap') }}">GÃ³i táº­p</a></li>
-                    <li><a href="{{ url('/tin-tuc') }}">Tin tá»©c</a></li>
-                    <li><a href="{{ url('/lien-he') }}">LiÃªn há»‡</a></li>
+                    <li><a href="{{ url('/') }}">Trang chủ</a></li>
+                    <li><a href="{{ url('/lich-lop') }}">Lịch lớp</a></li>
+                    <li><a href="{{ route('trainers') }}">Đội ngũ PT</a></li>
+                    <li><a href="{{ url('/goi-tap') }}">Gói tập</a></li>
+                    <li><a href="{{ url('/tin-tuc') }}">Tin tức</a></li>
+                    <li><a href="{{ url('/lien-he') }}">Liên hệ</a></li>
                 </ul>
             </div>
 
             {{-- Col 3: Support --}}
             <div class="footer-col">
-                <h4 class="footer-title">Há»— trá»£</h4>
+                <h4 class="footer-title">Hỗ trợ</h4>
                 <ul class="footer-links">
-                    <li><a href="#">CÃ¢u há»i thÆ°á»ng gáº·p</a></li>
-                    <li><a href="#">ChÃ­nh sÃ¡ch báº£o máº­t</a></li>
-                    <li><a href="#">Äiá»u khoáº£n sá»­ dá»¥ng</a></li>
-                    <li><a href="#">HÆ°á»›ng dáº«n Ä‘áº·t lá»‹ch</a></li>
+                    <li><a href="#">Câu hỏi thường gặp</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                    <li><a href="#">Hướng dẫn đặt lịch</a></li>
                 </ul>
             </div>
 
             {{-- Col 4: Contact --}}
             <div class="footer-col">
-                <h4 class="footer-title">LiÃªn há»‡</h4>
+                <h4 class="footer-title">Liên hệ</h4>
                 <ul class="footer-contact">
-                    <li><i class="fas fa-map-marker-alt"></i><span>123 ÄÆ°á»ng Thá»ƒ Thao, Quáº­n 1, TP.HCM</span></li>
+                    <li><i class="fas fa-map-marker-alt"></i><span>123 Đường Thể Thao, Quận 1, TP.HCM</span></li>
                     <li><i class="fas fa-phone"></i><span>0909 123 456</span></li>
                     <li><i class="fas fa-envelope"></i><span>info@extrafit.vn</span></li>
-                    <li><i class="fas fa-clock"></i><span>5:00 â€“ 22:00 (HÃ ng ngÃ y)</span></li>
+                    <li><i class="fas fa-clock"></i><span>5:00 – 22:00 (Hàng ngày)</span></li>
                 </ul>
             </div>
         </div>

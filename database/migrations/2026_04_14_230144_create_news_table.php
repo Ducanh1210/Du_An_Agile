@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('excerpt')->nullable();
             $table->longText('content');
+            $table->text('tags_list')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('author_id')->nullable();
             $table->enum('news_status', ['draft', 'pending', 'published', 'hidden'])->default('draft');

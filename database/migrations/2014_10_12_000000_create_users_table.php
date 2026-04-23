@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('password');
             $table->string('role')->default('user')->comment('Vai trò: user, staff, admin, trainer');
+            $table->enum('specialization', ['gym', 'yoga', 'both'])->nullable();
+            $table->decimal('price_per_session', 12, 2)->default(500000.00);
+            $table->tinyInteger('is_available')->default(1);
             $table->string('avatar_url')->nullable();
             $table->tinyInteger('is_active')->default(1);
             $table->timestamp('email_verified_at')->nullable();

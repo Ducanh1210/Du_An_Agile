@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('membership_id')->constrained('memberships');
-            $table->foreignId('trainer_id')->nullable()->constrained('trainers');
+            $table->foreignId('trainer_id')->nullable()->constrained('users');
             $table->date('start_date');
             $table->date('end_date');
             $table->decimal('final_price', 12, 2)->comment('Giá thực tế khi đăng ký');

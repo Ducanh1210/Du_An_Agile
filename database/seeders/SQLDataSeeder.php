@@ -10,7 +10,7 @@ class SQLDataSeeder extends Seeder
 {
     public function run(): void
     {
-        $sqlPath = database_path('du_an_agile (3).sql');
+        $sqlPath = database_path('gym_management.sql');
         if (!File::exists($sqlPath)) {
             $this->command->error("SQL file not found at $sqlPath");
             return;

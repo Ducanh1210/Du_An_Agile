@@ -73,38 +73,38 @@
                     <span class="font-medium text-[15px]">Dashboard</span>
                 </a>
 
-                <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Há»‡ thá»‘ng Dá»‹ch vá»¥</div>
+                <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Hệ thống Dịch vụ</div>
                 
                 <a href="{{ route('admin.memberships.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.memberships.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-id-card w-5"></i>
-                    <span class="font-medium text-[15px]">Quáº£n lÃ½ GÃ³i táº­p</span>
+                    <span class="font-medium text-[15px]">Quản lý Gói tập</span>
                 </a>
 
                 <a href="{{ route('admin.equipments.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.equipments.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-dumbbell w-5"></i>
-                    <span class="font-medium text-[15px]">Quáº£n lÃ½ Dá»¥ng cá»¥</span>
+                    <span class="font-medium text-[15px]">Quản lý Dụng cụ</span>
                 </a>
 
                 
 
                 <a href="{{ route('admin.schedules.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-calendar-day w-5"></i>
-                    <span class="font-medium text-[15px]">Quáº£n lÃ½ Lá»‹ch lá»›p</span>
+                    <span class="font-medium text-[15px]">Quản lý Lịch lớp</span>
                 </a>
 
                 <div x-data="{ open: {{ request()->routeIs('admin.news.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="sidebar-link flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-newspaper w-5"></i>
-                            <span class="font-medium text-[15px]">Quáº£n lÃ½ Tin tá»©c</span>
+                            <span class="font-medium text-[15px]">Quản lý Tin tức</span>
                         </div>
                         <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open ? 'rotate-180' : ''"></i>
                     </button>
                     <div x-show="open" x-cloak class="mt-1 ml-4 pl-4 border-l border-slate-700 space-y-1">
-                        <a href="{{ route('admin.news.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.index') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">BÃ i viáº¿t</a>
-                        <a href="{{ route('admin.news.categories.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.categories.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Danh má»¥c</a>
+                        <a href="{{ route('admin.news.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.index') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bài viết</a>
+                        <a href="{{ route('admin.news.categories.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.categories.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Danh mục</a>
                         <a href="{{ route('admin.news.tags.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.tags.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Hashtags</a>
-                        <a href="{{ route('admin.news.comments.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.comments.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">BÃ¬nh luáº­n</a>
+                        <a href="{{ route('admin.news.comments.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.comments.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bình luận</a>
                     </div>
                 </div>
 
@@ -134,7 +134,7 @@
                     @csrf
                     <button type="submit" class="flex items-center gap-3 px-4 py-2 w-full rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors uppercase tracking-widest leading-relaxed">
                         <i class="fa-solid fa-power-off w-5"></i>
-                        <span class="text-sm font-semibold uppercase tracking-widest leading-relaxed">ÄÄƒng xuáº¥t Admin</span>
+                        <span class="text-sm font-semibold uppercase tracking-widest leading-relaxed">Đăng xuất Admin</span>
                     </button>
                 </form>
             </div>
@@ -151,15 +151,15 @@
                     </button>
                     <!-- Breadcrumbs -->
                     <nav class="hidden md:flex items-center text-sm font-medium text-slate-500">
-                        <span class="hover:text-primary transition-colors cursor-pointer uppercase tracking-widest">Há»‡ thá»‘ng</span>
+                        <span class="hover:text-primary transition-colors cursor-pointer uppercase tracking-widest">Hệ thống</span>
                         <i class="fa-solid fa-chevron-right text-[10px] mx-3 text-slate-300"></i>
-                        <span class="text-slate-900 font-bold uppercase tracking-tighter">@yield('title', 'Quáº£n trá»‹ phÃ²ng Gym')</span>
+                        <span class="text-slate-900 font-bold uppercase tracking-tighter">@yield('title', 'Quản trị phòng Gym')</span>
                     </nav>
                 </div>
 
                 <div class="flex items-center gap-5">
                     <div class="relative hidden sm:block">
-                        <input type="text" placeholder="TÃ¬m nhanh..." class="bg-gray-100 border-none rounded-full px-5 py-1.5 text-sm w-48 focus:ring-2 focus:ring-orange-500/30 transition-all">
+                        <input type="text" placeholder="Tìm nhanh..." class="bg-gray-100 border-none rounded-full px-5 py-1.5 text-sm w-48 focus:ring-2 focus:ring-orange-500/30 transition-all">
                         <i class="fa-solid fa-magnifying-glass absolute right-4 top-2.5 text-slate-400 text-xs"></i>
                     </div>
                     
@@ -173,7 +173,7 @@
                     <div class="flex items-center gap-3 cursor-pointer group">
                         <div class="text-right hidden lg:block">
                             <div class="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">{{ Auth::user()->name }}</div>
-                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quáº£n trá»‹ viÃªn</div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quản trị viên</div>
                         </div>
                         <div class="relative">
                             <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=ea580c&color=fff&bold=true" 

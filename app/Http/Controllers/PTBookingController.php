@@ -132,6 +132,7 @@ class PTBookingController extends Controller
 
         // Lấy gói tập hiện tại của User
         $userSubscription = Auth::user()?->subscriptions()
+            ->with('membership')
             ->where('status', 'active')
             ->where('end_date', '>=', now()->toDateString())
             ->first();
