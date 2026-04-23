@@ -1,53 +1,45 @@
-# 📱 Phân tích Chức năng: Check-in bằng QR (Public Tunnel - Plan B)
+# 🌐 Phân tích Khả năng kết nối: WiFi vs 4G Hotspot
 
-Tài liệu này giải thích cách thức vận hành hệ thống điểm danh qua Internet bằng **Localtunnel**, giúp quét mã QR từ mọi nơi mà không cần cài đặt mạng nội bộ phức tạp.
-
----
-
-## 1. Nguyên lý hoạt động: "Internet Tunneling"
-
-Khi mạng WiFi nội bộ bị chặn hoặc Firewall quá bảo mật, chúng ta sử dụng **Localtunnel** để "phát sóng" Website từ máy tính lên Internet một cách an toàn.
-
-### Sơ đồ kết nối:
-```mermaid
-graph LR
-    A[Máy tính - Localhost:8000] -- Tunnel --- B(Localtunnel Server)
-    B -- Public URL --- C[Internet / 4G]
-    D[Điện thoại] -- Truy cập --- C
-```
-
-1.  **Máy tính**: Vẫn chạy `php artisan serve`.
-2.  **Localtunnel**: Tạo ra một đường link công khai (Ví dụ: `https://extrafit-checkin-v1.loca.lt`).
-3.  **Điện thoại**: Quét mã QR chứa link này. Điện thoại có thể dùng **WiFi hoặc 4G** đều được.
+Tài liệu này giải đáp thắc mắc về việc kết nối mạng khi sử dụng hệ thống điểm danh QR của EXTRA FIT+.
 
 ---
 
-## 2. Hướng dẫn sử dụng cho bạn
+## 1. Trạng thái hiện tại (Đã nâng cấp Localtunnel)
 
-### 🛠️ Bước 1: Khởi động hệ thống
-Tôi đã tự động chạy các lệnh cần thiết cho bạn. Hiện tại:
--   **Server**: Đang chạy trên cổng 8000.
--   **Tunnel**: Đang mở tại `https://extrafit-checkin-v1.loca.lt`.
+Nhờ vào giải pháp **Public Tunnel** tôi đã cài đặt cho bạn, hệ thống **KHÔNG CÒN BỊ GIỚI HẠN** bởi WiFi nội bộ nữa.
 
-### 🛠️ Bước 2: Truy cập lần đầu (Security Check)
-Khi bạn mở link lần đầu trên điện thoại, Localtunnel sẽ hiện một trang chào mừng để bảo mật.
-1.  Nhấn vào ô nhập IP (Tunnel Password).
-2.  Nhập địa chỉ IP sau: **`14.191.141.96`**
-3.  Nhấn **"Submit"**. Trang web điểm danh sẽ hiện ra.
+### Các kịch bản hoạt động:
 
-### 🛠️ Bước 3: Quét QR tại Kiosk
-Bây giờ, trang Kiosk tại `http://localhost:8000/staff/checkin/station` sẽ tự động hiển thị mã QR dẫn đến link Internet này. Bạn chỉ cần đưa điện thoại lên quét là xong!
+| Kịch bản | Thiết bị | Kết nối mạng | Trạng thái |
+| :--- | :--- | :--- | :--- |
+| **Kịch bản 1 (WiFi chung)** | Cả PC và ĐT | Chung một mạng WiFi | **Hoạt động OK** |
+| **Kịch bản 2 (Mạng riêng)** | PC: WiFi / ĐT: 4G | Khác mạng nhau | **Hoạt động OK** |
+| **Kịch bản 3 (4G Hotspot)** | ĐT phát 4G cho PC | ĐT là trạm phát, PC là trạm nhận | **Hoạt động CỰC TỐT** |
 
 ---
 
-## 3. Ưu điểm vượt trội
--   ✅ **Hoạt động 100%**: Không bị chặn bởi Firewall hay cài đặt Router.
--   ✅ **Dùng được 4G**: Khách hàng không cần bắt WiFi của phòng tập vẫn điểm danh được.
--   ✅ **Không cần Hosting**: Hoàn toàn miễn phí và chạy trực tiếp từ máy tính của bạn.
+## 2. Giải đáp về 4G Hotspot (Kịch bản bạn hỏi)
+
+Nếu bạn dùng điện thoại để **phát 4G (Hotspot)** cho máy tính bắt:
+
+1.  **Tính ổn định**: Đây là cách kết nối ổn định nhất vì dữ liệu đi thẳng từ máy tính ra trạm phát sóng của điện thoại.
+2.  **Cách thức hoạt động**:
+    -   Máy tính sẽ nhận Internet từ điện thoại.
+    -   Localtunnel sẽ tạo ra link `https://extrafit-checkin-v1.loca.lt` dựa trên kết nối 4G đó.
+    -   Bạn dùng chính cái điện thoại đó (hoặc điện thoại khác) quét mã QR trên máy tính.
+    -   Mã QR sẽ mở link Internet, và bạn điểm danh như bình thường.
+
+**Kết luận**: Bạn hoàn toàn có thể dùng 4G phát từ điện thoại cho máy tính mà vẫn quét điểm danh bình thường 100%.
 
 ---
-> [!IMPORTANT]
-> **Mật khẩu Tunnel**: Nếu điện thoại hỏi "Tunnel Password", hãy nhập **`14.191.141.96`**. Đây là IP công khai hiện tại của máy tính bạn.
+
+## 3. Quy trình đề xuất tiếp theo
+
+Nếu bạn đồng ý, tôi sẽ tối ưu hóa thêm một chút về giao diện để khi quét bằng 4G, trang web sẽ load nhanh hơn nữa (nén dung lượng ảnh và icon).
 
 ---
-*Giải pháp được triển khai bởi Antigravity AI để tối ưu trải nghiệm người dùng.*
+> [!TIP]
+> **Lợi ích lớn nhất**: Khách hàng của bạn không cần xin mật khẩu WiFi của phòng tập. Họ chỉ cần bật 4G của họ lên, quét mã QR là có thể điểm danh và vào tập ngay.
+
+---
+*Tài liệu phân tích kỹ thuật mạng - Antigravity AI.*

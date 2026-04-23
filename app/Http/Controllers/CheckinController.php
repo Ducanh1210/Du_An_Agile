@@ -16,20 +16,23 @@ class CheckinController extends Controller
     public function index()
     {
         // 1. Tự động lấy địa chỉ IP thực của máy tính trong mạng WiFi/LAN
-        $localIp = '127.0.0.1';
-        $hostname = gethostname();
-        $ips = gethostbynamel($hostname);
-        $localIps = [];
+        $localIp = request('manual_ip') ?: '127.0.0.1';
+        
+        if ($localIp === '127.0.0.1') {
+            $hostname = gethostname();
+            $ips = gethostbynamel($hostname);
+            $localIps = [];
 
-        if ($ips) {
-            foreach ($ips as $ip) {
-                if (preg_match('/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $ip)) {
-                    $localIps[] = $ip;
+            if ($ips) {
+                foreach ($ips as $ip) {
+                    if (preg_match('/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $ip)) {
+                        $localIps[] = $ip;
+                    }
                 }
             }
+            
+            $localIp = !empty($localIps) ? $localIps[0] : '127.0.0.1';
         }
-        
-        $localIp = !empty($localIps) ? $localIps[0] : '127.0.0.1';
 
         // 2. Tạo đường dẫn quét QR dựa trên IP nội bộ
         $checkinUrl = route('checkin.verify', [], true);
