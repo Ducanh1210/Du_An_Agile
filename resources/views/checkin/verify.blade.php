@@ -2,199 +2,256 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác nhận Vào phòng - EXTRA FIT+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Xác nhận Điểm danh — EXTRA FIT+</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         :root {
-            --color-primary: #10B981;
-            --color-secondary: #064E3B;
-            --bg-gradient: linear-gradient(135deg, #064E3B 0%, #10B981 100%);
+            --primary-bg: #0f172a;
+            --accent-color: #10b981;
+            --card-bg: rgba(30, 41, 59, 0.7);
         }
+
         body {
-            background: #f8fafc;
+            background-color: var(--primary-bg);
+            color: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', sans-serif;
             padding: 20px;
+            overflow-x: hidden;
         }
+
         .verify-card {
-            background: white;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 40px 30px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        .verify-header {
-            margin-bottom: 30px;
-        }
-        .logo-box {
-            background: var(--bg-gradient);
-            width: 70px;
-            height: 70px;
-            border-radius: 18px;
+
+        .logo-wrap {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-color), #34d399);
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 30px;
+            margin: 0 auto 30px;
+            font-size: 2rem;
+            color: #0f172a;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
         }
+
         .form-control {
-            border-radius: 12px;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            text-align: center;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px 20px;
+            color: #fff;
+            transition: all 0.3s ease;
         }
+
         .form-control:focus {
-            border-color: var(--color-primary);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-color);
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            color: #fff;
         }
-        .btn-verify {
-            background: var(--bg-gradient);
+
+        .btn-checkin {
+            background: var(--accent-color);
             border: none;
-            color: white;
-            width: 100%;
+            border-radius: 16px;
             padding: 15px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            width: 100%;
             margin-top: 20px;
-            transition: transform 0.2s;
+            color: #0f172a;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .btn-verify:active {
+
+        .btn-checkin:active {
             transform: scale(0.98);
         }
-        .status-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
+
+        .success-animation {
             display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            z-index: 10;
         }
-        .success-icon {
-            color: var(--color-primary);
-            font-size: 80px;
+
+        .checkmark-circle {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
             margin-bottom: 20px;
         }
-        .error-icon {
-            color: #ef4444;
-            font-size: 80px;
-            margin-bottom: 20px;
+
+        .checkmark-circle .background {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            position: absolute;
+        }
+
+        .checkmark-circle .check {
+            border-radius: 3px;
+            border-left: 5px solid #0f172a;
+            border-bottom: 5px solid #0f172a;
+            width: 50px;
+            height: 25px;
+            transform: rotate(-45deg);
+            position: absolute;
+            top: 33px;
+            left: 25px;
+        }
+
+        .loader {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(15, 23, 42, 0.3);
+            border-radius: 50%;
+            border-top-color: #0f172a;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-<div class="verify-card">
-    <div class="verify-header">
-        <div class="logo-box">
-            <i class="fas fa-dumbbell"></i>
+<div class="verify-card animate__animated animate__zoomIn">
+    <div id="formSection">
+        <div class="logo-wrap">
+            <i class="fas fa-qrcode"></i>
         </div>
-        <h2 class="fw-bold">Xác nhận Vào phòng</h2>
-        <p class="text-muted">Vui lòng nhập Email để hệ thống kiểm tra gói tập của bạn</p>
+        <h2 class="fw-bold mb-2">ĐIỂM DANH</h2>
+        <p class="text-secondary mb-4">Vui lòng nhập Email để vào tập</p>
+
+        <form id="checkinForm">
+            @csrf
+            <div class="mb-3">
+                <input type="email" id="email" name="email" class="form-control" placeholder="example@email.com" required>
+            </div>
+            <button type="submit" class="btn-checkin" id="submitBtn">
+                <span class="btn-text">XÁC NHẬN VÀO TẬP</span>
+                <div class="loader"></div>
+            </button>
+        </form>
     </div>
 
-    <form id="verifyForm">
-        <div class="mb-3">
-            <input type="email" id="email" class="form-control" placeholder="example@gmail.com" required>
+    <div id="successSection" class="success-animation animate__animated">
+        <div class="checkmark-circle">
+            <div class="background"></div>
+            <div class="check"></div>
         </div>
-        <button type="submit" class="btn-verify" id="btnSubmit">XÁC NHẬN VÀO TẬP</button>
-    </form>
-
-    <!-- Overlay Success/Error -->
-    <div id="statusOverlay" class="status-overlay">
-        <div id="statusContent"></div>
-        <button class="btn btn-outline-secondary mt-4 w-100" onclick="resetForm()">THỬ LẠI</button>
+        <h2 class="fw-bold mb-2">THÀNH CÔNG!</h2>
+        <p id="successMessage" class="text-secondary mb-4"></p>
+        <div class="user-info d-flex align-items-center justify-content-center mt-3 p-3 rounded-4" style="background: rgba(255,255,255,0.05)">
+            <img id="userAvatar" src="" alt="Avatar" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+            <div class="text-start">
+                <div class="fw-bold" id="userName"></div>
+                <div class="small opacity-50">Hội viên chính thức</div>
+            </div>
+        </div>
+        <p class="small text-secondary mt-4 opacity-50">Trang sẽ đóng sau 5 giây...</p>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $('#verifyForm').on('submit', function(e) {
+    const form = document.getElementById('checkinForm');
+    const formSection = document.getElementById('formSection');
+    const successSection = document.getElementById('successSection');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const loader = submitBtn.querySelector('.loader');
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const email = $('#email').val();
-        const btn = $('#btnSubmit');
-        
-        btn.html('<i class="fas fa-spinner fa-spin"></i> ĐANG KIỂM TRA...').prop('disabled', true);
+        // Show loading
+        btnText.style.display = 'none';
+        loader.style.display = 'block';
+        submitBtn.disabled = true;
 
-        $.ajax({
-            url: '/checkin/verify',
-            method: 'POST',
-            data: {
-                email: email,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(res) {
-                showStatus(true, res.message, res.user);
-            },
-            error: function(err) {
-                const msg = err.responseJSON ? err.responseJSON.message : 'Có lỗi xảy ra, vui lòng thử lại.';
-                showStatus(false, msg);
-            },
-            complete: function() {
-                btn.html('XÁC NHẬN VÀO TẬP').prop('disabled', false);
+        const email = document.getElementById('email').value;
+
+        try {
+            // Sử dụng đường dẫn tương đối để tránh lỗi CORS/Mixed Content trên Tunnel
+            const response = await fetch('/checkin/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Show success
+                formSection.style.display = 'none';
+                successSection.style.display = 'block';
+                successSection.classList.add('animate__fadeInUp');
+                
+                document.getElementById('successMessage').innerText = data.message;
+                document.getElementById('userName').innerText = data.user.name;
+                document.getElementById('userAvatar').src = data.user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.user.name);
+
+                // Auto close or redirect after 5s
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 5000);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi điểm danh',
+                    text: data.message,
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    confirmButtonColor: '#10b981'
+                });
+                
+                // Reset button
+                btnText.style.display = 'inline';
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
             }
-        });
-    });
-
-    function showStatus(isSuccess, message, user = null) {
-        const overlay = $('#statusOverlay');
-        const content = $('#statusContent');
-        
-        overlay.css('display', 'flex');
-        
-        if (isSuccess) {
-            content.innerHTML = ''; // Clear
-            content.html(`
-                <div class="animate__animated animate__bounceIn">
-                    <i class="fas fa-check-circle success-icon"></i>
-                    <h3 class="fw-bold">THÀNH CÔNG!</h3>
-                    <div class="my-4">
-                        <img src="${user.avatar}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primary)">
-                        <div class="mt-2 fw-bold fs-5">${user.name}</div>
-                    </div>
-                    <p class="text-muted">${message}</p>
-                </div>
-            `);
-            // Ẩn nút thử lại nếu thành công
-            overlay.find('button').hide();
-            // Tự động reload sau 3s
-            setTimeout(() => window.location.reload(), 3000);
-        } else {
-            content.html(`
-                <div class="animate__animated animate__shakeX">
-                    <i class="fas fa-times-circle error-icon"></i>
-                    <h3 class="fw-bold text-danger">THẤT BẠI</h3>
-                    <p class="text-muted mt-3">${message}</p>
-                </div>
-            `);
-            overlay.find('button').show();
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi hệ thống',
+                text: 'Không thể kết nối tới máy chủ. Vui lòng thử lại sau.',
+                background: '#1e293b',
+                color: '#f1f5f9'
+            });
+            
+            // Reset button
+            btnText.style.display = 'inline';
+            loader.style.display = 'none';
+            submitBtn.disabled = false;
         }
-    }
-
-    function resetForm() {
-        $('#statusOverlay').hide();
-        $('#email').val('').focus();
-    }
+    });
 </script>
 
 </body>
