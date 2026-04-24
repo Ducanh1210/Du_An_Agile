@@ -130,3 +130,26 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+# 🚀 EXTRA FIT+ Features
+
+## 📲 QR Check-in System
+Hệ thống điểm danh QR dành cho nhân viên và khách hàng. Để chạy thử nghiệm hệ thống này, vui lòng làm theo các bước sau:
+
+1.  **Chạy Backend**:
+    `php artisan serve` (mặc định port 8000).
+
+2.  **Kích hoạt Tunnel (Public URL)**:
+    Mở PowerShell và chạy script:
+    ```powershell
+    .\start-checkin.ps1
+    ```
+    Script này sẽ tự động tạo một link công khai và cập nhật mã QR. **Giữ cửa sổ này luôn mở** khi đang sử dụng.
+
+3.  **Sử dụng**:
+    - Truy cập Trạm điểm danh tại: `http://localhost:8000/staff/checkin/station`.
+    - Dùng điện thoại quét mã QR để bắt đầu điểm danh.
+
+*Lưu ý: Không cần chỉnh sửa file `.env` cho tính năng này vì hệ thống đã được tự động hóa.*

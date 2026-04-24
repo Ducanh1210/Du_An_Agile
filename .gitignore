@@ -17,3 +17,8 @@ yarn-error.log
 /.idea
 /.vscode
 *.pem
+
+# QR Tunnel Temporary Files
+tunnel_url.txt
+tunnel.log
+pinggy.log

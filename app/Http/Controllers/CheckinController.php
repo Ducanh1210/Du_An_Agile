@@ -20,28 +20,31 @@ class CheckinController extends Controller
         // Lưu vào cache vĩnh viễn
         \Illuminate\Support\Facades\Cache::forever('qr_token_' . $qrUuid, true);
 
-        // 2. Xác định Base URL (Ưu tiên Public URL để làm việc "mọi nơi")
-        $publicUrl = env('PUBLIC_CHECKIN_URL');
-        $tunnelFile = base_path('tunnel_url.txt');
         $currentHost = request()->getHost();
         $isLocalHost = in_array($currentHost, ['localhost', '127.0.0.1', '::1']);
 
-        if (!empty($publicUrl)) {
-            // Ưu tiên 1: Cấu hình trong .env (Dành cho Production/Global)
-            $baseUrl = rtrim($publicUrl, '/');
-            $method = "ENV_CONFIG";
-        } elseif (file_exists($tunnelFile) && $isLocalHost) {
-            // Ưu tiên 2: Tunnel file (Dành cho Local Dev qua 4G)
-            $content = file_get_contents($tunnelFile);
+        // 2. Xác định Base URL (Ưu tiên Tunnel động để tránh sửa .env liên tục)
+        $baseUrl = null;
+        $method = "UNKNOWN";
+        $tunnelFile = base_path('tunnel_url.txt');
+
+        // Thử đọc từ file tunnel_url.txt (Do script tự động cập nhật)
+        if (file_exists($tunnelFile)) {
+            $content = trim(file_get_contents($tunnelFile));
             if (preg_match('/https:\/\/[^\s]+/', $content, $matches)) {
                 $baseUrl = rtrim($matches[0], '/');
                 $method = "TUNNEL_FILE";
-            } else {
-                $baseUrl = request()->getSchemeAndHttpHost();
-                $method = "REQUEST_HOST";
             }
-        } else {
-            // Ưu tiên 3: Tự động lấy host từ request hiện tại
+        }
+
+        // Nếu không có file, thử lấy từ .env
+        if (!$baseUrl && env('PUBLIC_CHECKIN_URL')) {
+            $baseUrl = rtrim(env('PUBLIC_CHECKIN_URL'), '/');
+            $method = "ENV_CONFIG";
+        }
+
+        // Nếu vẫn không có, lấy từ request hiện tại
+        if (!$baseUrl) {
             $baseUrl = request()->getSchemeAndHttpHost();
             $method = "REQUEST_HOST";
         }
