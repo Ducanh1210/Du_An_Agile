@@ -173,32 +173,26 @@
         <div class="col-lg-5">
             <div class="qr-card">
                 <div class="animate__animated animate__fadeInDown">
-                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill mb-3" style="letter-spacing: 2px; font-size: 0.7rem;">SYSTEM LIVE</span>
+                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill mb-3" style="letter-spacing: 2px; font-size: 0.7rem;">SYSTEM PERMANENT</span>
                     <h2 class="fw-bold">QUÉT MÃ ĐIỂM DANH</h2>
-                    <p class="opacity-50 small">Mã QR tự động hết hạn sau 15 giây</p>
+                    <p class="opacity-50 small">Sử dụng QR này để quét vào phòng tập</p>
                 </div>
 
                 <div class="qr-container">
-                    <div id="qrOverlay" class="qr-overlay" onclick="reloadQR()">
-                        <div class="reload-btn">
-                            <i class="fas fa-sync-alt"></i>
-                        </div>
-                        <p class="mt-3 fw-bold text-white">NHẤN ĐỂ TẢI LẠI MÃ</p>
-                    </div>
                     <div id="qrWrapper" class="qr-wrapper animate__animated animate__zoomIn">
                         <div id="qrcode"></div>
                     </div>
                 </div>
 
-                <div class="timer-section" id="timerSection">
-                    <div class="timer-bar-container">
-                        <div id="timerProgress" class="timer-progress"></div>
-                    </div>
-                    <div class="timer-text">MÃ CÒN HIỆU LỰC: <span id="timeLeft">15</span>s</div>
-                </div>
-
                 <div class="mt-5 p-4 rounded-4 text-start" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);">
-                    <div class="small opacity-50 mb-2">THÔNG TIN MÁY CHỦ:</div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="small opacity-50">TRẠNG THÁI KẾT NỐI:</div>
+                        @if($method === 'ENV_CONFIG' || $method === 'TUNNEL_FILE')
+                            <span class="badge bg-success" style="font-size: 0.6rem;"><i class="fas fa-globe me-1"></i> PUBLIC</span>
+                        @else
+                            <span class="badge bg-warning text-dark" style="font-size: 0.6rem;"><i class="fas fa-wifi me-1"></i> LOCAL</span>
+                        @endif
+                    </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <div class="fw-bold text-primary">{{ $localIp }}</div>
@@ -248,38 +242,7 @@
         correctLevel : QRCode.CorrectLevel.H
     });
 
-    // 1. Logic Timer & Expiration
-    function startTimer() {
-        timerValue = 15;
-        document.getElementById('qrWrapper').classList.remove('expired');
-        document.getElementById('qrOverlay').classList.remove('active');
-        document.getElementById('timerSection').style.opacity = '1';
-        
-        updateTimerUI();
-        
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            timerValue--;
-            updateTimerUI();
-            
-            if (timerValue <= 0) {
-                expireQR();
-            }
-        }, 1000);
-    }
-
-    function updateTimerUI() {
-        document.getElementById('timeLeft').innerText = timerValue;
-        document.getElementById('timerProgress').style.width = (timerValue / 15 * 100) + '%';
-    }
-
-    function expireQR() {
-        clearInterval(timerInterval);
-        document.getElementById('qrWrapper').classList.add('expired');
-        document.getElementById('qrOverlay').classList.add('active');
-        document.getElementById('timerSection').style.opacity = '0';
-    }
-
+    // Logic Timer & Expiration đã được loại bỏ để làm QR vĩnh viễn
     function reloadQR() {
         window.location.reload();
     }
@@ -361,7 +324,6 @@
     // Initialize
     setInterval(fetchCheckins, 2000);
     fetchCheckins();
-    startTimer();
 
     // Unlock Audio Context on first click
     document.addEventListener('click', () => {

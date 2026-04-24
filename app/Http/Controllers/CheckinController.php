@@ -15,62 +15,64 @@ class CheckinController extends Controller
      */
     public function index()
     {
-        // 1. Tự động lấy địa chỉ IP thực của máy tính trong mạng WiFi/LAN
-        $localIp = request('manual_ip') ?: '127.0.0.1';
-        
-        if ($localIp === '127.0.0.1') {
+        // 1. Sử dụng Token Cố định để làm QR vĩnh viễn (Có thể in ra)
+        $qrUuid = 'permanent-checkin-token';
+        // Lưu vào cache vĩnh viễn
+        \Illuminate\Support\Facades\Cache::forever('qr_token_' . $qrUuid, true);
+
+        // 2. Xác định Base URL (Ưu tiên Public URL để làm việc "mọi nơi")
+        $publicUrl = env('PUBLIC_CHECKIN_URL');
+        $tunnelFile = base_path('tunnel_url.txt');
+        $currentHost = request()->getHost();
+        $isLocalHost = in_array($currentHost, ['localhost', '127.0.0.1', '::1']);
+
+        if (!empty($publicUrl)) {
+            // Ưu tiên 1: Cấu hình trong .env (Dành cho Production/Global)
+            $baseUrl = rtrim($publicUrl, '/');
+            $method = "ENV_CONFIG";
+        } elseif (file_exists($tunnelFile) && $isLocalHost) {
+            // Ưu tiên 2: Tunnel file (Dành cho Local Dev qua 4G)
+            $content = file_get_contents($tunnelFile);
+            if (preg_match('/https:\/\/[^\s]+/', $content, $matches)) {
+                $baseUrl = rtrim($matches[0], '/');
+                $method = "TUNNEL_FILE";
+            } else {
+                $baseUrl = request()->getSchemeAndHttpHost();
+                $method = "REQUEST_HOST";
+            }
+        } else {
+            // Ưu tiên 3: Tự động lấy host từ request hiện tại
+            $baseUrl = request()->getSchemeAndHttpHost();
+            $method = "REQUEST_HOST";
+        }
+
+        // 3. Xử lý fallback cho Local IP (Chỉ khi đang ở localhost và không có Public URL)
+        $localIp = $currentHost;
+        if ($isLocalHost && $method === "REQUEST_HOST") {
             $hostname = gethostname();
             $ips = gethostbynamel($hostname);
-            $localIps = [];
-
             if ($ips) {
                 foreach ($ips as $ip) {
                     if (preg_match('/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $ip)) {
-                        $localIps[] = $ip;
+                        $localIp = $ip;
+                        $baseUrl = str_replace($currentHost, $ip, $baseUrl);
+                        $method = "LOCAL_IP_FALLBACK";
+                        break;
                     }
                 }
             }
-            
-            $localIp = !empty($localIps) ? $localIps[0] : '127.0.0.1';
         }
 
-        // Tạo UUID duy nhất cho phiên quét này
-        $qrUuid = \Illuminate\Support\Str::uuid()->toString();
-        // Lưu vào cache trong 15 giây (khớp với thời gian refresh trên giao diện)
-        \Illuminate\Support\Facades\Cache::put('qr_token_' . $qrUuid, true, now()->addSeconds(20)); // Cho thêm 5s bù trừ độ trễ mạng
+        // 4. Tạo URL cuối cùng
+        $checkinUrl = $baseUrl . '/checkin/verify?uuid=' . $qrUuid;
 
-        // 2. Tạo đường dẫn quét QR dựa trên IP nội bộ
-        $checkinUrl = route('checkin.verify', ['uuid' => $qrUuid], true);
-        
-        // Lấy port hiện tại nếu có (ví dụ :8000)
-        $currentPort = parse_url(url()->current(), PHP_URL_PORT);
-        $portSuffix = $currentPort ? ':' . $currentPort : '';
-
-        // Thay thế localhost/127.0.0.1 bằng IP thực + Port
-        $checkinUrl = str_replace(['localhost', '127.0.0.1', '::1'], $localIp, $checkinUrl);
-        
-        // Đảm bảo URL có port nếu đang chạy qua artisan serve
-        if ($currentPort && !str_contains($checkinUrl, ':' . $currentPort)) {
-            $checkinUrl = str_replace($localIp, $localIp . ':' . $currentPort, $checkinUrl);
-        }
-
-        // 3. Kiểm tra Tunnel (nếu có) - Ưu tiên Tunnel nếu muốn dùng qua 4G
-        $tunnelFile = base_path('tunnel_url.txt');
-        if (file_exists($tunnelFile)) {
-            $content = file_get_contents($tunnelFile);
-            if (preg_match('/https:\/\/[^\s]+/', $content, $matches)) {
-                $checkinUrl = rtrim($matches[0], '/') . '/checkin/verify';
-                $localIp = "Internet Tunnel (Public)";
-            }
-        }
-
-        \Illuminate\Support\Facades\Log::info("QR Checkin URL Generated", [
-            'ip' => $localIp,
+        \Illuminate\Support\Facades\Log::info("QR Checkin Generated", [
+            'method' => $method,
             'url' => $checkinUrl,
-            'port' => $currentPort
+            'staff_host' => $currentHost
         ]);
 
-        return view('staff.checkin_station', compact('checkinUrl', 'localIp'));
+        return view('staff.checkin_station', compact('checkinUrl', 'localIp', 'method'));
     }
 
     /**
@@ -138,8 +140,8 @@ class CheckinController extends Controller
             'updated_at' => now(),
         ]);
 
-        // 4. Vô hiệu hóa mã QR ngay lập tức sau khi dùng
-        \Illuminate\Support\Facades\Cache::forget('qr_token_' . $uuid);
+        // 4. KHÔNG vô hiệu hóa mã QR (Để mã này có thể in ra và dùng vĩnh viễn)
+        // \Illuminate\Support\Facades\Cache::forget('qr_token_' . $uuid);
 
         return response()->json([
             'success' => true,
