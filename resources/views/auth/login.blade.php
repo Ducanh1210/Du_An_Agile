@@ -132,7 +132,7 @@
                 <div class="relative group">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">mail</span>
                     <input class="w-full bg-surface-container-low/50 border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 pl-12 pr-4 focus:ring-0 transition-all placeholder:text-on-surface-variant/40 text-on-surface font-semibold" 
-                           id="email" name="email" value="{{ old('email') }}" placeholder="example@gmail.com" type="email" required autofocus/>
+                           id="email" name="email" value="{{ old('email') }}" placeholder="example@gmail.com" type="email" autofocus/>
                 </div>
                 @error('email')
                     <p class="text-error text-xs ml-1 font-medium">{{ $message }}</p>
@@ -145,7 +145,7 @@
                 <div class="relative group" x-data="{ show: false }">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">lock</span>
                     <input x-bind:type="show ? 'text' : 'password'" class="w-full bg-surface-container-low/50 border-2 border-transparent focus:border-primary/20 rounded-2xl py-4 pl-12 pr-12 focus:ring-0 transition-all placeholder:text-on-surface-variant/40 text-on-surface font-semibold" 
-                           id="password" name="password" placeholder="••••••••" required/>
+                           id="password" name="password" placeholder="••••••••"/>
                     <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button" @click="show = !show">
                         <span class="material-symbols-outlined" x-text="show ? 'visibility_off' : 'visibility'">visibility</span>
                     </button>

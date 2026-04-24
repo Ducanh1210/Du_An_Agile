@@ -51,7 +51,7 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Họ và tên</label>
-                        <input type="text" name="name" value="{{ $trainer->name }}" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; outline: none; background: #F8FAFC;" required>
+                        <input type="text" name="name" value="{{ $trainer->name }}" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; outline: none; background: #F8FAFC;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Email (Không thể đổi)</label>

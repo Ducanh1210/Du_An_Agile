@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('trainer_id')->constrained('trainers')->onDelete('cascade');
+            $table->foreignId('trainer_id')->constrained('users')->onDelete('cascade');
             $table->string('item_type'); 
             $table->unsignedBigInteger('item_id');
             $table->text('reason');

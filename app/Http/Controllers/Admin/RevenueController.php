@@ -15,6 +15,25 @@ class RevenueController extends Controller
      */
     public function index()
     {
+        $data = $this->getRevenueData();
+        return view('admin.revenue.index', $data);
+    }
+
+    /**
+     * Xuất báo cáo doanh thu PDF
+     */
+    public function exportPdf()
+    {
+        $data = $this->getRevenueData();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.revenue.pdf', $data);
+        return $pdf->download('bao-cao-doanh-thu-' . date('d-m-Y') . '.pdf');
+    }
+
+    /**
+     * Lấy dữ liệu doanh thu chung
+     */
+    protected function getRevenueData()
+    {
         // 1. Tổng doanh thu (Chỉ tính các đơn status = completed)
         $totalRevenue = Payment::where('status', 'completed')->sum('amount');
         
@@ -101,11 +120,17 @@ class RevenueController extends Controller
             ->limit(5)
             ->get();
 
-        return view('admin.revenue.index', compact(
-            'totalRevenue', 'totalTransactionsCount', 'successfulTransactionsCount', 
-            'currentMonthRevenue', 'growthRate', 
-            'monthlyRevenue', 'weeklyRevenue', 'weeklyLabels',
-            'categoryData', 'topPackages'
-        ));
+        return [
+            'totalRevenue' => $totalRevenue,
+            'totalTransactionsCount' => $totalTransactionsCount,
+            'successfulTransactionsCount' => $successfulTransactionsCount,
+            'currentMonthRevenue' => $currentMonthRevenue,
+            'growthRate' => $growthRate,
+            'monthlyRevenue' => $monthlyRevenue,
+            'weeklyRevenue' => $weeklyRevenue,
+            'weeklyLabels' => $weeklyLabels,
+            'categoryData' => $categoryData,
+            'topPackages' => $topPackages
+        ];
     }
 }

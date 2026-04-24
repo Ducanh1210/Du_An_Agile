@@ -29,7 +29,7 @@
                         </div>
                         <input type="text" name="title" 
                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-orange-600/5 focus:border-orange-600 focus:bg-white transition-all outline-none font-medium @error('title') border-red-500 @enderror" 
-                               placeholder="VD: Yoga Flow, Boxing PT, Cardio..." value="{{ old('title') }}" required>
+                               placeholder="VD: Yoga Flow, Boxing PT, Cardio..." value="{{ old('title') }}">
                     </div>
                     @error('title') <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p> @enderror
                 </div>
@@ -42,7 +42,7 @@
                             <i class="fa-solid fa-user-tie"></i>
                         </div>
                         <select name="trainer_id" 
-                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-orange-600/5 focus:border-orange-600 focus:bg-white transition-all outline-none font-medium appearance-none @error('trainer_id') border-red-500 @enderror" required>
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-orange-600/5 focus:border-orange-600 focus:bg-white transition-all outline-none font-medium appearance-none @error('trainer_id') border-red-500 @enderror">
                             <option value="">-- Chọn Huấn luyện viên --</option>
                             @foreach($trainers as $trainer)
                                 <option value="{{ $trainer->id }}" {{ old('trainer_id') == $trainer->id ? 'selected' : '' }}>
@@ -67,7 +67,7 @@
                             </div>
                             <input type="datetime-local" name="start_time" 
                                    class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-orange-600/5 focus:border-orange-600 focus:bg-white transition-all outline-none font-medium @error('start_time') border-red-500 @enderror" 
-                                   value="{{ old('start_time') }}" required>
+                                   value="{{ old('start_time') }}">
                         </div>
                         @error('start_time') <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p> @enderror
                     </div>
@@ -81,7 +81,7 @@
                             </div>
                             <input type="datetime-local" name="end_time" 
                                    class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-orange-600/5 focus:border-orange-600 focus:bg-white transition-all outline-none font-medium @error('end_time') border-red-500 @enderror" 
-                                   value="{{ old('end_time') }}" required>
+                                   value="{{ old('end_time') }}">
                         </div>
                         @error('end_time') <p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p> @enderror
                     </div>

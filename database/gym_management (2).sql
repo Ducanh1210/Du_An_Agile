@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th4 23, 2026 lúc 03:16 AM
+-- Thời gian đã tạo: Th4 22, 2026 lúc 01:38 PM
 -- Phiên bản máy phục vụ: 8.0.30
 -- Phiên bản PHP: 8.3.29
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `bookings` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `subscription_id` bigint UNSIGNED DEFAULT NULL,
+  `subscription_id` bigint UNSIGNED NOT NULL,
   `booking_type` enum('class','pt_session') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `target_area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Vùng tập: Tay, Chân, Bụng, Ngực, Lưng, Toàn thân...',
   `schedule_id` bigint UNSIGNED DEFAULT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `bookings` (
   `end_time` datetime NOT NULL,
   `price` decimal(12,2) NOT NULL DEFAULT '0.00',
   `payment_status` enum('free','pending','paid') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'free',
-  `status` enum('pending','confirmed','cancelled','completed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `status` enum('confirmed','cancelled','completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'confirmed',
   `reschedule_status` enum('none','pending','approved','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'none',
   `reschedule_reason` text COLLATE utf8mb4_unicode_ci,
   `reschedule_at` timestamp NULL DEFAULT NULL,
@@ -58,10 +58,7 @@ INSERT INTO `bookings` (`id`, `user_id`, `subscription_id`, `booking_type`, `tar
 (1, 3, 5, 'class', NULL, 121, 12, '2026-04-17 08:00:00', '2026-04-17 09:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-15 20:58:20', '2026-04-15 20:58:20'),
 (2, 3, 5, 'class', NULL, 45, 9, '2026-04-16 15:00:00', '2026-04-16 16:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-15 21:02:35', '2026-04-15 21:02:35'),
 (3, 3, 5, 'pt_session', NULL, NULL, 8, '2026-04-18 17:00:00', '2026-04-18 18:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-17 18:28:28', '2026-04-17 18:28:28'),
-(4, 3, 5, 'class', NULL, 59, 9, '2026-04-22 15:00:00', '2026-04-22 16:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-21 16:48:08', '2026-04-21 16:48:08'),
-(5, 16, NULL, 'pt_session', 'Toàn thân', NULL, 6, '2026-04-23 18:00:00', '2026-04-23 19:00:00', 500000.00, 'pending', 'pending', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-23 02:34:47', '2026-04-23 02:34:47'),
-(6, 3, 5, 'pt_session', 'Cơ lưng', NULL, 6, '2026-04-23 15:00:00', '2026-04-23 16:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-23 03:00:53', '2026-04-23 03:00:53'),
-(7, 3, 5, 'pt_session', 'Cơ chân', NULL, 5, '2026-04-23 13:00:00', '2026-04-23 14:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-23 03:02:26', '2026-04-23 03:02:26');
+(4, 3, 5, 'class', NULL, 59, 9, '2026-04-22 15:00:00', '2026-04-22 16:00:00', 0.00, 'free', 'confirmed', 'none', NULL, NULL, NULL, NULL, NULL, '2026-04-21 16:48:08', '2026-04-21 16:48:08');
 
 -- --------------------------------------------------------
 
@@ -80,15 +77,6 @@ CREATE TABLE `checkins` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `checkins`
---
-
-INSERT INTO `checkins` (`id`, `user_id`, `subscription_id`, `qr_token`, `expires_at`, `checked_in_at`, `status`, `created_at`, `updated_at`) VALUES
-(1, 3, 5, '8e89f7a9069100c1911bc891021a44e1', '2026-04-22 21:04:35', '2026-04-22 21:03:35', 'used', '2026-04-22 14:03:35', '2026-04-22 14:03:35'),
-(2, 3, 5, 'e9d1a340b8fb3c7f9c127be8488b61b1', '2026-04-22 21:06:11', '2026-04-22 21:05:11', 'used', '2026-04-22 14:05:11', '2026-04-22 14:05:11'),
-(3, 3, 5, '4eca71a363349bc7bf4cbf3e0004a0d1', '2026-04-22 21:14:56', '2026-04-22 21:13:56', 'used', '2026-04-22 14:13:56', '2026-04-22 14:13:56');
 
 -- --------------------------------------------------------
 
@@ -155,13 +143,6 @@ CREATE TABLE `health_metrics` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `health_metrics`
---
-
-INSERT INTO `health_metrics` (`id`, `user_id`, `trainer_id`, `weight`, `bmi`, `fat_percent`, `recorded_by`, `created_at`, `updated_at`) VALUES
-(1, 3, 5, 60.00, 0.00, 12.00, 'trainer', '2026-04-23 03:07:24', '2026-04-23 03:07:24');
 
 -- --------------------------------------------------------
 
@@ -281,9 +262,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (33, '2026_04_21_235312_fix_notifications_table_structure', 4),
 (34, '2026_04_22_000526_cleanup_unused_tables_v2', 5),
 (35, '2026_04_22_001741_mega_db_merge_and_simplify', 6),
-(36, '2026_04_22_194601_add_target_area_to_bookings_table', 7),
-(37, '2026_04_23_093315_make_subscription_id_nullable_in_bookings_table', 8),
-(38, '2026_04_23_093414_update_status_enum_in_bookings_table', 9);
+(36, '2026_04_22_194601_add_target_area_to_bookings_table', 7);
 
 -- --------------------------------------------------------
 
@@ -395,14 +374,11 @@ CREATE TABLE `notifications` (
 
 INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
 ('0fc374f2-b6c0-405c-aada-55ce098f2df7', 'App\\Notifications\\DailyScheduleSummaryNotification', 'App\\Models\\User', 3, '{\"type\":\"daily_summary\",\"title\":\"L\\u1ecbch t\\u1eadp h\\u00f4m nay (1 bu\\u1ed5i)\",\"message\":\"H\\u00f4m nay b\\u1ea1n c\\u00f3 1 bu\\u1ed5i t\\u1eadp. Bu\\u1ed5i \\u0111\\u1ea7u ti\\u00ean b\\u1eaft \\u0111\\u1ea7u l\\u00fac 15:00. Ch\\u00fac b\\u1ea1n t\\u1eadp luy\\u1ec7n hi\\u1ec7u qu\\u1ea3!\",\"count\":1}', '2026-04-22 12:57:46', '2026-04-22 12:55:01', '2026-04-22 12:57:46'),
-('15399575-8115-47e4-a886-ff53391f2034', 'App\\Notifications\\BookingConfirmedNotification', 'App\\Models\\User', 3, '{\"type\":\"booking_confirmed\",\"title\":\"\\u0110\\u1eb7t l\\u1ecbch PT th\\u00e0nh c\\u00f4ng\",\"message\":\"Bu\\u1ed5i t\\u1eadp C\\u01a1 l\\u01b0ng l\\u00fac 15:00 23\\/04 \\u0111\\u00e3 s\\u1eb5n s\\u00e0ng.\",\"booking_id\":6}', NULL, '2026-04-23 03:00:53', '2026-04-23 03:00:53'),
 ('15f234f8-5a40-4759-a0aa-f5a7af8a3b51', 'App\\Notifications\\BookingConfirmedNotification', 'App\\Models\\User', 3, '{\"type\":\"booking_confirmed\",\"title\":\"\\u0110\\u1eb7t l\\u1ecbch th\\u00e0nh c\\u00f4ng\",\"message\":\"L\\u1ecbch t\\u1eadp L\\u1edbp h\\u1ecdc l\\u00fac 08:00 17\\/04\\/2026 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c x\\u00e1c nh\\u1eadn.\",\"booking_id\":1}', '2026-04-22 12:39:12', '2026-04-22 12:37:30', '2026-04-22 12:39:12'),
 ('3ba53a67-6796-4d5d-bf9b-27a6536f437a', 'App\\Notifications\\BookingConfirmedNotification', 'App\\Models\\User', 3, '{\"type\":\"booking_confirmed\",\"title\":\"\\u0110\\u1eb7t l\\u1ecbch th\\u00e0nh c\\u00f4ng\",\"message\":\"L\\u1ecbch t\\u1eadp L\\u1edbp h\\u1ecdc l\\u00fac 08:00 17\\/04\\/2026 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c x\\u00e1c nh\\u1eadn.\",\"booking_id\":1}', '2026-04-22 12:37:12', '2026-04-22 12:36:51', '2026-04-22 12:37:12'),
 ('59027c83-594d-4939-986f-1550127319b7', 'App\\Notifications\\DailyScheduleSummaryNotification', 'App\\Models\\User', 3, '{\"type\":\"daily_summary\",\"title\":\"L\\u1ecbch t\\u1eadp h\\u00f4m nay (1 bu\\u1ed5i)\",\"message\":\"H\\u00f4m nay b\\u1ea1n c\\u00f3 1 bu\\u1ed5i t\\u1eadp. Bu\\u1ed5i \\u0111\\u1ea7u ti\\u00ean b\\u1eaft \\u0111\\u1ea7u l\\u00fac 15:00. Ch\\u00fac b\\u1ea1n t\\u1eadp luy\\u1ec7n hi\\u1ec7u qu\\u1ea3!\",\"count\":1}', '2026-04-22 12:57:46', '2026-04-22 12:54:36', '2026-04-22 12:57:46'),
 ('6c7a7e7b-a6f3-405b-9c76-68eca48d6403', 'App\\Notifications\\DailyScheduleSummaryNotification', 'App\\Models\\User', 3, '{\"type\":\"daily_summary\",\"title\":\"L\\u1ecbch t\\u1eadp h\\u00f4m nay (1 bu\\u1ed5i)\",\"message\":\"H\\u00f4m nay b\\u1ea1n c\\u00f3 1 bu\\u1ed5i t\\u1eadp. Bu\\u1ed5i \\u0111\\u1ea7u ti\\u00ean b\\u1eaft \\u0111\\u1ea7u l\\u00fac 15:00. Ch\\u00fac b\\u1ea1n t\\u1eadp luy\\u1ec7n hi\\u1ec7u qu\\u1ea3!\",\"count\":1}', '2026-04-22 12:57:46', '2026-04-22 12:51:41', '2026-04-22 12:57:46'),
 ('8757a25a-e3af-4904-ad46-753f8f083e6b', 'App\\Notifications\\DailyScheduleSummaryNotification', 'App\\Models\\User', 3, '{\"type\":\"daily_summary\",\"title\":\"L\\u1ecbch t\\u1eadp h\\u00f4m nay (1 bu\\u1ed5i)\",\"message\":\"H\\u00f4m nay b\\u1ea1n c\\u00f3 1 bu\\u1ed5i t\\u1eadp. Bu\\u1ed5i \\u0111\\u1ea7u ti\\u00ean b\\u1eaft \\u0111\\u1ea7u l\\u00fac 15:00. Ch\\u00fac b\\u1ea1n t\\u1eadp luy\\u1ec7n hi\\u1ec7u qu\\u1ea3!\",\"count\":1}', '2026-04-22 12:57:46', '2026-04-22 12:57:15', '2026-04-22 12:57:46'),
-('bb8f2928-ca28-4fa2-91ec-24cd8b55b95a', 'App\\Notifications\\BookingConfirmedNotification', 'App\\Models\\User', 3, '{\"type\":\"booking_confirmed\",\"title\":\"\\u0110\\u1eb7t l\\u1ecbch PT th\\u00e0nh c\\u00f4ng\",\"message\":\"Bu\\u1ed5i t\\u1eadp C\\u01a1 ch\\u00e2n l\\u00fac 13:00 23\\/04 \\u0111\\u00e3 s\\u1eb5n s\\u00e0ng.\",\"booking_id\":7}', NULL, '2026-04-23 03:02:27', '2026-04-23 03:02:27'),
-('e18a8c89-a47b-4735-bf42-fb6b9c487306', 'App\\Notifications\\BookingConfirmedNotification', 'App\\Models\\User', 16, '{\"type\":\"booking_confirmed\",\"title\":\"\\u0110\\u1eb7t l\\u1ecbch PT th\\u00e0nh c\\u00f4ng\",\"message\":\"Bu\\u1ed5i t\\u1eadp To\\u00e0n th\\u00e2n l\\u00fac 18:00 23\\/04 \\u0111\\u00e3 s\\u1eb5n s\\u00e0ng.\",\"booking_id\":5}', '2026-04-23 02:35:08', '2026-04-23 02:34:47', '2026-04-23 02:35:08'),
 ('e90281be-2259-4d95-9e6e-6e75524706f9', 'App\\Notifications\\DailyScheduleSummaryNotification', 'App\\Models\\User', 3, '{\"type\":\"daily_summary\",\"title\":\"L\\u1ecbch t\\u1eadp h\\u00f4m nay (1 bu\\u1ed5i)\",\"message\":\"H\\u00f4m nay b\\u1ea1n c\\u00f3 1 bu\\u1ed5i t\\u1eadp. Bu\\u1ed5i \\u0111\\u1ea7u ti\\u00ean b\\u1eaft \\u0111\\u1ea7u l\\u00fac 15:00. Ch\\u00fac b\\u1ea1n t\\u1eadp luy\\u1ec7n hi\\u1ec7u qu\\u1ea3!\",\"count\":1}', '2026-04-22 12:51:38', '2026-04-22 12:50:29', '2026-04-22 12:51:38'),
 ('fc69cbeb-d1b1-4e32-ae97-c548034bede4', 'App\\Notifications\\DailyScheduleSummaryNotification', 'App\\Models\\User', 3, '{\"type\":\"daily_summary\",\"title\":\"L\\u1ecbch t\\u1eadp h\\u00f4m nay (1 bu\\u1ed5i)\",\"message\":\"H\\u00f4m nay b\\u1ea1n c\\u00f3 1 bu\\u1ed5i t\\u1eadp. Bu\\u1ed5i \\u0111\\u1ea7u ti\\u00ean b\\u1eaft \\u0111\\u1ea7u l\\u00fac 15:00. Ch\\u00fac b\\u1ea1n t\\u1eadp luy\\u1ec7n hi\\u1ec7u qu\\u1ea3!\",\"count\":1}', '2026-04-22 12:51:38', '2026-04-22 12:51:08', '2026-04-22 12:51:38'),
 ('fcc498dd-bbdf-445a-8d87-e771a2df1d3d', 'App\\Notifications\\BookingConfirmedNotification', 'App\\Models\\User', 3, '{\"type\":\"booking_confirmed\",\"title\":\"\\u0110\\u1eb7t l\\u1ecbch th\\u00e0nh c\\u00f4ng\",\"message\":\"L\\u1ecbch t\\u1eadp L\\u1edbp h\\u1ecdc l\\u00fac 08:00 17\\/04\\/2026 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c x\\u00e1c nh\\u1eadn.\",\"booking_id\":1}', '2026-04-22 12:37:12', '2026-04-22 12:36:37', '2026-04-22 12:37:12');
@@ -468,8 +444,7 @@ INSERT INTO `payments` (`id`, `subscription_id`, `amount`, `method`, `status`, `
 (16, 17, 300000.00, 'e_wallet', 'cancelled', 'VNP1776214778', NULL, 1, '2026-04-14 17:59:38', '2026-04-21 14:00:42'),
 (17, 20, 800000.00, 'e_wallet', 'cancelled', 'VNP1776215168', NULL, 1, '2026-04-14 18:06:08', '2026-04-21 14:00:46'),
 (18, 23, 1500000.00, 'e_wallet', 'completed', 'VNP1776215868', NULL, NULL, '2026-04-14 18:17:48', '2026-04-14 18:18:05'),
-(19, 24, 1500000.00, 'e_wallet', 'cancelled', 'VNP1776218166', NULL, 1, '2026-04-14 18:56:06', '2026-04-21 14:00:50'),
-(20, 25, 1500000.00, 'e_wallet', 'cancelled', 'VNP1776911857', 'Người dùng hủy thanh toán hoặc giao dịch thất bại.', NULL, '2026-04-23 02:37:37', '2026-04-23 02:37:43');
+(19, 24, 1500000.00, 'e_wallet', 'cancelled', 'VNP1776218166', NULL, 1, '2026-04-14 18:56:06', '2026-04-21 14:00:50');
 
 -- --------------------------------------------------------
 
@@ -734,7 +709,7 @@ INSERT INTO `subscriptions` (`id`, `user_id`, `membership_id`, `trainer_id`, `st
 (2, 3, 5, NULL, '2026-04-13', '2026-05-13', 900000.00, 4, 'pending_payment', NULL, NULL, NULL, '2026-04-13 06:42:40', '2026-04-13 06:42:40'),
 (3, 3, 5, NULL, '2026-04-13', '2026-05-13', 900000.00, 4, 'pending_payment', NULL, NULL, NULL, '2026-04-13 06:46:36', '2026-04-13 06:46:36'),
 (4, 3, 5, NULL, '2026-04-13', '2026-05-13', 900000.00, 4, 'pending_payment', NULL, NULL, NULL, '2026-04-13 06:47:32', '2026-04-13 06:47:32'),
-(5, 3, 5, NULL, '2026-04-13', '2026-06-12', 900000.00, 1, 'active', NULL, NULL, NULL, '2026-04-13 06:48:51', '2026-04-23 03:02:26'),
+(5, 3, 5, NULL, '2026-04-13', '2026-06-12', 900000.00, 3, 'active', NULL, NULL, NULL, '2026-04-13 06:48:51', '2026-04-17 18:28:28'),
 (6, 3, 2, NULL, '2026-04-13', '2026-05-13', 800000.00, 4, 'cancelled', 'ok', '2026-04-22 19:52:53', NULL, '2026-04-13 07:26:57', '2026-04-22 12:52:53'),
 (7, 3, 2, NULL, '2026-04-13', '2026-05-13', 800000.00, 4, 'pending_payment', NULL, NULL, NULL, '2026-04-13 07:27:15', '2026-04-13 07:27:15'),
 (8, 3, 2, NULL, '2026-04-13', '2026-05-13', 800000.00, 4, 'pending_payment', NULL, NULL, NULL, '2026-04-13 07:27:55', '2026-04-13 07:27:55'),
@@ -749,8 +724,7 @@ INSERT INTO `subscriptions` (`id`, `user_id`, `membership_id`, `trainer_id`, `st
 (17, 3, 1, NULL, '2026-04-15', '2026-05-15', 300000.00, 0, 'cancelled', 'tôi ko muốn dky nx', '2026-04-15 08:33:31', NULL, '2026-04-14 17:59:38', '2026-04-14 18:33:31'),
 (20, 3, 2, NULL, '2026-04-15', '2026-05-15', 800000.00, 4, 'cancelled', 'tôi ko muốn dky th', '2026-04-15 08:30:21', NULL, '2026-04-14 18:06:08', '2026-04-14 18:30:21'),
 (23, 3, 3, NULL, '2026-04-15', '2026-05-15', 1500000.00, 12, 'active', NULL, NULL, NULL, '2026-04-14 18:17:48', '2026-04-14 18:18:05'),
-(24, 3, 3, NULL, '2026-04-15', '2026-05-15', 1500000.00, 12, 'cancelled', 'ko mua', '2026-04-22 00:35:08', NULL, '2026-04-14 18:56:06', '2026-04-21 17:35:08'),
-(25, 16, 3, NULL, '2026-04-23', '2026-05-23', 1500000.00, 12, 'cancelled', 'Thanh toán VNPay không thành công.', NULL, NULL, '2026-04-23 02:37:37', '2026-04-23 02:37:43');
+(24, 3, 3, NULL, '2026-04-15', '2026-05-15', 1500000.00, 12, 'cancelled', 'ko mua', '2026-04-22 00:35:08', NULL, '2026-04-14 18:56:06', '2026-04-21 17:35:08');
 
 -- --------------------------------------------------------
 
@@ -785,7 +759,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `phone`, `height`, `password`, `role
 (1, 'Admin', 'admin@gmail.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'admin', NULL, 500000.00, 1, NULL, 1, '2026-04-02 16:29:21', NULL, '2026-04-02 15:34:25', '2026-04-21 02:30:31'),
 (2, 'Client Test', 'client@gmail.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'user', NULL, 500000.00, 1, NULL, 1, '2026-04-02 16:29:31', NULL, '2026-04-02 15:34:26', '2026-04-21 02:30:31'),
 (3, 'Đức Anh Nguyễn', 'anp93005@gmail.com', NULL, NULL, '$2y$10$h/Q.8WCBlsIRQMNDQkUXquGvs9f0.Rh0.YjRP00y9qlFX62hp3KP.', 'user', NULL, 500000.00, 1, '/storage/avatars/UIbibMtXLrwdzJG9FUcXs4XL7FpZdB7YMVGSSwGm.jpg', 1, NULL, NULL, '2026-04-02 15:38:04', '2026-04-21 15:20:25'),
-(5, 'Nguyễn Minh Tuấn', 'tuan.gym@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'gym', 500000.00, 1, '/storage/avatars/K7qM7QeoRcE9gfmP1lG3v07Vtyt8Zw5QeIe0eKBP.jpg', 1, NULL, NULL, '2026-04-10 16:00:39', '2026-04-23 02:23:37'),
+(5, 'Nguyễn Minh Tuấn', 'tuan.gym@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'gym', 500000.00, 1, 'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-10 16:00:39', '2026-04-21 02:30:31'),
 (6, 'Trần Thị Lan', 'lan.yoga@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'yoga', 500000.00, 1, 'https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-10 16:00:40', '2026-04-21 02:30:31'),
 (7, 'Lê Văn Hùng', 'hung.boxing@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'gym', 500000.00, 1, 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-10 16:00:40', '2026-04-21 02:30:31'),
 (8, 'Phạm Thu Hà', 'ha.fitness@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'both', 500000.00, 1, '/storage/avatars/w6zVBxJQZFsSVaX9KerUAB7YKBzhpFtsVBVmKYEP.jpg', 1, NULL, NULL, '2026-04-10 16:00:40', '2026-04-21 02:30:31'),
@@ -794,8 +768,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `phone`, `height`, `password`, `role
 (11, 'Admin User', 'admin@dummy.com', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'user', NULL, 500000.00, 1, NULL, 1, NULL, NULL, '2026-04-11 01:46:51', '2026-04-21 02:30:31'),
 (12, 'Lê Văn Hùng', 'hung.bodybuilding@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'gym', 500000.00, 1, 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-15 20:42:41', '2026-04-21 02:30:31'),
 (13, 'Phạm Thu Hà', 'ha.yoga@extrafit.vn', NULL, NULL, '$2y$10$olk10lusqrfMu7nDf9.H0O9V8642pb2S/h.7jIb2LpRP81qCwdxSC', 'trainer', 'yoga', 500000.00, 1, 'https://images.unsplash.com/photo-1609899537878-49e9196c5bcd?w=500&q=80&auto=format&fit=crop', 1, NULL, NULL, '2026-04-15 20:42:41', '2026-04-21 02:30:31'),
-(15, 'duc anh', 'chau12@gmail.com', NULL, NULL, '$2y$10$hR4UxDITp6yfPCZh/TNJ2uYG12NNQfDZXovN5FKfQVRNgnpE20Pr6', 'staff', NULL, 500000.00, 1, NULL, 1, NULL, NULL, '2026-04-21 15:51:23', '2026-04-21 15:51:23'),
-(16, 'Cậy Nguyễn', 'nguyencay280668@gmail.com', NULL, NULL, '$2y$10$j7Eoc7spPk7FYlYNcw/cHOK7kR7EyholrxK0Ztny0d2jmsmaANi7u', 'user', NULL, 500000.00, 1, NULL, 1, NULL, NULL, '2026-04-23 02:06:56', '2026-04-23 02:06:56');
+(15, 'duc anh', 'chau12@gmail.com', NULL, NULL, '$2y$10$hR4UxDITp6yfPCZh/TNJ2uYG12NNQfDZXovN5FKfQVRNgnpE20Pr6', 'staff', NULL, 500000.00, 1, NULL, 1, NULL, NULL, '2026-04-21 15:51:23', '2026-04-21 15:51:23');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -951,13 +924,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `checkins`
 --
 ALTER TABLE `checkins`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `equipments`
@@ -975,7 +948,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT cho bảng `health_metrics`
 --
 ALTER TABLE `health_metrics`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `jobs`
@@ -999,7 +972,7 @@ ALTER TABLE `memberships`
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT cho bảng `news`
@@ -1023,7 +996,7 @@ ALTER TABLE `news_comments`
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT cho bảng `reviews`
@@ -1041,13 +1014,13 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT cho bảng `subscriptions`
 --
 ALTER TABLE `subscriptions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

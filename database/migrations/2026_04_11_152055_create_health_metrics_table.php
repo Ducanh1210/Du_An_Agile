@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('health_metrics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('trainer_id')->nullable()->constrained('trainers')->onDelete('set null');
+            $table->foreignId('trainer_id')->nullable()->constrained('users')->onDelete('set null');
             $table->float('weight')->comment('Cân nặng (kg)');
             $table->float('bmi')->comment('Chỉ số BMI');
             $table->float('fat_percent')->nullable()->comment('Phần trăm mỡ (%)');

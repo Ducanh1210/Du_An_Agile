@@ -132,7 +132,7 @@
                     <label class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1" for="name">Họ tên</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">person</span>
-                        <input id="name" name="name" value="{{ old('name') }}" required autofocus class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="Nguyễn Văn A" type="text"/>
+                        <input id="name" name="name" value="{{ old('name') }}" autofocus class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="Nguyễn Văn A" type="text"/>
                     </div>
                     @error('name')
                         <p class="text-error text-[11px] font-bold ml-1 mt-1">{{ $message }}</p>
@@ -144,7 +144,7 @@
                     <label class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1" for="email">Email</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span>
-                        <input id="email" name="email" value="{{ old('email') }}" required class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="example@gymfit.com" type="email"/>
+                        <input id="email" name="email" value="{{ old('email') }}" class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="example@gymfit.com" type="email"/>
                     </div>
                     @error('email')
                         <p class="text-error text-[11px] font-bold ml-1 mt-1">{{ $message }}</p>
@@ -156,7 +156,7 @@
                     <label class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1" for="password">Mật khẩu</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span>
-                        <input id="password" name="password" required x-bind:type="showPass ? 'text' : 'password'" class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-12 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="••••••••"/>
+                        <input id="password" name="password" x-bind:type="showPass ? 'text' : 'password'" class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-12 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="••••••••"/>
                         <span @click="showPass = !showPass" class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline text-lg cursor-pointer hover:text-primary transition-colors" x-text="showPass ? 'visibility_off' : 'visibility'">visibility</span>
                     </div>
                     @error('password')
@@ -169,7 +169,7 @@
                     <label class="block text-[11px] font-bold uppercase tracking-widest text-on-surface-variant ml-1" for="password_confirmation">Xác nhận mật khẩu</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">shield</span>
-                        <input id="password_confirmation" name="password_confirmation" required x-bind:type="showConfirm ? 'text' : 'password'" class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-12 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="••••••••"/>
+                        <input id="password_confirmation" name="password_confirmation" x-bind:type="showConfirm ? 'text' : 'password'" class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-12 focus:ring-2 focus:ring-primary/40 text-on-surface placeholder:text-outline-variant transition-all" placeholder="••••••••"/>
                         <span @click="showConfirm = !showConfirm" class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline text-lg cursor-pointer hover:text-primary transition-colors" x-text="showConfirm ? 'visibility_off' : 'visibility'">visibility</span>
                     </div>
                     @error('password_confirmation')

@@ -16,7 +16,7 @@
                 @csrf
                 <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Tên thẻ <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" required placeholder="VD: Fitness, Yoga, Khuyến mãi..."
+                    <input type="text" name="name" placeholder="VD: Fitness, Yoga, Khuyến mãi..."
                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 text-sm transition-all">
                 </div>
                 <button type="submit" 

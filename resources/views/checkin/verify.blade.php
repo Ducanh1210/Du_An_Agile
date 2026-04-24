@@ -148,7 +148,7 @@
         <form id="checkinForm">
             @csrf
             <div class="mb-3">
-                <input type="email" id="email" name="email" class="form-control" placeholder="example@email.com" required>
+                <input type="email" id="email" name="email" class="form-control" placeholder="example@email.com">
             </div>
             <button type="submit" class="btn-checkin" id="submitBtn">
                 <span class="btn-text">XÁC NHẬN VÀO TẬP</span>
@@ -193,6 +193,8 @@
         submitBtn.disabled = true;
 
         const email = document.getElementById('email').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        const uuid = urlParams.get('uuid');
 
         try {
             // Sử dụng đường dẫn tương đối để tránh lỗi CORS/Mixed Content trên Tunnel
@@ -202,7 +204,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email, uuid })
             });
 
             const data = await response.json();

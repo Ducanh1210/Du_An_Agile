@@ -40,6 +40,7 @@ class RegisterRequest extends FormRequest
         return [
             'name.required' => 'Trường tên không được bỏ trống!',
             'email.required' => 'Trường email không được bỏ trống!',
+            'email.email' => 'Email không đúng định dạng!',
             'email.unique' => 'Email này đã tồn tại!',
             'password.required' => 'Trường mật khẩu không được bỏ trống!',
             'password.confirmed' => 'Mật khẩu xác nhận không khớp!',

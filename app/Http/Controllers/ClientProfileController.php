@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Models\Booking;
 use App\Models\Membership;
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -141,7 +142,8 @@ class ClientProfileController extends Controller
         $subscription = Subscription::where('user_id', Auth::id())->findOrFail($id);
 
         if ($subscription->status !== 'pending_payment') {
-            return back()->with('error', 'Chỉ có thể hủy gói đang chờ thanh toán.');
+            $statusLabel = $subscription->status === 'active' ? 'đang hoạt động' : 'đã xử lý';
+            return back()->with('error', "Không thể hủy gói tập này vì trạng thái là {$statusLabel}. Chỉ có thể hủy gói đang chờ thanh toán.");
         }
 
         $subscription->status = 'cancelled';
@@ -179,16 +181,24 @@ class ClientProfileController extends Controller
 
         // Định nghĩa lịch tập cá nhân theo thứ (1 = Thứ 2, ..., 7 = Chủ Nhật)
         $weeklyPlan = [
-            1 => ['title' => 'Ngực & Bụng', 'area' => 'abs'],
-            2 => ['title' => 'Lưng & Xô', 'area' => 'back'],
+            1 => ['title' => 'Ngực & Tay sau', 'area' => 'chest'],
+            2 => ['title' => 'Lưng & Tay trước', 'area' => 'back'],
             3 => ['title' => 'Chân & Mông', 'area' => 'legs'],
-            4 => ['title' => 'Vai & Tay sau', 'area' => 'chest'],
-            5 => ['title' => 'Tay trước & Cẳng tay', 'area' => 'arms'],
-            6 => ['title' => 'Cardio & Yoga', 'area' => 'fullbody'],
+            4 => ['title' => 'Vai & Cơ bụng', 'area' => 'abs'],
+            5 => ['title' => 'Cardio & HIIT', 'area' => 'fullbody'],
+            6 => ['title' => 'Yoga & Phục hồi', 'area' => 'fullbody'],
             7 => ['title' => 'Nghỉ ngơi', 'area' => 'rest'],
         ];
 
-        return view('client.lichCaNhan', compact('bookings', 'upcomingBookings', 'weeklyPlan'));
+        // Lấy tất cả lịch lớp học trong 30 ngày tới để hiển thị gợi ý
+        $gymSchedules = Schedule::with('trainer')
+            ->where('status', 'upcoming')
+            ->where('start_time', '>=', now()->startOfDay())
+            ->where('start_time', '<=', now()->addDays(30))
+            ->orderBy('start_time')
+            ->get();
+
+        return view('client.lichCaNhan', compact('bookings', 'upcomingBookings', 'weeklyPlan', 'gymSchedules'));
     }
 
     /**

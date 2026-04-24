@@ -3,10 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\NewsCategory;
-use App\Models\NewsTag;
-use App\Models\News;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class NewsCMSSeeder extends Seeder
@@ -16,36 +12,227 @@ class NewsCMSSeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = [
-            'Tin tức',
-            'Dinh dưỡng',
-            'Tập luyện',
-            'Sức khỏe',
-            'Sự kiện'
-        ];
-
-        $categoryIds = [];
-
-        foreach ($categories as $cat) {
-            $category = NewsCategory::firstOrCreate(
-                ['slug' => Str::slug($cat)],
-                ['name' => $cat, 'description' => "Danh mục $cat"]
-            );
-            $categoryIds[$cat] = $category->id;
-        }
-
-        $tags = ['Fitness', 'Yoga', 'Cardio', 'Giảm cân', 'Tăng cơ', 'Sống khỏe'];
-        foreach ($tags as $tag) {
-            NewsTag::firstOrCreate(
-                ['slug' => Str::slug($tag)],
-                ['name' => $tag]
-            );
-        }
-
-        // Cập nhật các bài viết cũ nếu đang dùng category string
-        // Note: Cột category sẽ bị drop sau migration update_news_table_for_categories
-        // nên ta cần chạy script này _trước_ khi chạy migration thứ 5 (nếu muốn giữ data)
-        // Nhưng vì migration chạy theo thứ tự file, update_news_table_for_categories sẽ drop `category`
-        // Do đó ta sẽ map qua DB data nếu cần.
+        \Illuminate\Support\Facades\DB::table('news')->insert([
+            [
+                'id' => 1,
+                'title' => 'Bài viết tin tức mẫu số 1',
+                'slug' => 'bai-viet-tin-tuc-mau-so-1',
+                'image' => 'news/P5Wg334CnOWmK9wlLa6fgjqJhGjHtEtYGglxriDx.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 1. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 1. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Cardio, Giảm cân',
+                'category_id' => 1,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 1,
+                'views' => 2622,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-03-29 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:30',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Bài viết tin tức mẫu số 2',
+                'slug' => 'bai-viet-tin-tuc-mau-so-2',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 2. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 2. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Tăng cơ',
+                'category_id' => 4,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 1,
+                'views' => 3033,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-03-23 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 3,
+                'title' => 'Bài viết tin tức mẫu số 3',
+                'slug' => 'bai-viet-tin-tuc-mau-so-3',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 3. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 3. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Cardio, Tăng cơ',
+                'category_id' => 2,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 1,
+                'views' => 3336,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-03-22 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 4,
+                'title' => 'Bài viết tin tức mẫu số 4',
+                'slug' => 'bai-viet-tin-tuc-mau-so-4',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 4. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 4. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Boxing, Tăng cơ',
+                'category_id' => 1,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 4680,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-03-19 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 5,
+                'title' => 'Bài viết tin tức mẫu số 5',
+                'slug' => 'bai-viet-tin-tuc-mau-so-5',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 5. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 5. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Giảm cân, Tăng cơ',
+                'category_id' => 2,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 4591,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-04-13 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 6,
+                'title' => 'Bài viết tin tức mẫu số 6',
+                'slug' => 'bai-viet-tin-tuc-mau-so-6',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 6. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 6. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Cardio, Giảm cân',
+                'category_id' => 3,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 1193,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-04-08 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-21 17:08:26',
+            ],
+            [
+                'id' => 7,
+                'title' => 'Bài viết tin tức mẫu số 7',
+                'slug' => 'bai-viet-tin-tuc-mau-so-7',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 7. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 7. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Boxing, Cardio, Yoga',
+                'category_id' => 3,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 2805,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-04-06 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 8,
+                'title' => 'Bài viết tin tức mẫu số 8',
+                'slug' => 'bai-viet-tin-tuc-mau-so-8',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 8. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 8. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Boxing, Giảm cân',
+                'category_id' => 1,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 2534,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-03-27 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 9,
+                'title' => 'Bài viết tin tức mẫu số 9',
+                'slug' => 'bai-viet-tin-tuc-mau-so-9',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 9. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 9. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Boxing, Sức bền, Tăng cơ',
+                'category_id' => 4,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 4174,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-03-20 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ],
+            [
+                'id' => 10,
+                'title' => 'Bài viết tin tức mẫu số 10',
+                'slug' => 'bai-viet-tin-tuc-mau-so-10',
+                'image' => 'news/default.jpg',
+                'excerpt' => 'Đây là mô tả ngắn cho bài viết tin tức mẫu số 10. Nội dung này giúp thu hút người đọc.',
+                'content' => '<p>Đây là nội dung chi tiết của bài viết mẫu số 10. Chào mừng bạn đến với Gym Pro.</p><p>Hành trình tập luyện của bạn sẽ trở nên thú vị hơn với những kiến thức bổ ích này.</p>',
+                'tags_list' => 'Boxing, Giảm cân',
+                'category_id' => 2,
+                'author_id' => 1,
+                'news_status' => 'published',
+                'is_featured' => 0,
+                'views' => 3019,
+                'title_font_family' => 'Outfit',
+                'title_font_size' => '24',
+                'meta_title' => null,
+                'meta_description' => null,
+                'published_at' => '2026-04-01 06:01:30',
+                'deleted_at' => null,
+                'created_at' => '2026-04-17 06:01:30',
+                'updated_at' => '2026-04-17 07:23:02',
+            ]
+        ]);
     }
 }

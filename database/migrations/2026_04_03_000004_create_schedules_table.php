@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 200);
             $table->enum('category', ['gym', 'yoga']);
-            $table->foreignId('trainer_id')->nullable()->constrained('trainers');
+            $table->foreignId('trainer_id')->nullable()->constrained('users');
             $table->datetime('start_time');
             $table->datetime('end_time');
             $table->integer('capacity')->default(20);

@@ -10,6 +10,9 @@
     </div>
     
     <div class="flex items-center gap-3">
+        <a href="{{ route('admin.revenue.export_pdf') }}" class="px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all text-sm font-semibold shadow-sm flex items-center gap-2">
+            <i class="fa-solid fa-file-pdf"></i> Xuất PDF
+        </a>
         <button onclick="window.print()" class="px-4 py-2 bg-white border border-gray-200 text-slate-700 rounded-xl hover:bg-gray-50 hover:text-primary transition-all text-sm font-semibold shadow-sm flex items-center gap-2">
             <i class="fa-solid fa-print"></i> In báo cáo
         </button>

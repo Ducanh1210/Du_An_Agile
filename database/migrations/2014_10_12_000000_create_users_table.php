@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('role')->default('user')->comment('Vai trò: user, staff, admin, trainer');
             $table->enum('specialization', ['gym', 'yoga', 'both'])->nullable();
             $table->decimal('price_per_session', 12, 2)->default(500000.00);
-            $table->boolean('is_available')->default(true);
+            $table->tinyInteger('is_available')->default(1);
             $table->string('avatar_url')->nullable();
             $table->tinyInteger('is_active')->default(1);
             $table->string('provider_name')->nullable();

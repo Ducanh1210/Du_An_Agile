@@ -281,7 +281,7 @@
     }
 
     function reloadQR() {
-        startTimer();
+        window.location.reload();
     }
 
     // 2. Beep Sound Synthesizer (Chuyên nghiệp hơn)

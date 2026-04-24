@@ -13,71 +13,72 @@ class MembershipSeeder extends Seeder
      */
     public function run(): void
     {
-        // Khởi tạo mảng dữ liệu gói tập
-        $memSeed = [
+        \Illuminate\Support\Facades\DB::table('memberships')->insert([
             [
+                'id' => 1,
                 'name' => 'Gym 1 Tháng',
                 'category' => 'gym',
                 'description' => 'Tập tự do khu thể hình, không PT',
                 'duration_days' => 30,
-                'price' => 300000,
+                'price' => 300000.00,
                 'allow_pt' => 0,
                 'pt_sessions' => 0,
                 'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => '2026-04-02 15:34:26',
+                'updated_at' => '2026-04-02 15:34:26',
             ],
             [
+                'id' => 2,
                 'name' => 'Gym 1 Tháng + 4 Buổi PT',
                 'category' => 'gym',
                 'description' => 'Tập tự do + 4 buổi hướng dẫn cùng PT',
                 'duration_days' => 30,
-                'price' => 800000,
+                'price' => 800000.00,
                 'allow_pt' => 1,
                 'pt_sessions' => 4,
                 'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => '2026-04-02 15:34:26',
+                'updated_at' => '2026-04-02 15:34:26',
             ],
             [
+                'id' => 3,
                 'name' => 'Gym 1 Tháng + 12 Buổi PT',
                 'category' => 'gym',
                 'description' => 'Tập tự do + 12 buổi PT, ưu tiên đặt lịch',
                 'duration_days' => 30,
-                'price' => 1500000,
+                'price' => 1500000.00,
                 'allow_pt' => 1,
                 'pt_sessions' => 12,
                 'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => '2026-04-02 15:34:26',
+                'updated_at' => '2026-04-02 15:34:26',
             ],
             [
+                'id' => 4,
                 'name' => 'Yoga 1 Tháng',
                 'category' => 'yoga',
                 'description' => 'Tham gia không giới hạn lớp yoga trong tháng',
                 'duration_days' => 30,
-                'price' => 350000,
+                'price' => 350000.00,
                 'allow_pt' => 0,
                 'pt_sessions' => 0,
                 'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => '2026-04-02 15:34:26',
+                'updated_at' => '2026-04-02 15:34:26',
             ],
             [
+                'id' => 5,
                 'name' => 'Yoga 1 Tháng + 4 Buổi PT',
                 'category' => 'yoga',
                 'description' => 'Lớp yoga + 4 buổi tập riêng cùng HLV yoga',
                 'duration_days' => 30,
-                'price' => 900000,
+                'price' => 900000.00,
                 'allow_pt' => 1,
                 'pt_sessions' => 4,
                 'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ];
-
-        // Thực hiện insert dữ liệu theo form mẫu
-        DB::table(table: 'memberships')->insert($memSeed);
+                'created_at' => '2026-04-02 15:34:26',
+                'updated_at' => '2026-04-02 15:34:26',
+            ]
+        ]);
     }
 }

@@ -15,8 +15,8 @@
             <form action="{{ route('admin.news.categories.store') }}" method="POST" class="p-8 space-y-5">
                 @csrf
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Tên danh mục <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" required placeholder="VD: Sức khỏe, Dinh dưỡng..."
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Tên danh mục</label>
+                    <input type="text" name="name" placeholder="VD: Fitness, Yoga, Khuyến mãi..."
                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 text-sm transition-all">
                 </div>
                 <div>
@@ -109,7 +109,7 @@
             @csrf @method('PUT')
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Tên danh mục</label>
-                <input type="text" name="name" id="editName" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30">
+                <input type="text" name="name" id="editName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30">
             </div>
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Mô tả</label>

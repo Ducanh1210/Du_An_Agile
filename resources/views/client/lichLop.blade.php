@@ -42,10 +42,11 @@
     }
 
     .premium-schedule {
-        background: #f8fafc;
+        background: var(--color-bg);
         min-height: 100vh;
         padding-top: var(--header-h);
         font-family: 'Be Vietnam Pro', sans-serif;
+        transition: background-color var(--transition-slow);
     }
 
     /* --- Category Backgrounds --- */
@@ -97,11 +98,11 @@
 @endsection
 
 @section('breadcrumb')
-<div class="bg-slate-900 border-none py-4">
+<div class="bg-surface border-b border-main py-4">
     <div class="container mx-auto px-6 flex items-center gap-3">
-        <a href="{{ url('/') }}" class="text-slate-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Trang chủ</a>
-        <i class="fas fa-chevron-right text-slate-700 text-[8px]"></i>
-        <span class="text-white font-black text-xs uppercase tracking-[0.2em]">Lịch lớp học nhóm</span>
+        <a href="{{ url('/') }}" class="text-muted hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest">Trang chủ</a>
+        <i class="fas fa-chevron-right text-muted opacity-30 text-[8px]"></i>
+        <span class="text-main font-black text-xs uppercase tracking-[0.2em]">Lịch lớp học nhóm</span>
     </div>
 </div>
 @endsection
@@ -124,14 +125,14 @@
             <div class="lg:w-full">
                 <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
                     <div>
-                        <h1 class="text-5xl font-black text-slate-900 uppercase tracking-tighter mb-2 italic">Lịch biểu <span class="text-primary italic">trong tuần</span></h1>
-                        <p class="text-slate-500 font-bold uppercase text-[10px] tracking-[0.4em]">Khám phá các lớp học mới cùng chuyên gia</p>
+                        <h1 class="text-5xl font-black text-main uppercase tracking-tighter mb-2 italic">Lịch biểu <span class="text-primary italic">trong tuần</span></h1>
+                        <p class="text-muted font-bold uppercase text-[10px] tracking-[0.4em]">Khám phá các lớp học mới cùng chuyên gia</p>
                     </div>
 
                     <!-- Week Toggle -->
-                    <div class="flex bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100">
-                        <button @click="activeWeek = 0; activeDay = '{{ $dates[0]['full'] }}'" :class="activeWeek === 0 ? 'bg-slate-900 text-white' : 'text-slate-500'" class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Tuần này</button>
-                        <button @click="activeWeek = 1; activeDay = '{{ $dates[7]['full'] }}'" :class="activeWeek === 1 ? 'bg-slate-900 text-white' : 'text-slate-500'" class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Tuần tới</button>
+                    <div class="flex bg-surface p-1.5 rounded-2xl shadow-sm border border-main">
+                        <button @click="activeWeek = 0; activeDay = '{{ $dates[0]['full'] }}'" :class="activeWeek === 0 ? 'bg-primary text-white' : 'text-muted'" class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Tuần này</button>
+                        <button @click="activeWeek = 1; activeDay = '{{ $dates[7]['full'] }}'" :class="activeWeek === 1 ? 'bg-primary text-white' : 'text-muted'" class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Tuần tới</button>
                     </div>
                 </div>
 
@@ -141,10 +142,10 @@
                     <button 
                         x-show="({{ $date['index'] }} >= activeWeek * 7) && ({{ $date['index'] }} < (activeWeek + 1) * 7)"
                         @click="activeDay = '{{ $date['full'] }}'"
-                        :class="activeDay === '{{ $date['full'] }}' ? 'bg-primary text-white scale-105 shadow-xl shadow-primary/30 border-transparent' : 'bg-white text-slate-400 border-slate-100'"
+                        :class="activeDay === '{{ $date['full'] }}' ? 'bg-primary text-white scale-105 shadow-xl shadow-primary/30 border-transparent' : 'bg-surface text-muted border-main'"
                         class="flex-shrink-0 w-24 h-28 rounded-3xl border flex flex-col items-center justify-center transition-all duration-300">
                         <span class="text-[9px] font-black uppercase tracking-widest mb-2 opacity-60">{{ $date['day_name'] }}</span>
-                        <span class="text-3xl font-black mb-1 leading-none">{{ explode('/', $date['label'])[0] }}</span>
+                        <span class="text-3xl font-black mb-1 leading-none text-main">{{ explode('/', $date['label'])[0] }}</span>
                         <span class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60">Tháng {{ explode('/', $date['label'])[1] }}</span>
                     </button>
                     @endforeach
@@ -153,17 +154,17 @@
                 <!-- Category Switcher (Premium Tabs) -->
                 <div class="flex flex-wrap items-center gap-3 mb-10">
                     <button @click="activeCategory = 'all'" 
-                        :class="activeCategory === 'all' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-500 border-slate-100'"
+                        :class="activeCategory === 'all' ? 'bg-primary text-white shadow-lg' : 'bg-surface text-muted border-main'"
                         class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2">
                         <i class="fas fa-th-large"></i> Tất cả
                     </button>
                     <button @click="activeCategory = 'gym'" 
-                        :class="activeCategory === 'gym' ? 'bg-primary text-white shadow-lg shadow-primary/30 border-transparent' : 'bg-white text-slate-500 border-slate-100'"
+                        :class="activeCategory === 'gym' ? 'bg-primary text-white shadow-lg shadow-primary/30 border-transparent' : 'bg-surface text-muted border-main'"
                         class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2">
                         <i class="fas fa-dumbbell"></i> Gym & Fitness
                     </button>
                     <button @click="activeCategory = 'yoga'" 
-                        :class="activeCategory === 'yoga' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 border-transparent' : 'bg-white text-slate-500 border-slate-100'"
+                        :class="activeCategory === 'yoga' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 border-transparent' : 'bg-surface text-muted border-main'"
                         class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2">
                         <i class="fas fa-om"></i> Yoga & Thiền
                     </button>
@@ -217,7 +218,7 @@
                                                     <form action="{{ route('bookings.store') }}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="schedule_id" value="{{ $item->id }}">
-                                                        <button type="submit" class="px-6 py-3 bg-white text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-xl">Đăng ký ngay</button>
+                                                        <button type="submit" class="px-6 py-3 bg-surface text-main rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-xl">Đăng ký ngay</button>
                                                     </form>
                                                 @endif
                                             @else
@@ -230,19 +231,19 @@
                                     <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-all"></div>
                                 </div>
                             @empty
-                                <div class="col-span-1 md:col-span-2 py-32 bg-white rounded-[40px] border-2 border-dashed border-slate-100 flex flex-col items-center justify-center text-center">
-                                    <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                                        <i class="fas fa-calendar-times text-4xl text-slate-200"></i>
+                                <div class="col-span-1 md:col-span-2 py-32 bg-surface rounded-[40px] border-2 border-dashed border-main flex flex-col items-center justify-center text-center">
+                                    <div class="w-24 h-24 bg-main rounded-full flex items-center justify-center mb-6">
+                                        <i class="fas fa-calendar-times text-4xl text-muted opacity-20"></i>
                                     </div>
-                                    <h3 class="text-2xl font-black text-slate-400 uppercase tracking-widest">Hôm nay không có lớp</h3>
-                                    <p class="text-slate-300 text-xs font-bold uppercase mt-2 tracking-widest">Vui lòng chọn ngày khác hoặc đặt PT riêng</p>
+                                    <h3 class="text-2xl font-black text-muted uppercase tracking-widest opacity-50">Hôm nay không có lớp</h3>
+                                    <p class="text-muted text-xs font-bold uppercase mt-2 tracking-widest opacity-40">Vui lòng chọn ngày khác hoặc đặt PT riêng</p>
                                 </div>
                             @endforelse
 
                             <!-- Empty Category State -->
                             <div x-show="activeCategory !== 'all' && $el.closest('.grid').querySelectorAll('.class-card[style*=\'display: block\']').length === 0" 
-                                 class="col-span-1 md:col-span-2 py-20 bg-white/50 rounded-[40px] border border-slate-100 flex flex-col items-center justify-center text-center">
-                                <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">Không có lớp <span x-text="activeCategory === 'gym' ? 'Gym & Fitness' : 'Yoga & Thiền'"></span> trong ngày này</p>
+                                 class="col-span-1 md:col-span-2 py-20 bg-surface/50 rounded-[40px] border border-main flex flex-col items-center justify-center text-center">
+                                <p class="text-muted text-sm font-bold uppercase tracking-widest">Không có lớp <span x-text="activeCategory === 'gym' ? 'Gym & Fitness' : 'Yoga & Thiền'"></span> trong ngày này</p>
                             </div>
                         </div>
                     </template>

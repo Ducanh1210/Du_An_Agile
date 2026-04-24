@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\PaymentSuccessfulNotification;
+use App\Http\Requests\PaymentRequest;
 
 class PaymentController extends Controller
 {
@@ -44,15 +45,9 @@ class PaymentController extends Controller
         return view('client.checkout', compact('membership'));
     }
 
-    /**
-     * Khởi tạo thanh toán VNPay
-     */
-    public function createPayment(Request $request)
+    public function createPayment(PaymentRequest $request)
     {
-        $request->validate([
-            'membership_id' => 'required|exists:memberships,id',
-        ]);
-
+        $validated = $request->validated();
         $user = Auth::user();
         $membership = Membership::findOrFail($request->membership_id);
 

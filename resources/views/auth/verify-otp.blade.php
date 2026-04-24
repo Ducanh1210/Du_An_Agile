@@ -87,7 +87,7 @@
                             <span class="material-symbols-outlined text-[20px]">password</span>
                         </div>
                         <input class="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl focus:ring-0 text-on-surface font-black tracking-[0.5em] text-center text-xl placeholder:text-slate-300" 
-                               id="otp" name="otp" required autofocus placeholder="000000" maxlength="6" type="text"/>
+                               id="otp" name="otp" autofocus placeholder="000000" maxlength="6" type="text"/>
                     </div>
                     @error('otp')
                         <p class="text-error text-xs ml-1 font-medium mt-1">{{ $message }}</p>

@@ -34,8 +34,13 @@ class CheckinController extends Controller
             $localIp = !empty($localIps) ? $localIps[0] : '127.0.0.1';
         }
 
+        // Tạo UUID duy nhất cho phiên quét này
+        $qrUuid = \Illuminate\Support\Str::uuid()->toString();
+        // Lưu vào cache trong 15 giây (khớp với thời gian refresh trên giao diện)
+        \Illuminate\Support\Facades\Cache::put('qr_token_' . $qrUuid, true, now()->addSeconds(20)); // Cho thêm 5s bù trừ độ trễ mạng
+
         // 2. Tạo đường dẫn quét QR dựa trên IP nội bộ
-        $checkinUrl = route('checkin.verify', [], true);
+        $checkinUrl = route('checkin.verify', ['uuid' => $qrUuid], true);
         
         // Lấy port hiện tại nếu có (ví dụ :8000)
         $currentPort = parse_url(url()->current(), PHP_URL_PORT);
@@ -82,8 +87,19 @@ class CheckinController extends Controller
     public function processVerify(Request $request)
     {
         $request->validate([
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'uuid' => 'required'
         ]);
+
+        $uuid = $request->uuid;
+
+        // Kiểm tra mã QR còn hiệu lực không
+        if (!\Illuminate\Support\Facades\Cache::has('qr_token_' . $uuid)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mã QR đã hết hạn hoặc đã được sử dụng. Vui lòng quét mã mới.'
+            ], 410); // Gone
+        }
 
         $email = $request->email;
 
@@ -121,6 +137,9 @@ class CheckinController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        // 4. Vô hiệu hóa mã QR ngay lập tức sau khi dùng
+        \Illuminate\Support\Facades\Cache::forget('qr_token_' . $uuid);
 
         return response()->json([
             'success' => true,

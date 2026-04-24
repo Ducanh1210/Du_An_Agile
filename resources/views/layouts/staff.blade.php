@@ -81,6 +81,7 @@
                 </a>
 
                 <div class="pt-5 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-widest leading-loose whitespace-nowrap">Hệ thống Dịch vụ</div>
+
                 <a href="{{ route('admin.memberships.index') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-300 {{ request()->routeIs('admin.memberships.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-id-card w-5"></i>
                     <span class="font-medium text-[15px]">Quản lý Gói tập</span>
@@ -108,6 +109,7 @@
                     <div x-show="open" x-cloak class="mt-1 ml-4 pl-4 border-l border-slate-700 space-y-1">
                         <a href="{{ route('admin.news.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.index') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bài viết</a>
                         <a href="{{ route('admin.news.categories.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.categories.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Danh mục</a>
+
                         <a href="{{ route('admin.news.comments.index') }}" class="block py-2 text-sm {{ request()->routeIs('admin.news.comments.*') ? 'text-orange-500 font-bold' : 'text-slate-400 hover:text-white' }}">Bình luận</a>
                     </div>
                 </div>

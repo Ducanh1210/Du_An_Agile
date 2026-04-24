@@ -226,7 +226,7 @@
 
             <div style="margin-bottom: 24px;">
                 <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Lý do xin nghỉ <span style="color:#ef4444;">*</span></label>
-                <textarea name="reason" rows="4" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; outline: none; font-family: inherit; font-size: 14px; background: #F8FAFC;" required placeholder="Ghi rõ lý do khẩn cấp..."></textarea>
+                <textarea name="reason" rows="4" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; outline: none; font-family: inherit; font-size: 14px; background: #F8FAFC;" placeholder="Ghi rõ lý do khẩn cấp..."></textarea>
             </div>
 
             <div style="background: #FEF2F2; padding: 16px; border-radius: 14px; display: flex; gap: 12px; margin-bottom: 24px;">

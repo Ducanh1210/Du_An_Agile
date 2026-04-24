@@ -129,6 +129,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Quản lý Doanh thu & Thanh toán
     Route::prefix('revenue')->name('revenue.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('index');
+        Route::get('/export-pdf', [\App\Http\Controllers\Admin\RevenueController::class, 'exportPdf'])->name('export_pdf');
     });
 
     Route::prefix('payments')->name('payments.')->group(function () {
