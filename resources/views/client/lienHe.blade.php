@@ -103,11 +103,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="contactName">Họ và tên <span class="required">*</span></label>
-                            <input type="text" id="contactName" class="form-control" placeholder="Nhập họ và tên của bạn" required>
+                            <input type="text" id="contactName" class="form-control" placeholder="Nhập họ và tên của bạn">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="contactEmail">Email <span class="required">*</span></label>
-                            <input type="email" id="contactEmail" class="form-control" placeholder="Nhập địa chỉ email" required>
+                            <input type="email" id="contactEmail" class="form-control" placeholder="Nhập địa chỉ email">
                         </div>
                     </div>
 
@@ -118,7 +118,7 @@
 
                     <div class="form-group">
                         <label class="form-label" for="contactMessage">Nội dung <span class="required">*</span></label>
-                        <textarea id="contactMessage" class="form-control" rows="5" placeholder="Nhập nội dung lời nhắn của bạn..." required></textarea>
+                        <textarea id="contactMessage" class="form-control" rows="5" placeholder="Nhập nội dung lời nhắn của bạn..."></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg" id="submitContactBtn">

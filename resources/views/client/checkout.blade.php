@@ -650,6 +650,19 @@
                         <form action="{{ route('payment.vnpay') }}" method="POST" id="checkoutForm">
                             @csrf
                             <input type="hidden" name="membership_id" value="{{ $membership->id }}">
+                            
+                            <div style="margin-bottom: 20px; text-align: left;">
+                                <label style="color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; margin-bottom: 8px; display: block;">Số điện thoại nhận thông báo</label>
+                                <input type="text" name="phone" value="{{ auth()->user()->phone }}" placeholder="Nhập số điện thoại..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; color: #fff; outline: none;">
+                                @error('phone') <span style="color: #ff4d4f; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div style="margin-bottom: 24px; text-align: left;">
+                                <label style="color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; margin-bottom: 8px; display: block;">Địa chỉ của bạn</label>
+                                <input type="text" name="address" placeholder="Nhập địa chỉ..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; color: #fff; outline: none;">
+                                @error('address') <span style="color: #ff4d4f; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span> @enderror
+                            </div>
+
                             <button type="submit" class="btn-vnpay" id="btnPayVnpay">
                                 <img src="{{ asset('images/vnpay-logo.svg') }}" alt="VNPay" class="vnpay-btn-logo" style="filter: brightness(0) invert(1);">
                                 Thanh toán ngay

@@ -142,7 +142,8 @@ class ClientProfileController extends Controller
         $subscription = Subscription::where('user_id', Auth::id())->findOrFail($id);
 
         if ($subscription->status !== 'pending_payment') {
-            return back()->with('error', 'Chỉ có thể hủy gói đang chờ thanh toán.');
+            $statusLabel = $subscription->status === 'active' ? 'đang hoạt động' : 'đã xử lý';
+            return back()->with('error', "Không thể hủy gói tập này vì trạng thái là {$statusLabel}. Chỉ có thể hủy gói đang chờ thanh toán.");
         }
 
         $subscription->status = 'cancelled';

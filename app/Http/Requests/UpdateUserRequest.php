@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users')->ignore($id),
             ],
             'password' => 'nullable|string|min:6',
-            'role' => 'required|in:user,staff,admin,trainer',
+            'role' => 'required|in:user,staff,admin,trainer,content_admin',
             'avatar_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }

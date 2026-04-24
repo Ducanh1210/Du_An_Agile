@@ -30,6 +30,12 @@ class PaymentManagementController extends Controller
         ]);
 
         $payment = Payment::findOrFail($id);
+
+        // Chặn cập nhật nếu đã hoàn thành hoặc đã hủy (TC33)
+        if (in_array($payment->status, ['completed', 'cancelled'])) {
+            return back()->with('error', 'Hóa đơn này đã được xử lý (Hoàn thành/Hủy) và không thể thay đổi trạng thái.');
+        }
+
         $payment->status = $request->status;
         $payment->confirmed_by = auth()->id();
         $payment->save();

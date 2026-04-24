@@ -107,7 +107,7 @@
             <div style="margin-bottom: 24px;">
                 <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Cân nặng hiện tại (kg)</label>
                 <input type="number" name="weight" step="0.1" value="{{ $student->healthMetrics->last()?->weight }}" 
-                       style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 800; outline: none; background: #F8FAFC;" required>
+                       style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 800; outline: none; background: #F8FAFC;">
             </div>
             <div style="margin-bottom: 32px;">
                 <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Phần trăm mỡ cơ thể (%) - <small style="color: var(--text-muted);">Tùy chọn</small></label>
@@ -133,11 +133,11 @@
             @csrf
             <div style="margin-bottom: 24px;">
                 <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Thời gian bắt đầu mới</label>
-                <input type="datetime-local" name="new_start_time" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; font-family: inherit; font-weight: 800; outline: none; background: #F8FAFC;" required>
+                <input type="datetime-local" name="new_start_time" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; font-family: inherit; font-weight: 800; outline: none; background: #F8FAFC;">
             </div>
             <div style="margin-bottom: 32px;">
                 <label style="display: block; font-size: 14px; font-weight: 800; margin-bottom: 10px;">Lý do thay đổi</label>
-                <textarea name="reason" rows="3" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; font-family: inherit; font-weight: 600; outline: none; background: #F8FAFC; resize: none;" placeholder="Nhập lý do dời lịch..." required></textarea>
+                <textarea name="reason" rows="3" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; font-family: inherit; font-weight: 600; outline: none; background: #F8FAFC; resize: none;" placeholder="Nhập lý do dời lịch..."></textarea>
             </div>
             
             @if($student->bookings->where('status', 'confirmed')->isEmpty())

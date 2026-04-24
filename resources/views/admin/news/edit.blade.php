@@ -40,7 +40,7 @@
 
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2 font-mono uppercase tracking-wider">Tiêu đề <span class="text-red-500">*</span></label>
-                            <input type="text" name="title" value="{{ old('title', $news->title) }}" required
+                            <input type="text" name="title" value="{{ old('title', $news->title) }}" 
                                    placeholder="Nhập tiêu đề bài viết..."
                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 text-sm transition-all font-bold text-slate-800">
                         </div>
@@ -69,7 +69,7 @@
 
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2 font-mono uppercase tracking-wider">Nội dung chi tiết <span class="text-red-500">*</span></label>
-                            <textarea name="content" rows="15" required
+                            <textarea name="content" rows="15"
                                       placeholder="Nội dung chính..."
                                       class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 text-sm transition-all resize-y leading-relaxed">{{ old('content', $news->content) }}</textarea>
                         </div>

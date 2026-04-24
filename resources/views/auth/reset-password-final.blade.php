@@ -83,7 +83,7 @@
                             <span class="material-symbols-outlined text-[20px]">lock_reset</span>
                         </div>
                         <input x-bind:type="show ? 'text' : 'password'" class="w-full pl-12 pr-12 py-4 bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl focus:ring-0 text-on-surface font-semibold placeholder:text-on-surface-variant/30 transition-all font-medium" 
-                               id="password" name="password" required autofocus placeholder="••••••••" type="password"/>
+                               id="password" name="password" autofocus placeholder="••••••••" type="password"/>
                         <button type="button" @click="show = !show" class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary">
                             <span class="material-symbols-outlined" x-text="show ? 'visibility_off' : 'visibility'">visibility</span>
                         </button>
@@ -101,7 +101,7 @@
                             <span class="material-symbols-outlined text-[20px]">lock_check</span>
                         </div>
                         <input x-bind:type="show ? 'text' : 'password'" class="w-full pl-12 pr-12 py-4 bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl focus:ring-0 text-on-surface font-semibold placeholder:text-on-surface-variant/30 transition-all font-medium" 
-                               id="password_confirmation" name="password_confirmation" required placeholder="••••••••" type="password"/>
+                               id="password_confirmation" name="password_confirmation" placeholder="••••••••" type="password"/>
                         <button type="button" @click="show = !show" class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary">
                             <span class="material-symbols-outlined" x-text="show ? 'visibility_off' : 'visibility'">visibility</span>
                         </button>

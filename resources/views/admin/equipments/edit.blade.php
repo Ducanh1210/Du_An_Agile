@@ -46,6 +46,16 @@
                     @enderror
                 </div>
 
+                <!-- Số lượng -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 uppercase tracking-widest mb-2">Số lượng <span class="text-red-500">*</span></label>
+                    <input type="number" name="quantity" value="{{ old('quantity', $equipment->quantity) }}" placeholder="VD: 10" 
+                           class="w-full bg-slate-50 border border-slate-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl px-4 py-3 text-sm transition-all outline-none text-slate-700 @error('quantity') border-red-500 @enderror">
+                    @error('quantity')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Ngày bảo trì -->
                 <div>
                     <label class="block text-sm font-bold text-slate-700 uppercase tracking-widest mb-2">Ngày bảo trì (Tùy chọn)</label>

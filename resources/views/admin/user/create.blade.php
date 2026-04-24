@@ -82,6 +82,8 @@
                                     <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Khách hàng (User)</option>
                                     <option value="trainer" {{ old('role') == 'trainer' ? 'selected' : '' }}>Huấn luyện viên (Trainer)</option>
                                     <option value="staff" {{ old('role') == 'staff' ? 'selected' : '' }}>Nhân viên (Staff)</option>
+                                    <option value="content_admin" {{ old('role') == 'content_admin' ? 'selected' : '' }}>Quản trị nội dung (Content Admin)</option>
+                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Quản trị viên (Admin)</option>
                                 </select>
                                 <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-500 transition-colors">
                                     <i class="fa-solid fa-chevron-down text-xs"></i>

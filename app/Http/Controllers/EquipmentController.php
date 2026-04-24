@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreEquipmentRequest;
+use App\Http\Requests\UpdateEquipmentRequest;
+use App\Models\Equipment;
 
 class EquipmentController extends Controller
 {
@@ -17,41 +20,23 @@ class EquipmentController extends Controller
         return view('admin.equipments.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreEquipmentRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:150',
-            'status' => 'required|in:active,maintenance,broken',
-            'description' => 'nullable|string'
-        ], [
-            'name.required' => 'Vui lòng nhập tên dụng cụ',
-            'status.in' => 'Trạng thái không hợp lệ',
-        ]);
-
-        \App\Models\Equipment::create($request->all());
+        Equipment::create($request->validated());
 
         return redirect()->route('admin.equipments.index')->with('success', 'Thêm dụng cụ thành công!');
     }
 
     public function edit($id)
     {
-        $equipment = \App\Models\Equipment::findOrFail($id);
+        $equipment = Equipment::findOrFail($id);
         return view('admin.equipments.edit', compact('equipment'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateEquipmentRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:150',
-            'status' => 'required|in:active,maintenance,broken',
-            'description' => 'nullable|string'
-        ], [
-            'name.required' => 'Vui lòng nhập tên dụng cụ',
-            'status.in' => 'Trạng thái không hợp lệ',
-        ]);
-
-        $equipment = \App\Models\Equipment::findOrFail($id);
-        $equipment->update($request->all());
+        $equipment = Equipment::findOrFail($id);
+        $equipment->update($request->validated());
 
         return redirect()->route('admin.equipments.index')->with('success', 'Cập nhật dụng cụ thành công!');
     }

@@ -93,7 +93,7 @@
                         <div class="form-group">
                             <label class="form-label">Họ và tên <span class="required">*</span></label>
                             <input type="text" name="name" class="form-control @error('name') is-error @enderror"
-                                   value="{{ old('name', $user->name) }}" required id="inputName">
+                                   value="{{ old('name', $user->name) }}" id="inputName">
                             @error('name')<span class="form-error" style="display:block">{{ $message }}</span>@enderror
                         </div>
 
@@ -136,21 +136,21 @@
                     <div class="form-group">
                         <label class="form-label">Mật khẩu hiện tại <span class="required">*</span></label>
                         <input type="password" name="current_password" class="form-control @error('current_password') is-error @enderror"
-                               placeholder="••••••••" required id="inputCurrentPassword">
+                               placeholder="••••••••" id="inputCurrentPassword">
                         @error('current_password')<span class="form-error" style="display:block">{{ $message }}</span>@enderror
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Mật khẩu mới <span class="required">*</span></label>
                         <input type="password" name="password" class="form-control @error('password') is-error @enderror"
-                               placeholder="••••••••" required id="inputNewPassword">
+                               placeholder="••••••••" id="inputNewPassword">
                         @error('password')<span class="form-error" style="display:block">{{ $message }}</span>@enderror
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Xác nhận mật khẩu mới <span class="required">*</span></label>
                         <input type="password" name="password_confirmation" class="form-control"
-                               placeholder="••••••••" required id="inputConfirmPassword">
+                               placeholder="••••••••" id="inputConfirmPassword">
                     </div>
 
                     <div style="margin-top: var(--space-3)">

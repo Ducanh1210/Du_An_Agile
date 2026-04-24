@@ -148,7 +148,7 @@
             @csrf
             <div style="margin-bottom: 24px;">
                 <label style="display: block; font-size: 14px; font-weight: 700; margin-bottom: 10px;">Nội dung buổi tập & Nhận xét</label>
-                <textarea name="notes" rows="4" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; outline: none; font-family: inherit; font-size: 14px; transition: all 0.2s; background: #F8FAFC;" placeholder="Ví dụ: Học viên đã hoàn thành tốt các bài tập Squat, Lunges..." required></textarea>
+                <textarea name="notes" rows="4" style="width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; outline: none; font-family: inherit; font-size: 14px; transition: all 0.2s; background: #F8FAFC;" placeholder="Ví dụ: Học viên đã hoàn thành tốt các bài tập Squat, Lunges..."></textarea>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">

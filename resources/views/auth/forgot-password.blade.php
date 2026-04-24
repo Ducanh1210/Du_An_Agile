@@ -131,7 +131,7 @@
                             <span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
                         </div>
                         <input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl focus:ring-0 text-on-surface placeholder:text-on-surface-variant/40 transition-all font-medium" 
-                               id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="username@email.com" type="email"/>
+                               id="email" name="email" value="{{ old('email') }}" autofocus placeholder="username@email.com" type="email"/>
                     </div>
                     @error('email')
                         <p class="text-error text-xs ml-1 font-medium mt-1">{{ $message }}</p>
